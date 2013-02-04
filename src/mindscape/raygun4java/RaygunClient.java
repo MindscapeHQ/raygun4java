@@ -49,7 +49,7 @@ public class RaygunClient {
 		
 	}
 	
-	protected RaygunMessage BuildMessage(Exception exception)
+	private RaygunMessage BuildMessage(Exception exception)
 	{
 		try
 		{
@@ -63,7 +63,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Failed to build RaygunMessage: " + e.getMessage());
+			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e.getMessage());
 		}
 		return null;
 	}
@@ -76,12 +76,12 @@ public class RaygunClient {
 			{
 				// TODO: HTTP post
 				
-				System.out.println(ReflectionToStringBuilder.toString(raygunMessage.getDetails()));
+				System.out.println(ReflectionToStringBuilder.toString(raygunMessage));
 			}
 		}
 		catch (Exception e)
 		{
-			System.err.println("Error logging exception to Raygun.io: " + e.getMessage());
+			System.err.println("Raygun4Java: Error posting exception" + e.getMessage());
 		}
 	}
 }

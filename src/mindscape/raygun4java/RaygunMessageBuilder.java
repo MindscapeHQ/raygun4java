@@ -1,5 +1,13 @@
 package mindscape.raygun4java;
 
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.text.AttributedCharacterIterator.Attribute;
+import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
 import mindscape.raygun4java.messages.RaygunClientMessage;
 import mindscape.raygun4java.messages.RaygunEnvironmentMessage;
 import mindscape.raygun4java.messages.RaygunErrorMessage;
@@ -51,7 +59,32 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	public IRaygunMessageBuilder SetVersion() {		
 		// TODO
 		
-		_raygunMessage.getDetails().setVersion("the version");
+		_raygunMessage.getDetails().setVersion(ReadVersion());
 		return this;
+	}
+	
+	private String ReadVersion()
+	{
+		StackTraceElement[] stack = Thread.currentThread ().getStackTrace ();
+	    StackTraceElement main = stack[stack.length - 1];
+	    String mainClass = main.getClassName ();
+	    	
+	    try {
+	    	Class cl = getClass().getClassLoader().loadClass(mainClass);
+	    	String className = cl.getSimpleName() + ".class";
+	    	String classPath = cl.getResource(className).toString();
+	    	if (!classPath.startsWith("jar")) {	    	  // 
+	    	  return "Not found";
+	    	}
+	    	String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +  "/META-INF/MANIFEST.MF";
+	    	Manifest manifest = new Manifest(new URL(manifestPath).openStream());
+	    	Attributes attr = manifest.getMainAttributes();	    	
+		  
+	    	return attr.getValue("Implementation-Version");
+		
+		} catch (Exception e) {
+		  System.err.println("Raygun4Java: Can't read version from manifest");
+		}
+		return "Not found";
 	}
 }
