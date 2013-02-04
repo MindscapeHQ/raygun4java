@@ -76,12 +76,12 @@ public class RaygunClient {
 			{
 				// TODO: HTTP post
 				
-				System.out.println(ReflectionToStringBuilder.toString(raygunMessage));
+				//System.out.println(ReflectionToStringBuilder.toString(raygunMessage.getDetails().getError().getStackTrace()));
 			}
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Error posting exception" + e.getMessage());
+			System.err.println("Raygun4Java: Error posting exception - " + e.getMessage());
 		}
 	}
 }
