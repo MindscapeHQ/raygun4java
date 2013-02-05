@@ -1,12 +1,20 @@
 package mindscape.raygun4java;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.management.ReflectionException;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 
 import mindscape.raygun4java.messages.RaygunMessage;
 
@@ -34,19 +42,17 @@ public class RaygunClient {
 		}		
 	}
 	
-	public void Send(Exception exception)
+	public int Send(Exception exception)
 	{
-		Post(BuildMessage(exception));
+		return Post(BuildMessage(exception));
 	}
 	
 	public void Send(Exception exception, ArrayList<String> tags)
-	{
-		
+	{		
 	}
 	
 	public void Send(Exception exception, ArrayList<String> tags, String version)
-	{
-		
+	{		
 	}
 	
 	private RaygunMessage BuildMessage(Exception exception)
@@ -68,20 +74,34 @@ public class RaygunClient {
 		return null;
 	}
 	
-	public void Post(RaygunMessage raygunMessage)
+	public int Post(RaygunMessage raygunMessage)
 	{
 		try
 		{
 			if (ValidateApiKey())
-			{
-				// TODO: HTTP post
+			{ 
+				String jsonPayload = new Gson().toJson(raygunMessage);				
 				
-				//System.out.println(ReflectionToStringBuilder.toString(raygunMessage.getDetails().getError().getStackTrace()));
+				HttpURLConnection connection = (HttpURLConnection) new URL(RaygunSettings.GetSettings().getApiEndPoint()).openConnection();
+				
+				connection.setDoOutput(true);
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-Type", "application/json");
+				connection.setRequestProperty("charset", "utf-8");
+				connection.setRequestProperty("X-ApiKey", _apiKey);
+				
+				OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+				writer.write(jsonPayload);
+				writer.flush();
+				writer.close();				
+				connection.disconnect();
+				return connection.getResponseCode();
 			}
 		}
 		catch (Exception e)
 		{
 			System.err.println("Raygun4Java: Error posting exception - " + e.getMessage());
 		}
+		return -1;
 	}
 }

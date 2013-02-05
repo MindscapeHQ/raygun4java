@@ -1,5 +1,37 @@
 package mindscape.raygun4java.messages;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+
 public class RaygunEnvironmentMessage {
 
+	private String cpu;
+	private int processorCount;
+	private String osVersion;
+	private int windowBoundsWidth;
+	private int windowBoundsHeight;
+	private String currentOrientation;
+	private String location;
+	private long totalPhysicalMemory;
+	private long availablePhysicalMemory;
+	private long totalVirtualMemory;
+	private long availableVirtualMemory;
+	private int diskSpaceFree;
+	private String architecture;
+	
+	public RaygunEnvironmentMessage()
+	{
+		OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
+		architecture = osMXBean.getArch();		
+		osVersion = osMXBean.getVersion();		
+		processorCount = Runtime.getRuntime().availableProcessors();
+		totalVirtualMemory = Runtime.getRuntime().totalMemory();
+		availableVirtualMemory = Runtime.getRuntime().freeMemory();
+		windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+		windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+		
+	}
+	
 }

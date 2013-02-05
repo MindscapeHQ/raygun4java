@@ -74,7 +74,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	    	String className = cl.getSimpleName() + ".class";
 	    	String classPath = cl.getResource(className).toString();
 	    	if (!classPath.startsWith("jar")) {	    	  // 
-	    	  return "Not found";
+	    	  return null;
 	    	}
 	    	String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +  "/META-INF/MANIFEST.MF";
 	    	Manifest manifest = new Manifest(new URL(manifestPath).openStream());
@@ -85,6 +85,6 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 		} catch (Exception e) {
 		  System.err.println("Raygun4Java: Can't read version from manifest");
 		}
-		return "Not found";
+		return null;
 	}
 }
