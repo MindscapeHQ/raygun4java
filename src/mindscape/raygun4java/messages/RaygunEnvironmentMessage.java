@@ -4,6 +4,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.util.Locale;
+
+import javax.activity.ActivityCompletedException;
 
 public class RaygunEnvironmentMessage {
 
@@ -31,7 +34,7 @@ public class RaygunEnvironmentMessage {
 		availableVirtualMemory = Runtime.getRuntime().freeMemory();
 		windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 		windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-		
+		location = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();		
 	}
 	
 }
