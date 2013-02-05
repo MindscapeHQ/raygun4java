@@ -9,17 +9,17 @@ public class RaygunErrorMessage {
 	private String className;
 	private RaygunErrorStackTraceLineMessage[] stackTrace;
 
-	public RaygunErrorMessage(Exception exception)
+	public RaygunErrorMessage(Throwable throwable)
 	{		
-		message = exception.getClass().getSimpleName() + ": " + exception.getMessage();
-		className = exception.getClass().getCanonicalName();
+		message = throwable.getClass().getSimpleName() + ": " + throwable.getMessage();
+		className = throwable.getClass().getCanonicalName();
 		
-		if (exception.getCause() != null)
+		if (throwable.getCause() != null)
 		{
-			innerError = new RaygunErrorMessage((Exception) exception.getCause());		
+			innerError = new RaygunErrorMessage((Exception) throwable.getCause());		
 		}
 				
-		StackTraceElement[] ste = exception.getStackTrace();
+		StackTraceElement[] ste = throwable.getStackTrace();
 		stackTrace = new RaygunErrorStackTraceLineMessage[ste.length];
 		
 		for (int i = 0; i < ste.length; i++)

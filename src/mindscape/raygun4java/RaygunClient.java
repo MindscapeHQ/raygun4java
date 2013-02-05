@@ -42,9 +42,9 @@ public class RaygunClient {
 		}		
 	}
 	
-	public int Send(Exception exception)
+	public int Send(Throwable throwable)
 	{
-		return Post(BuildMessage(exception));
+		return Post(BuildMessage(throwable));
 	}
 	
 	public void Send(Exception exception, ArrayList<String> tags)
@@ -55,14 +55,14 @@ public class RaygunClient {
 	{		
 	}
 	
-	private RaygunMessage BuildMessage(Exception exception)
+	private RaygunMessage BuildMessage(Throwable throwable)
 	{
 		try
 		{
 			return RaygunMessageBuilder.New()
 					.SetEnvironmentDetails()
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
-					.SetExceptionDetails(exception)
+					.SetExceptionDetails(throwable)
 					.SetClientDetails()
 					.SetVersion()
 					.Build();

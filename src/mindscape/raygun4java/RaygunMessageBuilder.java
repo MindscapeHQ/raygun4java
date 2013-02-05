@@ -38,8 +38,8 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	}	
 
 	@Override
-	public IRaygunMessageBuilder SetExceptionDetails(Exception exception) {
-		_raygunMessage.getDetails().setError(new RaygunErrorMessage(exception));
+	public IRaygunMessageBuilder SetExceptionDetails(Throwable throwable) {
+		_raygunMessage.getDetails().setError(new RaygunErrorMessage(throwable));
 		return this;
 	}
 

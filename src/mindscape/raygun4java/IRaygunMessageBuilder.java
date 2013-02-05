@@ -8,7 +8,7 @@ public interface IRaygunMessageBuilder {
 	
 	IRaygunMessageBuilder SetMachineName(String machineName);
 	
-	IRaygunMessageBuilder SetExceptionDetails(Exception exception);
+	IRaygunMessageBuilder SetExceptionDetails(Throwable throwable);
 	
 	IRaygunMessageBuilder SetClientDetails();
 
