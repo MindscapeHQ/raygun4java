@@ -9,7 +9,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.management.ReflectionException;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -64,7 +63,7 @@ public class RaygunClient {
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
-					.SetVersion()
+					.SetVersion()					
 					.Build();
 		}
 		catch (Exception e)
@@ -100,7 +99,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Error posting exception - " + e.getMessage());
+			System.err.println("Raygun4Java: Couldn't post exception - " + e.getMessage());
 		}
 		return -1;
 	}
