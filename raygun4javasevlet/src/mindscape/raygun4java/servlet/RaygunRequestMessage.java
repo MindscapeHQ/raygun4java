@@ -2,6 +2,8 @@ package mindscape.raygun4java.servlet;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class RaygunRequestMessage {
 
 	private String hostName;
@@ -14,8 +16,9 @@ public class RaygunRequestMessage {
 	private Map headers;
 	private String rawData;	
 	
-	public RaygunRequestMessage()
+	public RaygunRequestMessage(HttpServletRequest request)
 	{			
+		//request.getHeaders();
 	}
 	
 }

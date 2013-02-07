@@ -1,9 +1,7 @@
 package mindscape.raygun4java.servlet;
 
-import com.sun.net.httpserver.HttpContext;
-
-import mindscape.raygun4java.IRaygunMessageBuilder;
+import javax.servlet.http.HttpServletRequest;
 
 public interface IRaygunHttpMessageBuilder {
-	IRaygunMessageBuilder SetHttpDetails(HttpContext context);
+	IRaygunMessageBuilder SetRequestDetails(HttpServletRequest request);
 }
