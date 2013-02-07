@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Main-Class: testapp.TestApp
+Name: java/util/
+Specification-Title: Java Utility Classes
+Specification-Version: 1.2
+Specification-Vendor: Example Tech, Inc.
+Implementation-Title: java.util
+Implementation-Version: build57
+Implementation-Vendor: Example Tech, Inc.
