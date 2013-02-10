@@ -1,23 +1,28 @@
 package mindscape.raygun4java.servlet;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class RaygunMessage {
 	
-	private Date occurredOn;	
+	private String occurredOn;	
 	private RaygunMessageDetails details;
 	
 	public RaygunMessage()
 	{
 		details = new RaygunMessageDetails();
-		occurredOn = new Date();
+				
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
+		occurredOn = df.format(Calendar.getInstance().getTime());		
 	}
 
-	public Date getOccurredOn() {
+	public String getOccurredOn() {
 		return occurredOn;
 	}
 
-	public void setOccurredOn(Date _occurredOn) {
+	public void setOccurredOn(String _occurredOn) {
 		this.occurredOn = _occurredOn;
 	}
 
