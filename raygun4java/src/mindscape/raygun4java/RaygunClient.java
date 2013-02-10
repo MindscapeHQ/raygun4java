@@ -68,7 +68,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e.getMessage());
+			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
 		}
 		return null;
 	}

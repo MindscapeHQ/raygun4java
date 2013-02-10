@@ -26,15 +26,19 @@ public class RaygunEnvironmentMessage {
 	
 	public RaygunEnvironmentMessage()
 	{
-		OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
-		architecture = osMXBean.getArch();		
-		osVersion = osMXBean.getVersion();		
-		processorCount = Runtime.getRuntime().availableProcessors();
-		totalVirtualMemory = Runtime.getRuntime().totalMemory();
-		availableVirtualMemory = Runtime.getRuntime().freeMemory();
-		windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-		windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-		location = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();		
+		try {
+			OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
+			architecture = osMXBean.getArch();		
+			osVersion = osMXBean.getVersion();		
+			processorCount = Runtime.getRuntime().availableProcessors();
+			totalVirtualMemory = Runtime.getRuntime().totalMemory();
+			availableVirtualMemory = Runtime.getRuntime().freeMemory();
+			windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+			windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+			location = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();	
+		} catch (Exception e) { 
+		}
+			
 	}
 	
 }

@@ -1,25 +1,14 @@
 package mindscape.raygun4java.servlet;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.management.ReflectionException;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.WebServiceContext;
-
 import mindscape.raygun4java.RaygunSettings;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
 
 /*
  * 
@@ -27,12 +16,12 @@ import com.google.gson.stream.JsonWriter;
 public class RaygunClient {
 
 	private String _apiKey;
-	private HttpServletRequest servletRequest;
+	private Object servletRequest;
 	
 	public RaygunClient(String apiKey, HttpServletRequest request)
 	{
 		_apiKey = apiKey;
-		this.servletRequest = servletRequest;
+		this.servletRequest = request;
 	}
 	
 	private Boolean ValidateApiKey() throws Exception
@@ -64,8 +53,9 @@ public class RaygunClient {
 	{
 		try
 		{
+			System.out.println("about to");
 			return RaygunMessageBuilder.New()
-					.SetRequestDetails(servletRequest)
+					//.SetRequestDetails(servletRequest)
 					.SetEnvironmentDetails()
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
@@ -75,7 +65,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e.getMessage());
+			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
 		}
 		return null;
 	}
