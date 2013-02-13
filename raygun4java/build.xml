@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HW.makejar" default="all" basedir=".">
+	<!-- Properties -->
+	
+	<property name="app.name" value="Raygun4Java" />
+	<property name="app.version" value="1.0" />
+	
+	<property name="src" location="src" />	
+	<property name="build" location="build" />
+	<property name="bin" location="${build}/bin" />
+	<property name="distro" location="${build}/distro" />
+	
+	<!-- Paths -->
+	
+	<path id="compile.classpath">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<!-- Targets -->
+	
+	<target name="all" depends="clean, compile, jar">		
+	</target>	
+	
+	<target name="clean">
+		<delete dir="${build}" />		
+		<mkdir dir="${build}/distro" />
+		<mkdir dir="${bin}" />
+	</target>	
+		
+	<target name="compile">
+		<javac srcdir="${src}" destdir="${bin}" includeantruntime="false">
+			<classpath refid="compile.classpath" />
+		</javac>
+	</target>
+	
+	<target name="jar">
+		<jar destfile="${distro}/raygun4java.jar" basedir="${bin}" >
+			<manifest>
+				<attribute name="Implementation-Version" value="${app.version}" />
+				<attribute name="Implementation-Title" value="${app.name}" />
+				<attribute name="Specification-Version" value="${app.version}" />
+				<attribute name="Specification-Title" value="${app.name}" />
+			</manifest>
+		</jar>
+	</target>
+</project>

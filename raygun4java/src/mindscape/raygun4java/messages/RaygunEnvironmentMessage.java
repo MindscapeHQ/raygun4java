@@ -16,7 +16,7 @@ public class RaygunEnvironmentMessage {
 	private int windowBoundsWidth;
 	private int windowBoundsHeight;
 	private String currentOrientation;
-	private String location;
+	private String locale;
 	private long totalPhysicalMemory;
 	private long availablePhysicalMemory;
 	private long totalVirtualMemory;
@@ -35,7 +35,7 @@ public class RaygunEnvironmentMessage {
 			availableVirtualMemory = Runtime.getRuntime().freeMemory();
 			windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 			windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-			location = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();	
+			locale = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();	
 		} catch (Exception e) { 
 		}
 			
