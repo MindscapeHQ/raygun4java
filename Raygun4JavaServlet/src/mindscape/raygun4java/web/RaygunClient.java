@@ -1,4 +1,4 @@
-package mindscape.raygun4java.servlet;
+package mindscape.raygun4java.web;
 
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;

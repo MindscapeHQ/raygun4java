@@ -1,4 +1,4 @@
-package mindscape.raygun4java.servlet;
+package mindscape.raygun4java.web;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

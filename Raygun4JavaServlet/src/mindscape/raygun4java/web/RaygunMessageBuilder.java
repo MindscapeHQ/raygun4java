@@ -1,4 +1,4 @@
-package mindscape.raygun4java.servlet;
+package mindscape.raygun4java.web;
 
 import java.net.URL;
 import java.util.jar.Attributes;
@@ -11,7 +11,7 @@ import com.mindscapehq.raygun4java.messages.RaygunClientMessage;
 import com.mindscapehq.raygun4java.messages.RaygunEnvironmentMessage;
 import com.mindscapehq.raygun4java.messages.RaygunErrorMessage;
 
-import mindscape.raygun4java.servlet.RaygunMessage;
+import mindscape.raygun4java.web.RaygunMessage;
 
 public class RaygunMessageBuilder implements IRaygunMessageBuilder, IRaygunHttpMessageBuilder {
 
