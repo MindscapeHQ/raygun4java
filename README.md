@@ -15,7 +15,7 @@ Alpha version
 
 To catch all exceptions in your application, and to send them to Raygun:
 
-```
+```java
 class MyApp
 {
 	public static void main(String[] args) throws Throwable
@@ -42,7 +42,7 @@ Or see the sample app which is where this code originates.
 The concept is the same for the above - set up an Unhandled Exception handler, then inside it create a RaygunClient and call Send() on it, passing in the exception. The way this is done will vary based on what framework you are using. Presented below is a naive example that just uses plain JSPs - this architecture is obviously not recommended. A similar method will work for raw servlets if happen to be using those.
 
 Inside web.xml
-```
+```xml
 <error-page>
 		<exception-type>java.lang.Throwable</exception-type>
 		<location>/error.jsp</location>
@@ -50,7 +50,7 @@ Inside web.xml
 ```
 
 Inside error.jsp
-```
+```jsp
 <%@ page isErrorPage="true" %>
 <%@ page import="mindscape.raygun4java.servlet.RaygunClient" %>
 
