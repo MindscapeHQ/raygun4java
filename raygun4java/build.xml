@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="HW.makejar" default="all" basedir=".">
+<project name="HW.makejar" default="default" basedir=".">
 	<!-- Properties -->
 	
 	<property name="app.name" value="Raygun4Java" />
@@ -20,7 +20,7 @@
 	
 	<!-- Targets -->
 	
-	<target name="all" depends="clean, compile, jar">		
+	<target name="default" depends="clean, compile, jar">		
 	</target>	
 	
 	<target name="clean">
@@ -41,8 +41,15 @@
 				<attribute name="Implementation-Version" value="${app.version}" />
 				<attribute name="Implementation-Title" value="${app.name}" />
 				<attribute name="Specification-Version" value="${app.version}" />
-				<attribute name="Specification-Title" value="${app.name}" />
+				<attribute nxame="Specification-Title" value="${app.name}" />
 			</manifest>
 		</jar>
+		
+		<copy todir="${distro}">
+			<fileset dir="lib">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
 	</target>
+
 </project>

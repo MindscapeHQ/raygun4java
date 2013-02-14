@@ -1,15 +1,12 @@
-package mindscape.raygun4java.servlet;
+package com.mindscapehq.raygun4java.messages;
 
 import java.util.ArrayList;
-
-import com.mindscapehq.raygun4java.messages.*;
 
 public class RaygunMessageDetails {
 
 	private String machineName;
 	private String version;
-	private RaygunErrorMessage error;
-	private RaygunRequestMessage request;
+	private RaygunErrorMessage error;	
 	private RaygunEnvironmentMessage environment;
 	private RaygunClientMessage client;
 	private ArrayList<String> tags;
@@ -31,12 +28,6 @@ public class RaygunMessageDetails {
 	}
 	public void setError(RaygunErrorMessage error) {
 		this.error = error;
-	}
-	public RaygunRequestMessage getRequest() {
-		return request;
-	}
-	public void setRequest(RaygunRequestMessage request) {
-		this.request = request;
 	}
 	public RaygunEnvironmentMessage getEnvironment() {
 		return environment;

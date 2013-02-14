@@ -1,19 +1,20 @@
-package mindscape.raygun4java.servlet;
+package com.mindscapehq.raygun4java;
 
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.text.AttributedCharacterIterator.Attribute;
+import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.handler.MessageContext;
 
 import com.mindscapehq.raygun4java.messages.RaygunClientMessage;
 import com.mindscapehq.raygun4java.messages.RaygunEnvironmentMessage;
 import com.mindscapehq.raygun4java.messages.RaygunErrorMessage;
+import com.mindscapehq.raygun4java.messages.RaygunMessage;
 
-import mindscape.raygun4java.servlet.RaygunMessage;
 
-public class RaygunMessageBuilder implements IRaygunMessageBuilder, IRaygunHttpMessageBuilder {
+public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 
 	private RaygunMessage _raygunMessage;
 	
@@ -63,12 +64,6 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder, IRaygunHttpM
 		return this;
 	}
 	
-	@Override
-	public IRaygunMessageBuilder SetRequestDetails(HttpServletRequest request) {
-		_raygunMessage.getDetails().setRequest(new RaygunRequestMessage(request));
-		return this;
-	}
-	
 	private String ReadVersion()
 	{
 		StackTraceElement[] stack = Thread.currentThread ().getStackTrace ();
@@ -92,5 +87,5 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder, IRaygunHttpM
 		  System.err.println("Raygun4Java: Can't read version from manifest");
 		}
 		return null;
-	}	
+	}
 }

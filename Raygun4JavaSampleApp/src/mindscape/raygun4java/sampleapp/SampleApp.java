@@ -23,6 +23,5 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 		RaygunClient client = new RaygunClient("{{your api key here}}");
 		client.Send(e);
 		
-	}
-	
+	}	
 }

@@ -1,10 +1,10 @@
-package mindscape.raygun4java.servlet;
+package com.mindscapehq.raygun4java;
 
 import com.mindscapehq.raygun4java.messages.RaygunMessage;
 
 public interface IRaygunMessageBuilder {
 
-	mindscape.raygun4java.servlet.RaygunMessage Build();
+	RaygunMessage Build();
 	
 	IRaygunMessageBuilder SetMachineName(String machineName);
 	
