@@ -52,8 +52,7 @@ public class RaygunClient {
 	private RaygunMessage BuildMessage(Throwable throwable)
 	{
 		try
-		{
-			System.out.println("about to");
+		{			
 			return RaygunMessageBuilder.New()
 					//.SetRequestDetails(servletRequest)
 					.SetEnvironmentDetails()
