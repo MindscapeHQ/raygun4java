@@ -16,7 +16,7 @@ Alpha version
 To catch all exceptions in your application, and to send them to Raygun:
 
 ```java
-class MyApp
+public class MyApp
 {
 	public static void main(String[] args) throws Throwable
 	{
