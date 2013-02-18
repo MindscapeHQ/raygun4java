@@ -11,6 +11,7 @@ import javax.activity.ActivityCompletedException;
 public class RaygunEnvironmentMessage {
 
 	private String cpu;
+	private String architecture;
 	private int processorCount;
 	private String osVersion;
 	private int windowBoundsWidth;
@@ -21,21 +22,31 @@ public class RaygunEnvironmentMessage {
 	private long availablePhysicalMemory;
 	private long totalVirtualMemory;
 	private long availableVirtualMemory;
-	private int diskSpaceFree;
-	private String architecture;
+	private int diskSpaceFree;	
 	
 	public RaygunEnvironmentMessage()
 	{
-		try {
+		try {			
 			OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
-			architecture = osMXBean.getArch();		
-			osVersion = osMXBean.getVersion();		
+			com.sun.management.OperatingSystemMXBean sunMxBean = (com.sun.management.OperatingSystemMXBean) osMXBean;
+			
+			architecture = sunMxBean.getArch();				
 			processorCount = Runtime.getRuntime().availableProcessors();
-			totalVirtualMemory = Runtime.getRuntime().totalMemory();
-			availableVirtualMemory = Runtime.getRuntime().freeMemory();
+			
 			windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 			windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 			locale = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();	
+			
+			availablePhysicalMemory = sunMxBean.getFreePhysicalMemorySize();
+			totalPhysicalMemory = sunMxBean.getTotalPhysicalMemorySize();
+			totalVirtualMemory = sunMxBean.getTotalSwapSpaceSize();
+			availableVirtualMemory = sunMxBean.getFreeSwapSpaceSize();
+			
+			processorCount = sunMxBean.getAvailableProcessors();
+			
+			// This to be refactored when we have a Map to put the info into
+			osVersion = sunMxBean.getName() + " - " +sunMxBean.getVersion();
+			
 		} catch (Exception e) { 
 		}
 			

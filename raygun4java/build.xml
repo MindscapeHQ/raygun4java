@@ -41,7 +41,7 @@
 				<attribute name="Implementation-Version" value="${app.version}" />
 				<attribute name="Implementation-Title" value="${app.name}" />
 				<attribute name="Specification-Version" value="${app.version}" />
-				<attribute nxame="Specification-Title" value="${app.name}" />
+				<attribute name="Specification-Title" value="${app.name}" />
 			</manifest>
 		</jar>
 		
