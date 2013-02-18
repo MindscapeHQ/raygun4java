@@ -6,8 +6,10 @@ Alpha version
 ## Installation
 
 1. Clone this repository
-2. Run `ant` inside /raygun4java (and run it inside /raygun4javaservlet if you have a web application)
-3. From /build/distro, copy raygun4java.jar and gson-2.2.2.jar into your project's /lib directory, and add them to your Java build path. Also copy and add raygun4java-web.jar for web applications.
+2. Run `ant` inside raygun4java/
+3. From raygun4java/build/distro, copy raygun4java.jar into your project's lib/ directory, and add them to your Java build path.
+4. For web applications, copy the above library into raygun4java/raygun4javaweb/lib, then run `ant` on raygun4java/raygun4javaweb/build.xml.
+5. Copy both raygun4java.jar and raygun4javaweb.jar and add them to your project's build path
 
 ## Usage
 
