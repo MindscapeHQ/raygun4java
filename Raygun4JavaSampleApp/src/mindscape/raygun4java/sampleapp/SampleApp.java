@@ -1,5 +1,5 @@
 package mindscape.raygun4java.sampleapp;
-import mindscape.raygun4java.*;
+import com.mindscapehq.raygun4java.*;
 
 public class SampleApp {
 
@@ -20,7 +20,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
-		RaygunClient client = new RaygunClient("{{your api key here}}");
+		RaygunClient client = new RaygunClient("YOUR_APP_API_KEY");
 		client.Send(e);
 		
 	}	

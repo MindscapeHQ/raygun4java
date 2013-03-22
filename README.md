@@ -30,7 +30,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 {
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
-		RaygunClient client = new RaygunClient("{{your api key here}}");
+		RaygunClient client = new RaygunClient("YOUR_APP_API_KEY");
 		client.Send(e);
 		
 	}	
@@ -57,7 +57,7 @@ Inside error.jsp
 <%@ page import="mindscape.raygun4java.servlet.RaygunClient" %>
 
 <% 
-RaygunClient client = new RaygunClient("{{your api key here}}}", request);
+RaygunClient client = new RaygunClient("YOUR_APP_API_KEY", request);
 
 client.Send(exception);    
 %>
