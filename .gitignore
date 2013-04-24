@@ -1,4 +1,6 @@
 *.class
+.metadata
+Raygun4JavaSampleApp/lib
 
 # Package Files #
 *.war
