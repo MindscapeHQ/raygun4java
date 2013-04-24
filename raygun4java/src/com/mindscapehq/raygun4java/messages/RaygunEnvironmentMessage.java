@@ -4,7 +4,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.Locale;
 
 import javax.activity.ActivityCompletedException;
@@ -39,7 +39,7 @@ public class RaygunEnvironmentMessage {
 			windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 			locale = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();	
 			
-			utcOffset = Calendar.getInstance().getTimeZone().getOffset(Calendar.getInstance().getTimeInMillis()) / 3600000;
+			utcOffset = TimeZone.getDefault().getRawOffset() / 3600000.0;
 			
 			availablePhysicalMemory = sunMxBean.getFreePhysicalMemorySize();
 			totalPhysicalMemory = sunMxBean.getTotalPhysicalMemorySize();
