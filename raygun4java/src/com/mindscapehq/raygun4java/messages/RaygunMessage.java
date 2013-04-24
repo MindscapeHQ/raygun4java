@@ -13,7 +13,7 @@ public class RaygunMessage {
 	public RaygunMessage()
 	{
 		details = new RaygunMessageDetails();
-				
+		
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		df.setTimeZone(TimeZone.getTimeZone("UTC"));
 		occurredOn = df.format(Calendar.getInstance().getTime());		
