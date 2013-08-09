@@ -1,1 +1,0 @@
-Place raygun4java.jar and add it to the build path, then run build.xml. Note that you will also need the java servlet libraries.

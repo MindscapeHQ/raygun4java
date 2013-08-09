@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+  	<groupId>org.sonatype.oss</groupId>
+  	<artifactId>oss-parent</artifactId>
+  	<version>7</version>
+  </parent>
+  <groupId>com.mindscapehq</groupId>
+  <artifactId>raygun4java</artifactId>
+  <version>1.0.0-RELEASE</version>
+  <packaging>pom</packaging>
+  <name>raygun4java</name>
+  <url>http://raygun.io</url>  
+  <licenses>
+  	<license>
+  		<name>The MIT License</name>
+  		<url>http://www.opensource.org/licenses/mit-license.php</url>
+  		<distribution></distribution>
+  	</license>
+  </licenses>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <modules>
+    <module>web</module>
+    <module>sampleapp</module>
+    <module>core</module>
+  </modules>
+  <description>The official provider for the Raygun error tracking  service. For Java 6+. </description>
+  <developers>
+  	<developer>
+  		<id>callum</id>
+  		<name>Callum Gavin</name>
+  		<email>hello@raygun.io</email>
+  		<organisation>Mindscape</organisation>
+  		<organisationUrl>http://raygun.io</organisationUrl>
+  		<roles>
+  			<role>developer</role>
+  		</roles>
+  		<timezone>+12</timezone>
+  	</developer>
+  </developers>
+  <scm>
+  	<connection>scm:git:git@github.com:MindscapeHQ/raygun4java.git</connection>
+  	<developerConnection>scm:git:git@github.com:MindscapeHQ/raygun4java.git</developerConnection>
+  	<url>git@github.com:MindscapeHQ/raygun4java.git</url>
+  </scm>
+</project>
