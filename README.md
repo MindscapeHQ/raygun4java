@@ -1,7 +1,9 @@
 raygun4java
 ===========
 
-Alpha version
+Version 1.0
+
+**Major breaking change in this version:** the provider is now a maven package. A namespace change has also occured; see the Changelog below for details
 
 ## Installation
 
@@ -66,3 +68,10 @@ client.Send(exception);
 When an exception is thrown from another JSP, this page will take care of the sending.
 
 Note: all Java dynamic web page projects must have raygun4java.jar, raygun4java-web.jar and gson-2.2.2.jar on their build path.
+
+Changelog
+---------
+
+Version 1.0: Changed from ant to maven for packaging and building. The three parts are now maven modules, core, webprovider and sampleapp. The main provider is now located in the *core* namespace, and the JSP and Servlet module is located in *webprovider*.
+
+Version 0.0.1: Initial version.
