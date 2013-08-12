@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.mindscapehq</groupId>
   <artifactId>raygun4java</artifactId>
-  <version>1.0.0-RELEASE</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>raygun4java</name>
   <url>http://raygun.io</url>  
@@ -54,4 +54,21 @@
   	<developerConnection>scm:git:git@github.com:MindscapeHQ/raygun4java.git</developerConnection>
   	<url>git@github.com:MindscapeHQ/raygun4java.git</url>
   </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
