@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.mindscapehq</groupId>
   <artifactId>raygun4java</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>raygun4java</name>
   <url>http://raygun.io</url>  
@@ -16,7 +16,7 @@
   	<license>
   		<name>The MIT License</name>
   		<url>http://www.opensource.org/licenses/mit-license.php</url>
-  		<distribution></distribution>
+  		<distribution />
   	</license>
   </licenses>
   <properties>
