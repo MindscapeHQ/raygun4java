@@ -4,10 +4,10 @@
   <parent>
     <groupId>com.mindscapehq.raygun4java</groupId>
     <artifactId>raygun4java</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
   </parent>
   <artifactId>webprovider</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <name>Raygun4java web provider</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
