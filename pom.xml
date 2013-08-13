@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.mindscapehq.raygun4java</groupId>
   <artifactId>raygun4java</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>raygun4java</name>
   <url>http://raygun.io</url>  
