@@ -19,6 +19,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <packaging>pom</packaging>
   <name>Raygun4java sample app</name>
 </project>
