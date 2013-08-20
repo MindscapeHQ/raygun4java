@@ -1,23 +1,70 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.mindscapehq.raygun4java</groupId>
-    <artifactId>raygun4java</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+  	<groupId>org.sonatype.oss</groupId>
+  	<artifactId>oss-parent</artifactId>
+  	<version>7</version>
   </parent>
+  <groupId>com.mindscapehq.raygun4java</groupId>
   <artifactId>sampleapp</artifactId>
   <version>1.0.3-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>sampleapp</name>  
+  <url>http://raygun.io</url>  
+  <licenses>
+  	<license>
+  		<name>The MIT License</name>
+  		<url>http://www.opensource.org/licenses/mit-license.php</url>
+  		<distribution />
+  	</license>
+  </licenses>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+<description>The official provider for the Raygun error tracking  service. This is an example project, using raygun4java.core.</description>
+  <developers>
+  	<developer>
+  		<id>callum</id>
+  		<name>Callum Gavin</name>
+  		<email>hello@raygun.io</email>
+  		<organisation>Mindscape</organisation>
+  		<organisationUrl>http://raygun.io</organisationUrl>
+  		<roles>
+  			<role>developer</role>
+  		</roles>
+  		<timezone>+12</timezone>
+  	</developer>
+  </developers>
+  <scm>
+  	<connection>scm:git:git@github.com:MindscapeHQ/raygun4java.git</connection>
+  	<developerConnection>scm:git:git@github.com:MindscapeHQ/raygun4java.git</developerConnection>
+  	<url>git@github.com:MindscapeHQ/raygun4java.git</url>
+  </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <groupId>com.mindscape.raygun4java</groupId>
+      <artifactId>core</artifactId>
+      <version>1.0.3</version>  
+      <scope>provided</scope>    
     </dependency>
   </dependencies>
-  <name>Raygun4java sample app</name>
 </project>

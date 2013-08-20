@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
   	<groupId>org.sonatype.oss</groupId>
@@ -7,11 +7,12 @@
   	<version>7</version>
   </parent>
   <groupId>com.mindscapehq.raygun4java</groupId>
-  <artifactId>raygun4java</artifactId>
+  <artifactId>webprovider</artifactId>
   <version>1.0.3-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>raygun4java</name>
-  <url>http://raygun.io</url>  
+  <packaging>jar</packaging>
+
+  <name>webprovider</name>
+  <url>http://raygun.io</url>
   <licenses>
   	<license>
   		<name>The MIT License</name>
@@ -22,20 +23,26 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <description>The official provider for the Raygun error tracking  service. This is the web provider that sends errors caught from your servlet/JSP application. Used in conjunction with raygun4java.core</description>
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <groupId>com.mindscapehq.raygun4java</groupId>
+      <artifactId>core</artifactId>
+      <version>1.0.3</version>
+      <scope>provided</scope>
     </dependency>
+        <dependency>
+	    	<groupId>javax.servlet</groupId>
+	    	<artifactId>javax.servlet-api</artifactId>
+	    	<version>3.1.0</version>
+	    	<scope>provided</scope>
+    	</dependency>
+    	    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.1</version>        
+	</dependency>
   </dependencies>
-  <modules>
-    <module>web</module>
-    <module>sampleapp</module>
-    <module>core</module>
-  </modules>
-  <description>The official provider for the Raygun error tracking  service. For Java 6+. </description>
   <developers>
   	<developer>
   		<id>callum</id>
