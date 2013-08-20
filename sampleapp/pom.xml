@@ -4,7 +4,7 @@
   <parent>
   	<groupId>com.mindscapehq.raygun4java</groupId>
   	<artifactId>raygun4java</artifactId>
-  	<version>1.0.3-SNAPSHOT</version>
+  	<version>1.0.8-SNAPSHOT</version>
   	<relativePath>../raygun4java</relativePath>
   </parent>
   <artifactId>sampleapp</artifactId>
@@ -22,5 +22,13 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-<description>The official provider for the Raygun error tracking  service. This is an example project, using raygun4java.core.</description>
+ <description>The official provider for the Raygun error tracking  service. This is an example project, using raygun4java.core.</description>
+ <dependencies>
+   <dependency>
+     <groupId>com.mindscapehq.raygun4java</groupId>
+     <artifactId>core</artifactId>
+     <version>1.0.4</version>
+     <scope>provided</scope>
+   </dependency>
+ </dependencies>   
 </project>
