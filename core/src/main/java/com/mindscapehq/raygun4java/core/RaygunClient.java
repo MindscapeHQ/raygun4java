@@ -17,8 +17,8 @@ import com.google.gson.stream.JsonWriter;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 
-/*
- * 
+/**
+ * This is the main sending object that you instantiate with your API key
  */
 public class RaygunClient {
 

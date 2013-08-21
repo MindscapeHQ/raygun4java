@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.gson.Gson;
 import com.mindscapehq.raygun4java.core.RaygunSettings;
 
-/*
- * 
+/**
+ * This client is the main sending object for servlet/JSP environments
  */
 public class RaygunClient {
 

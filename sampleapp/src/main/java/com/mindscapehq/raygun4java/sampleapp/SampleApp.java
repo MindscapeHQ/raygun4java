@@ -4,8 +4,7 @@ import com.mindscapehq.raygun4java.core.*;
 public class SampleApp {
 
 	/**
-	 * @param args
-	 * @throws Throwable 
+	 * An example of how to use Raygun4Java 
 	 */
 	public static void main(String[] args) throws Throwable
 	{
