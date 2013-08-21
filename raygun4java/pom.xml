@@ -29,9 +29,9 @@
   	</developer>
   </developers>
   <scm>
-  	<connection>scm:git:git@github.com:MindscapeHQ/raygun4java.git</connection>
-  	<developerConnection>scm:git:git@github.com:MindscapeHQ/raygun4java.git</developerConnection>
-  	<url>git@github.com:MindscapeHQ/raygun4java.git</url>
+  	<url>https://github.com/mindscapehq/raygun4java</url>
+  	<connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
+  	<developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>  	
   </scm>
   <build>
     <plugins>
