@@ -16,7 +16,7 @@ import com.mindscapehq.raygun4java.core.RaygunSettings;
 public class RaygunClient {
 
 	private String _apiKey;
-	private Object servletRequest;
+	private HttpServletRequest servletRequest;
 	
 	public RaygunClient(String apiKey, HttpServletRequest request)
 	{
@@ -54,7 +54,7 @@ public class RaygunClient {
 		try
 		{			
 			return RaygunMessageBuilder.New()
-					//.SetRequestDetails(servletRequest)
+					.SetRequestDetails(servletRequest)
 					.SetEnvironmentDetails()
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
