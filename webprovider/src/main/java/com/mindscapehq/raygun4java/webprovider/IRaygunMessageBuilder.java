@@ -1,6 +1,9 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import java.util.AbstractList;
+import java.util.Map;
+
+import com.mindscapehq.raygun4java.webprovider.RaygunMessage;
 
 public interface IRaygunMessageBuilder {
 
@@ -15,4 +18,8 @@ public interface IRaygunMessageBuilder {
     IRaygunMessageBuilder SetEnvironmentDetails();
 
     IRaygunMessageBuilder SetVersion();
+
+	IRaygunMessageBuilder SetTags(AbstractList<Object> tags);
+	
+	IRaygunMessageBuilder SetUserCustomData(Map<Object, Object> userCustomData);
 }
