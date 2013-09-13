@@ -24,10 +24,18 @@
  <description>The official provider for the Raygun error tracking  service. This is an example project, using raygun4java.core.</description>
  <dependencies>
    <dependency>
-     <groupId>com.mindscapehq.raygun4java</groupId>
-     <artifactId>core</artifactId>
-     <version>1.0.4</version>
-     <scope>provided</scope>
+   	<groupId>com.mindscapehq</groupId>
+   	<artifactId>core</artifactId>
+   	<version>1.2.2-SNAPSHOT</version>
    </dependency>
  </dependencies>   
+ <dependencyManagement>
+ 	<dependencies>
+ 		<dependency>
+ 			<groupId>com.mindscapehq</groupId>
+ 			<artifactId>core</artifactId>
+ 			<version>1.2.2-SNAPSHOT</version>
+ 		</dependency>
+ 	</dependencies>
+ </dependencyManagement>
 </project>
