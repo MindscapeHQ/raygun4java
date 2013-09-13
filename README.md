@@ -1,9 +1,9 @@
 raygun4java
 ===========
 
-Version 1.2.1
+Version 1.2.3
 
-**Major breaking change in this version:** the provider is now a maven package. A namespace change has also occured; see the Changelog below for details
+This provider is now a Maven package; see the changelog below.
 
 ## Installation with Maven and Eclipse
 
@@ -94,7 +94,9 @@ Note: all Java dynamic web page projects must have core-1.2.1.jar, webprovider-1
 Changelog
 ---------
 
-Version 1.2.1: Completed change from ant to maven for packaging and building. The three parts are now maven modules, core, webprovider and sampleapp. The main provider is now located in the *core* namespace, and the JSP and Servlet module is located in *webprovider*.
+Version 1.2.3: Added tags and user custom data method overloads for Send. See usage in the updated Sampleapp class.
+
+Version 1.2.1: **Breaking change:** Completed change from ant to maven for packaging and building. The three parts are now maven modules, core, webprovider and sampleapp. The main provider is now located in the *core* namespace, and the JSP and Servlet module is located in *webprovider*.
 
 Version 1.0: Maven package refactor.
 
