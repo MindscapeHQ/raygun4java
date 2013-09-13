@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.AttributedCharacterIterator.Attribute;
+import java.util.AbstractList;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -56,6 +57,16 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 		// TODO
 		
 		_raygunMessage.getDetails().setVersion(ReadVersion());
+		return this;
+	}
+	
+	public IRaygunMessageBuilder SetTags(AbstractList<Object> tags) {
+		_raygunMessage.getDetails().setTags(tags);
+		return this;
+	}
+
+	public IRaygunMessageBuilder SetUserCustomData(Map<Object, Object> userCustomData) {
+		_raygunMessage.getDetails().setUserCustomData(userCustomData);
 		return this;
 	}
 	
