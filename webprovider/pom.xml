@@ -3,7 +3,7 @@
   <parent>
   	<groupId>com.mindscapehq</groupId>
   	<artifactId>raygun4java</artifactId>
-  	<version>1.2.2-SNAPSHOT</version>
+  	<version>1.2.3-SNAPSHOT</version>
   	<relativePath>../</relativePath>
   </parent>
   <artifactId>webprovider</artifactId>
@@ -25,11 +25,10 @@
   <description>The official provider for the Raygun error tracking  service. This is the web provider that sends errors caught from your servlet/JSP application. Used in conjunction with raygun4java.core</description>
   <dependencies>
     <dependency>
-      <groupId>com.mindscapehq.raygun4java</groupId>
-      <artifactId>core</artifactId>
-      <version>1.0.4</version>
-      <scope>provided</scope>
-    </dependency>
+ 			<groupId>com.mindscapehq</groupId>
+ 			<artifactId>core</artifactId>
+ 			<version>1.2.2-SNAPSHOT</version>
+ 		</dependency>
         <dependency>
 	    	<groupId>javax.servlet</groupId>
 	    	<artifactId>javax.servlet-api</artifactId>
@@ -43,4 +42,13 @@
 	</dependency>
   </dependencies>
   
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>com.mindscapehq.raygun4java</groupId>
+  			<artifactId>core</artifactId>
+  			<version>1.2.2-SNAPSHOT</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
 </project>

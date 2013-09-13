@@ -6,7 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.management.ReflectionException;
 
@@ -15,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
 
 /**
@@ -46,12 +49,14 @@ public class RaygunClient {
 		return Post(BuildMessage(throwable));
 	}
 	
-	public void Send(Exception exception, ArrayList<String> tags)
+	public int Send(Throwable throwable, AbstractList<Object> tags)
 	{		
+		return Post(BuildMessage(throwable, tags));
 	}
 	
-	public void Send(Exception exception, ArrayList<String> tags, String version)
-	{		
+	public int Send(Throwable throwable, AbstractList<Object> tags, Map<Object, Object> userCustomData)
+	{	
+		return Post(BuildMessage(throwable, tags, userCustomData));
 	}
 	
 	private RaygunMessage BuildMessage(Throwable throwable)
@@ -64,6 +69,47 @@ public class RaygunClient {
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
 					.SetVersion()					
+					.Build();
+		}
+		catch (Exception e)
+		{
+			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+		}
+		return null;
+	}
+	
+	private RaygunMessage BuildMessage(Throwable throwable, AbstractList<Object> tags)
+	{
+		try
+		{
+			return RaygunMessageBuilder.New()					
+					.SetEnvironmentDetails()
+					.SetMachineName(InetAddress.getLocalHost().getHostName())
+					.SetExceptionDetails(throwable)
+					.SetClientDetails()
+					.SetVersion()	
+					.SetTags(tags)
+					.Build();
+		}
+		catch (Exception e)
+		{
+			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+		}
+		return null;
+	}
+	
+	private RaygunMessage BuildMessage(Throwable throwable, AbstractList<Object> tags, Map<Object, Object> userCustomData)
+	{
+		try
+		{
+			return RaygunMessageBuilder.New()					
+					.SetEnvironmentDetails()
+					.SetMachineName(InetAddress.getLocalHost().getHostName())
+					.SetExceptionDetails(throwable)
+					.SetClientDetails()
+					.SetVersion()	
+					.SetTags(tags)
+					.SetUserCustomData(userCustomData)
 					.Build();
 		}
 		catch (Exception e)

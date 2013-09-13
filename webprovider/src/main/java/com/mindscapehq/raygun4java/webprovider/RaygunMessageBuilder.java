@@ -1,12 +1,11 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import java.net.URL;
+import java.util.AbstractList;
+import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.handler.MessageContext;
-
 import com.mindscapehq.raygun4java.core.messages.RaygunClientMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunEnvironmentMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
@@ -60,6 +59,16 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder, IRaygunHttpM
 	
 	public IRaygunMessageBuilder SetRequestDetails(HttpServletRequest request) {
 		_raygunMessage.getDetails().setRequest(new RaygunRequestMessage(request));
+		return this;
+	}
+	
+	public IRaygunMessageBuilder SetTags(AbstractList<Object> tags) {
+		_raygunMessage.getDetails().setTags(tags);
+		return this;
+	}
+	
+	public IRaygunMessageBuilder SetUserCustomData(Map<Object, Object> customData) {
+		_raygunMessage.getDetails().setUserCustomData(customData);
 		return this;
 	}
 	
