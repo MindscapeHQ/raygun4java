@@ -3,7 +3,7 @@
   <parent>
   	<groupId>com.mindscapehq</groupId>
   	<artifactId>raygun4java</artifactId>
-  	<version>1.2.3-SNAPSHOT</version>
+  	<version>1.2.2-SNAPSHOT</version>
   	<relativePath>../</relativePath>
   </parent>
   <artifactId>webprovider</artifactId>
@@ -26,8 +26,8 @@
   <dependencies>
     <dependency>
  			<groupId>com.mindscapehq</groupId>
- 			<artifactId>core</artifactId>
- 			<version>1.2.2-SNAPSHOT</version>
+ 			<artifactId>core</artifactId> 	
+ 			<version>${project.version}</version>		
  		</dependency>
         <dependency>
 	    	<groupId>javax.servlet</groupId>
