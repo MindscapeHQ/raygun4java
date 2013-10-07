@@ -74,7 +74,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	    String mainClass = main.getClassName ();
 	    	
 	    try {
-	    	Class cl = getClass().getClassLoader().loadClass(mainClass);
+	    	Class<?> cl = getClass().getClassLoader().loadClass(mainClass);
 	    	String className = cl.getSimpleName() + ".class";
 	    	String classPath = cl.getResource(className).toString();
 	    	if (!classPath.startsWith("jar")) {	    	  // 
