@@ -1,23 +1,14 @@
 package com.mindscapehq.raygun4java.core;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.Map;
 
-import javax.management.ReflectionException;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
-import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
 
 /**
