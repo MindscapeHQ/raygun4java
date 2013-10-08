@@ -21,6 +21,7 @@
   </licenses>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <powermock.version>1.5.1</powermock.version>
   </properties>
   <description>The official provider for the Raygun error tracking  service. This core project is plugged in to your desktop, mobile or web application, and performs the actual sending.</description>
   <dependencies>
@@ -33,6 +34,18 @@
 		<groupId>junit</groupId>
 		<artifactId>junit</artifactId>
 		<version>4.11</version>
-	</dependency>		
+	</dependency>
+	<dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+   </dependency>
+   <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+   </dependency>
 </dependencies>
 </project>
