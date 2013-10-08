@@ -30,6 +30,7 @@ class RaygunConnection {
 		
 		HttpURLConnection connection = null;
 		
+		System.getSecurityManager();
 		if (this.raygunSettings.getProxy() != null) {
 			connection = (HttpURLConnection) new URL(this.raygunSettings.getApiEndPoint()).openConnection(this.raygunSettings.getProxy());
 		} else {
