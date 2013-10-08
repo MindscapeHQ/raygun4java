@@ -1,4 +1,4 @@
-package core.mindscapehq.raygun4java.core;
+package com.mindscapehq.raygun4java.core;
 
 import static org.junit.Assert.assertEquals;
 
