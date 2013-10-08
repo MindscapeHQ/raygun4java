@@ -1,23 +1,13 @@
 package com.mindscapehq.raygun4java.core;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.Map;
 
-import javax.management.ReflectionException;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
-import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
 
 /**
@@ -25,11 +15,15 @@ import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
  */
 public class RaygunClient {
 
+	private RaygunConnection raygunConnection;
+	protected void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
+
 	private String _apiKey;
 	
 	public RaygunClient(String apiKey)
 	{
 		_apiKey = apiKey;
+		this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
 	}
 	
 	private Boolean ValidateApiKey() throws Exception
@@ -127,13 +121,7 @@ public class RaygunClient {
 			{ 
 				String jsonPayload = new Gson().toJson(raygunMessage);				
 				
-				HttpURLConnection connection = (HttpURLConnection) new URL(RaygunSettings.GetSettings().getApiEndPoint()).openConnection();
-				
-				connection.setDoOutput(true);
-				connection.setRequestMethod("POST");
-				connection.setRequestProperty("Content-Type", "application/json");
-				connection.setRequestProperty("charset", "utf-8");
-				connection.setRequestProperty("X-ApiKey", _apiKey);
+				HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
 				
 				OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 				writer.write(jsonPayload);
@@ -141,6 +129,7 @@ public class RaygunClient {
 				writer.close();				
 				connection.disconnect();
 				return connection.getResponseCode();
+				
 			}
 		}
 		catch (Exception e)
@@ -149,4 +138,5 @@ public class RaygunClient {
 		}
 		return -1;
 	}
+		
 }

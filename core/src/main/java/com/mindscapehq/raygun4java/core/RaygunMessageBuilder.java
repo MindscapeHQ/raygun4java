@@ -1,9 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.text.AttributedCharacterIterator.Attribute;
 import java.util.AbstractList;
 import java.util.Map;
 import java.util.jar.Attributes;
@@ -77,7 +74,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	    String mainClass = main.getClassName ();
 	    	
 	    try {
-	    	Class cl = getClass().getClassLoader().loadClass(mainClass);
+	    	Class<?> cl = getClass().getClassLoader().loadClass(mainClass);
 	    	String className = cl.getSimpleName() + ".class";
 	    	String classPath = cl.getResource(className).toString();
 	    	if (!classPath.startsWith("jar")) {	    	  // 
