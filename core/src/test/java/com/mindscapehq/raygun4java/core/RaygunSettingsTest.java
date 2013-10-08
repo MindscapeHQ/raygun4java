@@ -23,4 +23,11 @@ public class RaygunSettingsTest {
 		
 	}
 	
+	@Test
+	public void getSettings_OnlySingletonReturned_FirstAndSecondReturnObjectsAreSame() {
+		RaygunSettings raygunSettings1 = RaygunSettings.GetSettings();
+		RaygunSettings raygunSettings2 = RaygunSettings.GetSettings();
+		assertEquals(raygunSettings1, raygunSettings2);
+	}
+	
 }

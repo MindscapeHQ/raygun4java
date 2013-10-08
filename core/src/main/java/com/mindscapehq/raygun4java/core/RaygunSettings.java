@@ -6,7 +6,17 @@ import java.net.Proxy;
 public class RaygunSettings {
 	
 	private RaygunSettings(){}
-	public static RaygunSettings GetSettings(){ return new RaygunSettings(); }
+	
+	private static RaygunSettings raygunSettings;
+	
+	public static synchronized RaygunSettings GetSettings(){ 
+		
+		if (RaygunSettings.raygunSettings == null) {
+			RaygunSettings.raygunSettings = new RaygunSettings(); 
+		}
+		
+		return RaygunSettings.raygunSettings; 
+	}
 	
 	private final String defaultApiEndPoint = "https://api.raygun.io/entries";
 
