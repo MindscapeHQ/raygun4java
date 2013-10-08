@@ -14,17 +14,12 @@ import java.net.URL;
  */
 class RaygunConnection {
 	
+	private RaygunSettings raygunSettings;
+	
 	public RaygunConnection(RaygunSettings raygunSettings) {
 		super();
 		this.raygunSettings = raygunSettings;
 	}
-
-	private RaygunSettings raygunSettings;	
-	public RaygunSettings getRaygunSettings() { return this.raygunSettings; }
-	public void setRaygunSettings(RaygunSettings raygunSettings) {
-		this.raygunSettings = raygunSettings;
-	}
-
 
 	public HttpURLConnection getConnection(String apiKey) throws MalformedURLException, IOException {
 		
