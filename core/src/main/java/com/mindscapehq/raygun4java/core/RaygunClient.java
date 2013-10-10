@@ -16,9 +16,9 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 public class RaygunClient {
 
 	private RaygunConnection raygunConnection;
-	protected void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
+	public void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
 
-	private String _apiKey;
+	protected String _apiKey;
 	
 	public RaygunClient(String apiKey)
 	{
@@ -26,7 +26,7 @@ public class RaygunClient {
 		this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
 	}
 	
-	private Boolean ValidateApiKey() throws Exception
+	protected Boolean ValidateApiKey() throws Exception
 	{
 		if (_apiKey.isEmpty())
 		{

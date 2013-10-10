@@ -8,11 +8,10 @@ import java.net.URL;
 /**
  * Utility class to provide HttpUrlConnections that are used to communicate
  * with the Raygun servers.
- * 
- * This class is only visible to the package.
+ *
  *
  */
-class RaygunConnection {
+public class RaygunConnection {
 	
 	private RaygunSettings raygunSettings;
 	
