@@ -1,7 +1,7 @@
 package com.mindscapehq.raygun4java.core.messages;
 
 import java.util.AbstractList;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class RaygunMessageDetails {
@@ -11,8 +11,8 @@ public class RaygunMessageDetails {
 	private RaygunErrorMessage error;	
 	private RaygunEnvironmentMessage environment;
 	private RaygunClientMessage client;
-	private AbstractList<Object> tags;
-	private Map<Object, Object> userCustomData;
+	private List<?> tags;
+	private Map<?, ?> userCustomData;
 	
 	public String getMachineName() {
 		return machineName;
@@ -44,16 +44,16 @@ public class RaygunMessageDetails {
 	public void setClient(RaygunClientMessage client) {
 		this.client = client;
 	}
-	public AbstractList<Object> getTags() {
+	public List<?> getTags() {
 		return tags;
 	}
-	public void setTags(AbstractList<Object> tags) {
+	public void setTags(List<?> tags) {
 		this.tags = tags;
 	}
-	public void setUserCustomData(Map<Object, Object> userCustomData) {
+	public void setUserCustomData(Map<?, ?> userCustomData) {
 		this.userCustomData = userCustomData;		
 	}
-	public Map<Object, Object> getUserCustomData() {
+	public Map<?, ?> getUserCustomData() {
 		return this.userCustomData;
 	}	
 }

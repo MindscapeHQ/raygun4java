@@ -4,6 +4,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.util.AbstractList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -44,12 +45,12 @@ public class RaygunClient {
 		return Post(BuildMessage(throwable));
 	}
 	
-	public int Send(Throwable throwable, AbstractList<Object> tags)
+	public int Send(Throwable throwable, List<?> tags)
 	{		
 		return Post(BuildMessage(throwable, tags));
 	}
 	
-	public int Send(Throwable throwable, AbstractList<Object> tags, Map<Object, Object> userCustomData)
+	public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
 	{	
 		return Post(BuildMessage(throwable, tags, userCustomData));
 	}
@@ -73,7 +74,7 @@ public class RaygunClient {
 		return null;
 	}
 	
-	private RaygunMessage BuildMessage(Throwable throwable, AbstractList<Object> tags)
+	private RaygunMessage BuildMessage(Throwable throwable, List<?> tags)
 	{
 		try
 		{
@@ -93,7 +94,7 @@ public class RaygunClient {
 		return null;
 	}
 	
-	private RaygunMessage BuildMessage(Throwable throwable, AbstractList<Object> tags, Map<Object, Object> userCustomData)
+	private RaygunMessage BuildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
 	{
 		try
 		{

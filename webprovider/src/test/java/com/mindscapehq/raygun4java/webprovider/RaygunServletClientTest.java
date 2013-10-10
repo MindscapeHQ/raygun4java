@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +55,34 @@ public class RaygunServletClientTest
     when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
 
     assertEquals(202, this.raygunClient.Send(new Exception()));
+  }
+
+  @Test
+  public void send_WithTags_Returns202() throws MalformedURLException, IOException
+  {
+    HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+    when(httpURLConnection.getResponseCode()).thenReturn(202);
+    when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+    when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
+
+    List<String> tags = new ArrayList<String>();
+    tags.add("test");
+    assertEquals(202, this.raygunClient.Send(new Exception(), tags));
+  }
+
+  @Test
+  public void send_WithTagsAndCustomData_Returns202() throws MalformedURLException, IOException
+  {
+    HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+    when(httpURLConnection.getResponseCode()).thenReturn(202);
+    when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+    when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
+
+    List<String> tags = new ArrayList<String>();
+    tags.add("a_tag");
+    Map<Integer, String> customData = new HashMap<Integer, String>();
+    customData.put(0, "zero");
+    assertEquals(202, this.raygunClient.Send(new Exception(), tags, customData));
   }
 
 }
