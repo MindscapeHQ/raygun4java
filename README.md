@@ -91,6 +91,10 @@ When an exception is thrown from another JSP, this page will take care of the se
 
 Note: all Java dynamic web page projects must have core-1.2.1.jar, webprovider-1.2.1.jar and gson-2.1.jar on their build path.
 
+## Troubleshooting
+
+- When Maven runs the tests locally, Surefire might complain of unsupported major.minor version 51.0 - ensure you have JDK 7 set as your JAVA_HOME, or set the plugin goal for maven-surefire-plugin to be `<configuration><jvm>${env.your_jre_7_home}/bin/java.exe</jvm></configuration>` in the parent pom.
+
 Changelog
 ---------
 
