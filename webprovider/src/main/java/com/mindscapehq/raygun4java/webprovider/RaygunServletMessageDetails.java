@@ -1,9 +1,6 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import java.util.AbstractList;
-import java.util.Map;
-
-import com.mindscapehq.raygun4java.core.messages.*;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
 
 public class RaygunServletMessageDetails extends RaygunMessageDetails {
 

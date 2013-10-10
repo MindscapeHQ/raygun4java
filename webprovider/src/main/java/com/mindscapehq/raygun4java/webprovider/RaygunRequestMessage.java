@@ -2,6 +2,7 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,11 +26,15 @@ public class RaygunRequestMessage {
 		  ipAddress = request.getRemoteAddr();
 		  hostName = request.getRemoteHost();
 		  url = request.getRequestURI();
-		  queryString = QueryStringToMap(request.getQueryString());
+      String qS = request.getQueryString();
+      if (qS != null)
+      {
+        queryString = QueryStringToMap(qS);
+      }
     }
     catch (NullPointerException e)
     {
-      System.out.println("Raygun4Java: Error when parsing request msg: " + e);
+      Logger.getLogger("Raygun4Java").info("Couldn't get all request params: " + e.getMessage());
     }
 	}
 	

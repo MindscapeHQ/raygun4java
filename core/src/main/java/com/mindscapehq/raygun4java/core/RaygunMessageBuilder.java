@@ -5,6 +5,7 @@ import java.util.AbstractList;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+import java.util.logging.Logger;
 
 import com.mindscapehq.raygun4java.core.messages.RaygunClientMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunEnvironmentMessage;
@@ -87,7 +88,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	    	return attr.getValue("Implementation-Version");
 		
 		} catch (Exception e) {
-		  System.err.println("Raygun4Java: Can't read version from manifest");
+        Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
 		}
 		return null;
 	}

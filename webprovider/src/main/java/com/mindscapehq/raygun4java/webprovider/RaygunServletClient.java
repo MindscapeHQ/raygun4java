@@ -1,19 +1,13 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Map;
+import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
-
-import com.google.gson.Gson;
-import com.mindscapehq.raygun4java.core.RaygunClient;
-import com.mindscapehq.raygun4java.core.RaygunSettings;
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import java.net.InetAddress;
+import java.util.AbstractList;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * This client is the main sending object for servlet/JSP environments
@@ -48,7 +42,7 @@ public class RaygunServletClient extends RaygunClient
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
@@ -63,7 +57,7 @@ public class RaygunServletClient extends RaygunClient
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
@@ -78,7 +72,7 @@ public class RaygunServletClient extends RaygunClient
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}

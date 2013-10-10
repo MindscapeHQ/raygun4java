@@ -2,10 +2,6 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
-
 public class RaygunServletMessage extends RaygunMessage
 {
 	

@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.util.AbstractList;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
@@ -67,7 +68,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
@@ -87,7 +88,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
@@ -108,7 +109,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
@@ -134,7 +135,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Couldn't post exception - " + e.getMessage());
+      Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + e.getMessage());
 		}
 		return -1;
 	}
