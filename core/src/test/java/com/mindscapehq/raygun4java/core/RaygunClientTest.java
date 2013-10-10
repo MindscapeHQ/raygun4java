@@ -37,14 +37,14 @@ public class RaygunClientTest {
 	}
 	
 	@Test
-	public void post_ValidResponse_Returns200() throws MalformedURLException, IOException {
+	public void post_ValidResponse_Returns202() throws MalformedURLException, IOException {
 		
 		HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);		
-		when(httpURLConnection.getResponseCode()).thenReturn(200);
+		when(httpURLConnection.getResponseCode()).thenReturn(202);
 		when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
 		when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
 		
-		assertEquals(200, this.raygunClient.Send(new Exception()));
+		assertEquals(202, this.raygunClient.Send(new Exception()));
 		
 	}
 	
