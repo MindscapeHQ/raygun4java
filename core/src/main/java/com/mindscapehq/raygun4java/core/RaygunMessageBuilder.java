@@ -14,7 +14,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 
-	private RaygunMessage _raygunMessage;
+	protected RaygunMessage _raygunMessage;
 	
 	public RaygunMessageBuilder()
 	{

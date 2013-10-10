@@ -7,9 +7,9 @@ import java.net.URL;
 
 /**
  * Utility class to provide HttpUrlConnections that are used to communicate
- * with the Raygun servers.
+ * with the Raygun API.
  *
- *
+ * This class is public for testing purposes; you shouldn't need to use this directly
  */
 public class RaygunConnection {
 	

@@ -18,12 +18,19 @@ public class RaygunRequestMessage {
 	private String rawData;	
 	
 	public RaygunRequestMessage(HttpServletRequest request)
-	{			
-		httpMethod = request.getMethod();
-		ipAddress = request.getRemoteAddr();
-		hostName = request.getRemoteHost();
-		url = request.getRequestURI();
-		queryString = QueryStringToMap(request.getQueryString());
+	{
+    try
+    {
+		  httpMethod = request.getMethod();
+		  ipAddress = request.getRemoteAddr();
+		  hostName = request.getRemoteHost();
+		  url = request.getRequestURI();
+		  queryString = QueryStringToMap(request.getQueryString());
+    }
+    catch (NullPointerException e)
+    {
+      System.out.println("Raygun4Java: Error when parsing request msg: " + e);
+    }
 	}
 	
 	public Map QueryStringToMap(String query)

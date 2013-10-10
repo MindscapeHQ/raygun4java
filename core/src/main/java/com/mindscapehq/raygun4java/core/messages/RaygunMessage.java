@@ -7,8 +7,8 @@ import java.util.TimeZone;
 
 public class RaygunMessage {
 	
-	private String occurredOn;	
-	private RaygunMessageDetails details;
+	protected String occurredOn;
+	protected RaygunMessageDetails details;
 	
 	public RaygunMessage()
 	{
