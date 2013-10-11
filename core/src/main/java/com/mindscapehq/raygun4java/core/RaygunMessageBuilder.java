@@ -67,6 +67,12 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 		_raygunMessage.getDetails().setUserCustomData(userCustomData);
 		return this;
 	}
+
+  public IRaygunMessageBuilder SetUser(String user)
+  {
+    _raygunMessage.getDetails().setUser(user);
+    return this;
+  }
 	
 	private String ReadVersion()
 	{

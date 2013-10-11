@@ -20,8 +20,10 @@ public class RaygunClient {
 	public void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
 
 	protected String _apiKey;
-	
-	public RaygunClient(String apiKey)
+  protected String _user;
+  protected String _context;
+
+  public RaygunClient(String apiKey)
 	{
 		_apiKey = apiKey;
 		this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
@@ -38,6 +40,11 @@ public class RaygunClient {
 			return true;	
 		}		
 	}
+
+  public void SetUser(String user)
+  {
+    _user = user;
+  }
 	
 	public int Send(Throwable throwable)
 	{
@@ -63,7 +70,8 @@ public class RaygunClient {
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
-					.SetVersion()					
+					.SetVersion()
+          .SetUser(_user)
 					.Build();
 		}
 		catch (Exception e)
@@ -84,6 +92,7 @@ public class RaygunClient {
 					.SetClientDetails()
 					.SetVersion()	
 					.SetTags(tags)
+          .SetUser(_user)
 					.Build();
 		}
 		catch (Exception e)
@@ -105,6 +114,7 @@ public class RaygunClient {
 					.SetVersion()	
 					.SetTags(tags)
 					.SetUserCustomData(userCustomData)
+          .SetUser(_user)
 					.Build();
 		}
 		catch (Exception e)

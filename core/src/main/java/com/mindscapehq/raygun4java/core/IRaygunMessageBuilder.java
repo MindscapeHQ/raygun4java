@@ -22,4 +22,6 @@ public interface IRaygunMessageBuilder {
     IRaygunMessageBuilder SetTags(List<?> tags);
     
     IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData);
+
+  IRaygunMessageBuilder SetUser(String user);
 }

@@ -12,6 +12,7 @@ public class RaygunMessageDetails {
 	private RaygunClientMessage client;
 	private List<?> tags;
 	private Map<?, ?> userCustomData;
+  private RaygunIdentifier user;
 	
 	public String getMachineName() {
 		return machineName;
@@ -54,5 +55,17 @@ public class RaygunMessageDetails {
 	}
 	public Map<?, ?> getUserCustomData() {
 		return this.userCustomData;
-	}	
+	}
+  public String getUser()
+  {
+    return user.getIdentifier();
+  }
+  public void setUser(String user)
+  {
+    if (this.user == null)
+    {
+      this.user = new RaygunIdentifier();
+    }
+    this.user.setIdentifier(user);
+  }
 }
