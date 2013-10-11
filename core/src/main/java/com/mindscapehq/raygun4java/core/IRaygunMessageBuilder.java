@@ -1,9 +1,9 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+
 import java.util.List;
 import java.util.Map;
-
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 public interface IRaygunMessageBuilder {
 

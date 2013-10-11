@@ -1,8 +1,8 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements IRaygunHttpMessageBuilder {
 

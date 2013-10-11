@@ -1,9 +1,10 @@
 package com.mindscapehq.raygun4java.sampleapp;
+
+import com.mindscapehq.raygun4java.core.RaygunClient;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.mindscapehq.raygun4java.core.*;
 
 public class SampleApp {
 

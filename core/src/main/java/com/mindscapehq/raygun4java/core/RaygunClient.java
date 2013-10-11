@@ -1,15 +1,14 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.google.gson.Gson;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.util.AbstractList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import com.google.gson.Gson;
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 
 /**

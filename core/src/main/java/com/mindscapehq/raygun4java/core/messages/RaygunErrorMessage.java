@@ -1,7 +1,5 @@
 package com.mindscapehq.raygun4java.core.messages;
 
-import java.util.Dictionary;
-
 public class RaygunErrorMessage {
 
 	private RaygunErrorMessage innerError;		

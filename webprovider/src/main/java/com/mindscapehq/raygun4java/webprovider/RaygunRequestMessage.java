@@ -1,10 +1,9 @@
 package com.mindscapehq.raygun4java.webprovider;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class RaygunRequestMessage {
 

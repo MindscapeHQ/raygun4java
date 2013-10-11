@@ -1,6 +1,5 @@
 package com.mindscapehq.raygun4java.core.messages;
 
-import java.util.AbstractList;
 import java.util.List;
 import java.util.Map;
 

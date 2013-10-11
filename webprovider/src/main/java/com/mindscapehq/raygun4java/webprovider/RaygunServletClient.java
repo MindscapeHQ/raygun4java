@@ -5,7 +5,6 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
-import java.util.AbstractList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
