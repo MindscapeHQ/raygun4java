@@ -23,12 +23,26 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
+    	<version>1.2.4</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.2.1</version>
+    	<version>1.2.4</version>
     </dependency>
+</dependencies>
+```
+
+*POM for Web Projects*
+
+If you're using servlets, JSPs or similar, you'll need to also add:
+
+```
+<dependency>
+    <groupId>com.mindscapehq</groupId>
+    <artifactId>webprovider</artifactId>
+    <version>1.2.4</version>
+</dependency>
 ```
 
 Again, if you are in a web environment, you will also need to add a dependency node for the `webprovider` package.
@@ -78,10 +92,10 @@ Inside web.xml
 Inside error.jsp
 ```jsp
 <%@ page isErrorPage="true" %>
-<%@ page import="mindscape.raygun4java.servlet.RaygunClient" %>
+<%@ page import="com.mindscapehq.raygun4java.webprovider.RaygunServletClient" %>
 
 <% 
-RaygunClient client = new RaygunClient("YOUR_APP_API_KEY", request);
+RaygunServletClient client = new RaygunServletClient("YOUR_APP_API_KEY", request);
 
 client.Send(exception);    
 %>
@@ -89,7 +103,13 @@ client.Send(exception);
 
 When an exception is thrown from another JSP, this page will take care of the sending.
 
-Note: all Java dynamic web page projects must have core-1.2.1.jar, webprovider-1.2.1.jar and gson-2.1.jar on their build path.
+Note: all Java dynamic web page projects should have core-1.2.*.jar, webprovider-1.2.*.jar and gson-2.1.jar on their classpath.
+
+## Documentation
+
+### Unique user tracking
+
+TODO
 
 ## Troubleshooting
 
@@ -97,6 +117,8 @@ Note: all Java dynamic web page projects must have core-1.2.1.jar, webprovider-1
 
 Changelog
 ---------
+
+Version 1.2.4: Refactored webprovider package; added SetUser method for unique user tracking; added authenticated proxy support.
 
 Version 1.2.3: Added tags and user custom data method overloads for Send. See usage in the updated Sampleapp class.
 
