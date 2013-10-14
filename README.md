@@ -109,7 +109,7 @@ Note: all Java dynamic web page projects should have core-1.2.*.jar, webprovider
 
 ### Unique user tracking
 
-TODO
+You can call client.SetUser(string), where the string parameter is the username or email address of the current user of the calling application. This will be attached to the message and visible in the dashboard. This method is optional, if you do not call this user tracking will not be enabled. If you use this, and the user changes (log in/out), be sure to call it again passing in the new user.
 
 ## Troubleshooting
 
