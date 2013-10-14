@@ -38,6 +38,7 @@ public class RaygunServletClient extends RaygunClient
             .SetExceptionDetails(throwable)
             .SetClientDetails()
             .SetVersion()
+            .SetUser(_user)
             .Build();
 		}
 		catch (Exception e)
@@ -53,6 +54,13 @@ public class RaygunServletClient extends RaygunClient
 		{
 			return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
+            .SetEnvironmentDetails()
+            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetExceptionDetails(throwable)
+            .SetClientDetails()
+            .SetVersion()
+            .SetUser(_user)
+            .SetTags(tags)
 					  .Build();
 		}
 		catch (Exception e)
@@ -68,6 +76,14 @@ public class RaygunServletClient extends RaygunClient
 		{
 			return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
+            .SetEnvironmentDetails()
+            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetExceptionDetails(throwable)
+            .SetClientDetails()
+            .SetVersion()
+            .SetUser(_user)
+            .SetTags(tags)
+            .SetUserCustomData(userCustomData)
 					  .Build();
 		}
 		catch (Exception e)

@@ -1,7 +1,7 @@
 raygun4java
 ===========
 
-Version 1.2.3
+Version 1.2.4
 
 This provider is now a Maven package; see the changelog below.
 

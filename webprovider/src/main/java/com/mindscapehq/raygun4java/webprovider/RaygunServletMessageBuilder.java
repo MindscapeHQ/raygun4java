@@ -27,7 +27,7 @@ public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements
     _raygunServletMessage.getDetails().setVersion(_raygunMessage.getDetails().getVersion());
     _raygunServletMessage.getDetails().setTags(_raygunMessage.getDetails().getTags());
     _raygunServletMessage.getDetails().setUserCustomData(_raygunMessage.getDetails().getUserCustomData());
-
+    _raygunServletMessage.getDetails().setUser(_raygunMessage.getDetails().getUser());
     return _raygunServletMessage;
   }
 	
