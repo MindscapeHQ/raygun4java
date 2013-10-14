@@ -2,6 +2,7 @@ package com.mindscapehq.raygun4java.core.messages;
 
 import java.awt.*;
 import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -27,26 +28,22 @@ public class RaygunEnvironmentMessage {
 	{
 		try {			
 			OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
-			com.sun.management.OperatingSystemMXBean sunMxBean = (com.sun.management.OperatingSystemMXBean) osMXBean;
 			
-			architecture = sunMxBean.getArch();				
+			architecture = osMXBean.getArch();
 			processorCount = Runtime.getRuntime().availableProcessors();
 			
 			windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 			windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-			locale = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();	
-			
+			locale = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();
 			utcOffset = TimeZone.getDefault().getRawOffset() / 3600000.0;
-			
-			availablePhysicalMemory = sunMxBean.getFreePhysicalMemorySize();
-			totalPhysicalMemory = sunMxBean.getTotalPhysicalMemorySize();
-			totalVirtualMemory = sunMxBean.getTotalSwapSpaceSize();
-			availableVirtualMemory = sunMxBean.getFreeSwapSpaceSize();
-			
-			processorCount = sunMxBean.getAvailableProcessors();
+
+      MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+
+      totalVirtualMemory = memBean.getHeapMemoryUsage().getMax() + memBean.getNonHeapMemoryUsage().getMax();
+      availableVirtualMemory = memBean.getHeapMemoryUsage().getUsed() + memBean.getNonHeapMemoryUsage().getUsed();
 			
 			// This to be refactored when we have a Map to put the info into
-			osVersion = sunMxBean.getName() + " - " +sunMxBean.getVersion();
+			osVersion = osMXBean.getName() + " - " + osMXBean.getVersion();
 			
 		} catch (Exception e) { 
 		}
