@@ -52,7 +52,15 @@
             </goals>
           </execution>
         </executions>
-      </plugin>       
+      </plugin>     
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.13</version>
+        <configuration>        
+          <jvm>${env.JAVA_HOME_7}</jvm>
+        </configuration>
+      </plugin>   
     </plugins>
   </build>
     <dependencies>
