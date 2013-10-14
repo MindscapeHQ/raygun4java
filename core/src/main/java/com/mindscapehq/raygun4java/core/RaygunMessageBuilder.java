@@ -1,20 +1,21 @@
 package com.mindscapehq.raygun4java.core;
 
-import java.net.URL;
-import java.util.AbstractList;
-import java.util.Map;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
 import com.mindscapehq.raygun4java.core.messages.RaygunClientMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunEnvironmentMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.logging.Logger;
+
 
 public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 
-	private RaygunMessage _raygunMessage;
+	protected RaygunMessage _raygunMessage;
 	
 	public RaygunMessageBuilder()
 	{
@@ -57,15 +58,21 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 		return this;
 	}
 	
-	public IRaygunMessageBuilder SetTags(AbstractList<Object> tags) {
+	public IRaygunMessageBuilder SetTags(List<?> tags) {
 		_raygunMessage.getDetails().setTags(tags);
 		return this;
 	}
 
-	public IRaygunMessageBuilder SetUserCustomData(Map<Object, Object> userCustomData) {
+	public IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData) {
 		_raygunMessage.getDetails().setUserCustomData(userCustomData);
 		return this;
 	}
+
+  public IRaygunMessageBuilder SetUser(String user)
+  {
+    _raygunMessage.getDetails().setUser(user);
+    return this;
+  }
 	
 	private String ReadVersion()
 	{
@@ -87,7 +94,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	    	return attr.getValue("Implementation-Version");
 		
 		} catch (Exception e) {
-		  System.err.println("Raygun4Java: Can't read version from manifest");
+        Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
 		}
 		return null;
 	}

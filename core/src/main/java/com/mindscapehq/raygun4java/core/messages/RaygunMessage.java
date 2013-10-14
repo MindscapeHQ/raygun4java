@@ -2,13 +2,12 @@ package com.mindscapehq.raygun4java.core.messages;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 public class RaygunMessage {
 	
-	private String occurredOn;	
-	private RaygunMessageDetails details;
+	protected String occurredOn;
+	protected RaygunMessageDetails details;
 	
 	public RaygunMessage()
 	{

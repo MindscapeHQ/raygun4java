@@ -1,13 +1,10 @@
 package com.mindscapehq.raygun4java.core.messages;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.util.TimeZone;
 import java.util.Locale;
-
-import javax.activity.ActivityCompletedException;
+import java.util.TimeZone;
 
 public class RaygunEnvironmentMessage {
 

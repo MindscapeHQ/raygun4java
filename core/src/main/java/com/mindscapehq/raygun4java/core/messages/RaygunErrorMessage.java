@@ -1,7 +1,5 @@
 package com.mindscapehq.raygun4java.core.messages;
 
-import java.util.Dictionary;
-
 public class RaygunErrorMessage {
 
 	private RaygunErrorMessage innerError;		
@@ -11,7 +9,12 @@ public class RaygunErrorMessage {
 
 	public RaygunErrorMessage(Throwable throwable)
 	{		
-		message = throwable.getClass().getSimpleName() + ": " + throwable.getMessage();
+		message = throwable.getClass().getSimpleName();
+    String throwableMessage =  throwable.getMessage();
+    if (throwableMessage != null)
+    {
+      message = message.concat(": ").concat(throwableMessage);
+    }
 		className = throwable.getClass().getCanonicalName();
 		
 		if (throwable.getCause() != null)
