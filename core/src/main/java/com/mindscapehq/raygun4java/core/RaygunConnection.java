@@ -7,12 +7,11 @@ import java.net.URL;
 
 /**
  * Utility class to provide HttpUrlConnections that are used to communicate
- * with the Raygun servers.
- * 
- * This class is only visible to the package.
+ * with the Raygun API.
  *
+ * This class is public for testing purposes; you shouldn't need to use this directly
  */
-class RaygunConnection {
+public class RaygunConnection {
 	
 	private RaygunSettings raygunSettings;
 	

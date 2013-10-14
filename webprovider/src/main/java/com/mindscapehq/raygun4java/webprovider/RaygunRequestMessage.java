@@ -1,9 +1,9 @@
 package com.mindscapehq.raygun4java.webprovider;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.logging.Logger;
 
 public class RaygunRequestMessage {
 
@@ -18,12 +18,23 @@ public class RaygunRequestMessage {
 	private String rawData;	
 	
 	public RaygunRequestMessage(HttpServletRequest request)
-	{			
-		httpMethod = request.getMethod();
-		ipAddress = request.getRemoteAddr();
-		hostName = request.getRemoteHost();
-		url = request.getRequestURI();
-		queryString = QueryStringToMap(request.getQueryString());
+	{
+    try
+    {
+		  httpMethod = request.getMethod();
+		  ipAddress = request.getRemoteAddr();
+		  hostName = request.getRemoteHost();
+		  url = request.getRequestURI();
+      String qS = request.getQueryString();
+      if (qS != null)
+      {
+        queryString = QueryStringToMap(qS);
+      }
+    }
+    catch (NullPointerException e)
+    {
+      Logger.getLogger("Raygun4Java").info("Couldn't get all request params: " + e.getMessage());
+    }
 	}
 	
 	public Map QueryStringToMap(String query)

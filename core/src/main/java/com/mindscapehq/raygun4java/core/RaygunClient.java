@@ -1,13 +1,14 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.google.gson.Gson;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.util.AbstractList;
+import java.util.List;
 import java.util.Map;
-
-import com.google.gson.Gson;
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import java.util.logging.Logger;
 
 
 /**
@@ -16,17 +17,19 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 public class RaygunClient {
 
 	private RaygunConnection raygunConnection;
-	protected void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
+	public void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
 
-	private String _apiKey;
-	
-	public RaygunClient(String apiKey)
+	protected String _apiKey;
+  protected String _user;
+  protected String _context;
+
+  public RaygunClient(String apiKey)
 	{
 		_apiKey = apiKey;
 		this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
 	}
 	
-	private Boolean ValidateApiKey() throws Exception
+	protected Boolean ValidateApiKey() throws Exception
 	{
 		if (_apiKey.isEmpty())
 		{
@@ -37,18 +40,23 @@ public class RaygunClient {
 			return true;	
 		}		
 	}
+
+  public void SetUser(String user)
+  {
+    _user = user;
+  }
 	
 	public int Send(Throwable throwable)
 	{
 		return Post(BuildMessage(throwable));
 	}
 	
-	public int Send(Throwable throwable, AbstractList<Object> tags)
+	public int Send(Throwable throwable, List<?> tags)
 	{		
 		return Post(BuildMessage(throwable, tags));
 	}
 	
-	public int Send(Throwable throwable, AbstractList<Object> tags, Map<Object, Object> userCustomData)
+	public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
 	{	
 		return Post(BuildMessage(throwable, tags, userCustomData));
 	}
@@ -62,17 +70,18 @@ public class RaygunClient {
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
-					.SetVersion()					
+					.SetVersion()
+          .SetUser(_user)
 					.Build();
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
 	
-	private RaygunMessage BuildMessage(Throwable throwable, AbstractList<Object> tags)
+	private RaygunMessage BuildMessage(Throwable throwable, List<?> tags)
 	{
 		try
 		{
@@ -83,16 +92,17 @@ public class RaygunClient {
 					.SetClientDetails()
 					.SetVersion()	
 					.SetTags(tags)
+          .SetUser(_user)
 					.Build();
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
 	
-	private RaygunMessage BuildMessage(Throwable throwable, AbstractList<Object> tags, Map<Object, Object> userCustomData)
+	private RaygunMessage BuildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
 	{
 		try
 		{
@@ -104,11 +114,12 @@ public class RaygunClient {
 					.SetVersion()	
 					.SetTags(tags)
 					.SetUserCustomData(userCustomData)
+          .SetUser(_user)
 					.Build();
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Failed to build RaygunMessage - " + e);
+      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
@@ -134,7 +145,7 @@ public class RaygunClient {
 		}
 		catch (Exception e)
 		{
-			System.err.println("Raygun4Java: Couldn't post exception - " + e.getMessage());
+      Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + e.getMessage());
 		}
 		return -1;
 	}
