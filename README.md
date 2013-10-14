@@ -1,7 +1,7 @@
 raygun4java
 ===========
 
-Version 1.2.4
+Version 1.2.5
 
 This provider is now a Maven package; see the changelog below.
 
@@ -117,6 +117,8 @@ You can call client.SetUser(string), where the string parameter is the username 
 
 Changelog
 ---------
+
+Version 1.2.5: Fix a bug where the package used to populate the environment data was not available in certain runtime environments (OSGi, some JVMs)
 
 Version 1.2.4: Refactored webprovider package; added SetUser method for unique user tracking; added authenticated proxy support.
 
