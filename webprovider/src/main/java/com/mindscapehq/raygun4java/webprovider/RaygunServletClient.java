@@ -24,7 +24,29 @@ public class RaygunServletClient extends RaygunClient
 
   public int Send(Throwable throwable)
   {
-    return Post(BuildServletMessage(throwable));
+    if (throwable != null)
+    {
+      return Post(BuildServletMessage(throwable));
+    }
+    return -1;
+  }
+
+  public int Send(Throwable throwable, List<?> tags)
+  {
+    if (throwable != null)
+    {
+      return Post(BuildServletMessage(throwable));
+    }
+    return -1;
+  }
+
+  public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
+  {
+    if (throwable != null)
+    {
+      return Post(BuildServletMessage(throwable));
+    }
+    return -1;
   }
 
 	private RaygunMessage BuildServletMessage(Throwable throwable)
