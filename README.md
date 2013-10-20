@@ -10,7 +10,7 @@ This provider is now a Maven package; see the changelog below.
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add com.mindscape.raygun4java and com.mindscapehq.core, version 1.2.4. If you are working in a web environment, get the webprovider jar too. If you wish to grab the example project, you can also get the sampleapp jar.
+2. Add com.mindscape.raygun4java and com.mindscapehq.core, version 1.2.5. If you are working in a web environment, get the webprovider jar too. If you wish to grab the example project, you can also get the sampleapp jar.
 3. Save your POM, and the dependencies should appear in Maven Dependencies.
 
 If you are in a shell/text editor environment, you can run `mvn install` from the directory containing your project's pom.xml.
