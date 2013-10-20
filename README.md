@@ -23,12 +23,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.2.4</version>
+    	<version>1.2.5</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.2.4</version>
+    	<version>1.2.5</version>
     </dependency>
 </dependencies>
 ```
@@ -41,7 +41,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 </dependency>
 ```
 
