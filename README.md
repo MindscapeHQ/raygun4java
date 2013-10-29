@@ -1,7 +1,7 @@
 raygun4java
 ===========
 
-Version 1.2.5
+Version 1.2.6
 
 This provider is now a Maven package; see the changelog below.
 
@@ -10,7 +10,7 @@ This provider is now a Maven package; see the changelog below.
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add com.mindscape.raygun4java and com.mindscapehq.core, version 1.2.5. If you are working in a web environment, get the webprovider jar too. If you wish to grab the example project, you can also get the sampleapp jar.
+2. Add com.mindscape.raygun4java and com.mindscapehq.core, version 1.2.6. If you are working in a web environment, get the webprovider jar too. If you wish to grab the example project, you can also get the sampleapp jar.
 3. Save your POM, and the dependencies should appear in Maven Dependencies.
 
 If you are in a shell/text editor environment, you can run `mvn install` from the directory containing your project's pom.xml.
@@ -23,12 +23,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.2.5</version>
+    	<version>1.2.6</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.2.5</version>
+    	<version>1.2.6</version>
     </dependency>
 </dependencies>
 ```
@@ -41,7 +41,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
 </dependency>
 ```
 
@@ -111,12 +111,20 @@ Note: all Java dynamic web page projects should have core-1.2.*.jar, webprovider
 
 You can call client.SetUser(string), where the string parameter is the username or email address of the current user of the calling application. This will be attached to the message and visible in the dashboard. This method is optional, if you do not call this user tracking will not be enabled. If you use this, and the user changes (log in/out), be sure to call it again passing in the new user.
 
+### Version tracking
+
+Raygun4Java reads the version of your application from your manifest.mf file in the calling package. It first attempts to read this from Specification-Version, then Implementation-Version if the first doesn't exist.
+
+In 1.2.6, a SetVersion(string) method was added to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
+
 ## Troubleshooting
 
 - When Maven runs the tests locally, Surefire might complain of unsupported major.minor version 51.0 - ensure you have JDK 7 set as your JAVA_HOME, or set the plugin goal for maven-surefire-plugin to be `<configuration><jvm>${env.your_jre_7_home}/bin/java.exe</jvm></configuration>` in the parent pom.
 
 Changelog
 ---------
+
+Version 1.2.6: Version now automatically reads Specification-Version then Implementation-Version in manifest, and provided method for manually specifying version
 
 Version 1.2.5: Fix a bug where the package used to populate the environment data was not available in certain runtime environments (OSGi, some JVMs)
 

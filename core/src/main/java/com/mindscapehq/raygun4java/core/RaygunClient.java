@@ -22,6 +22,7 @@ public class RaygunClient {
 	protected String _apiKey;
   protected String _user;
   protected String _context;
+  protected String _version = null;
 
   public RaygunClient(String apiKey)
 	{
@@ -44,6 +45,11 @@ public class RaygunClient {
   public void SetUser(String user)
   {
     _user = user;
+  }
+
+  public void SetVersion(String version)
+  {
+    _version = version;
   }
 	
 	public int Send(Throwable throwable)
@@ -70,7 +76,7 @@ public class RaygunClient {
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
-					.SetVersion()
+					.SetVersion(_version)
           .SetUser(_user)
 					.Build();
 		}
@@ -90,7 +96,7 @@ public class RaygunClient {
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
-					.SetVersion()	
+					.SetVersion(_version)
 					.SetTags(tags)
           .SetUser(_user)
 					.Build();
@@ -111,7 +117,7 @@ public class RaygunClient {
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
-					.SetVersion()	
+					.SetVersion(_version)
 					.SetTags(tags)
 					.SetUserCustomData(userCustomData)
           .SetUser(_user)

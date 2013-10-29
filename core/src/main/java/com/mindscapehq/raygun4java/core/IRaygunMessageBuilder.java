@@ -17,7 +17,7 @@ public interface IRaygunMessageBuilder {
 
     IRaygunMessageBuilder SetEnvironmentDetails();
 
-    IRaygunMessageBuilder SetVersion();
+    IRaygunMessageBuilder SetVersion(String version);
     
     IRaygunMessageBuilder SetTags(List<?> tags);
     

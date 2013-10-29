@@ -59,7 +59,7 @@ public class RaygunServletClient extends RaygunClient
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
-            .SetVersion()
+            .SetVersion(_version)
             .SetUser(_user)
             .Build();
 		}
@@ -80,7 +80,7 @@ public class RaygunServletClient extends RaygunClient
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
-            .SetVersion()
+            .SetVersion(_version)
             .SetUser(_user)
             .SetTags(tags)
 					  .Build();
@@ -102,7 +102,7 @@ public class RaygunServletClient extends RaygunClient
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
-            .SetVersion()
+            .SetVersion(_version)
             .SetUser(_user)
             .SetTags(tags)
             .SetUserCustomData(userCustomData)

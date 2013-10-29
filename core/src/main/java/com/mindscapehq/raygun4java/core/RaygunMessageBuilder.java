@@ -51,12 +51,17 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 		return this;
 	}
 
-	public IRaygunMessageBuilder SetVersion() {		
-		// TODO
-		
-		_raygunMessage.getDetails().setVersion(ReadVersion());
-		return this;
-	}
+  public IRaygunMessageBuilder SetVersion(String version) {
+    if (version != null)
+    {
+      _raygunMessage.getDetails().setVersion(version);
+    }
+    else
+    {
+      _raygunMessage.getDetails().setVersion(ReadVersion());
+    }
+    return this;
+  }
 	
 	public IRaygunMessageBuilder SetTags(List<?> tags) {
 		_raygunMessage.getDetails().setTags(tags);
@@ -84,18 +89,25 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 	    	Class<?> cl = getClass().getClassLoader().loadClass(mainClass);
 	    	String className = cl.getSimpleName() + ".class";
 	    	String classPath = cl.getResource(className).toString();
-	    	if (!classPath.startsWith("jar")) {	    	  // 
+	    	if (!classPath.startsWith("jar")) {
 	    	  return null;
 	    	}
 	    	String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +  "/META-INF/MANIFEST.MF";
 	    	Manifest manifest = new Manifest(new URL(manifestPath).openStream());
-	    	Attributes attr = manifest.getMainAttributes();	    	
-		  
-	    	return attr.getValue("Implementation-Version");
+	    	Attributes attr = manifest.getMainAttributes();
+
+        if (attr.getValue("Specification-Version") != null)
+        {
+          return attr.getValue("Specification-Version");
+        }
+        else if (attr.getValue("Implementation-Version") != null)
+        {
+          return attr.getValue("Implementation-Version");
+        }
 		
 		} catch (Exception e) {
         Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
 		}
-		return null;
+		return "Not supplied";
 	}
 }
