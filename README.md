@@ -1,17 +1,21 @@
 raygun4java
 ===========
 
-Version 1.2.6
+Version 1.3
 
 This provider is now a Maven package; see the changelog below.
 
-## Installation with Maven and Eclipse
+## Installation
+
+###  With Maven and Eclipse/another IDE
 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
 2. Add com.mindscape.raygun4java and com.mindscapehq.core, version 1.2.6. If you are working in a web environment, get the webprovider jar too. If you wish to grab the example project, you can also get the sampleapp jar.
 3. Save your POM, and the dependencies should appear in Maven Dependencies.
+
+### With Maven and a command shell
 
 If you are in a shell/text editor environment, you can run `mvn install` from the directory containing your project's pom.xml.
 The pom.xml will need to contain something like:
@@ -23,12 +27,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.2.6</version>
+    	<version>1.3</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.2.6</version>
+    	<version>1.3</version>
     </dependency>
 </dependencies>
 ```
@@ -41,13 +45,15 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.2.6</version>
+    <version>1.3</version>
 </dependency>
 ```
 
-Again, if you are in a web environment, you will also need to add a dependency node for the `webprovider` package.
+### With Ant or other build tools
 
-This process downloads the JARs to your ~/.m2 directory. If you do not have a Maven project, you could create a dummy one, add the dependencies, install it to grab the JARs then copy them to your actual project.
+Grab the JARs for the latest version from here: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mindscapehq%22
+
+**raygun-core** is required. If you are in a web environment, you will also need to grab the **webprovider** JAR. The sampleapp JAR contains an example project.
 
 ## Usage
 
@@ -60,7 +66,7 @@ public class MyApp
 {
 	public static void main(String[] args) throws Throwable
 	{
-			Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());			
+			Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
 	}
 }
 
@@ -70,8 +76,8 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 	public void uncaughtException(Thread t, Throwable e) {
 		RaygunClient client = new RaygunClient("YOUR_APP_API_KEY");
 		client.Send(e);
-		
-	}	
+
+	}
 }
 ```
 
@@ -94,10 +100,10 @@ Inside error.jsp
 <%@ page isErrorPage="true" %>
 <%@ page import="com.mindscapehq.raygun4java.webprovider.RaygunServletClient" %>
 
-<% 
+<%
 RaygunServletClient client = new RaygunServletClient("YOUR_APP_API_KEY", request);
 
-client.Send(exception);    
+client.Send(exception);
 %>
 ```
 
@@ -123,6 +129,8 @@ In 1.2.6, a SetVersion(string) method was added to manually specify this version
 
 Changelog
 ---------
+
+Version 1.3: Renamed module **core** to **raygun-core**, clarified documentation
 
 Version 1.2.6: Version now automatically reads Specification-Version then Implementation-Version in manifest, and provided method for manually specifying version
 
