@@ -3,8 +3,6 @@ raygun4java
 
 Version 1.2.7
 
-This provider is now a Maven package; see the changelog below.
-
 ## Installation
 
 ###  With Maven and Eclipse/another IDE
@@ -12,7 +10,11 @@ This provider is now a Maven package; see the changelog below.
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add com.mindscape.raygun4java and com.mindscapehq.core, version 1.2.6. If you are working in a web environment, get the webprovider jar too. If you wish to grab the example project, you can also get the sampleapp jar.
+2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.2.7.
+
+    If you are working in a web environment, add **com.mindscapehq.webprovider** jar too.
+
+    If you wish to grab the example project, you can also get the sampleapp jar.
 3. Save your POM, and the dependencies should appear in Maven Dependencies.
 
 ### With Maven and a command shell
@@ -37,7 +39,7 @@ The pom.xml will need to contain something like:
 </dependencies>
 ```
 
-*POM for Web Projects*
+**POM for Web Projects**
 
 If you're using servlets, JSPs or similar, you'll need to also add:
 
@@ -51,9 +53,13 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 
 ### With Ant or other build tools
 
-Grab the JARs for the latest version from here: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mindscapehq%22
+Download the JARs for the latest version from here:
 
-**core-1.2.7** is required. If you are in a web environment, you will also need to grab the **webprovider** JAR. The sampleapp JAR contains an example project.
+[raygun-core](http://mvnrepository.com/artifact/com.mindscapehq/core): *required*
+
+[raygun-webprovider](http://mvnrepository.com/artifact/com.mindscapehq/webprovider): *optional* - if you want to receive HTTP request data from JSPs, servlets, GAE, web frameworks etc.
+
+[gson](http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar): *required* - you will also need the Gson dependency in your classpath.
 
 ## Usage
 
@@ -127,10 +133,12 @@ In 1.2.6, a SetVersion(string) method was added to manually specify this version
 
 - When Maven runs the tests locally, Surefire might complain of unsupported major.minor version 51.0 - ensure you have JDK 7 set as your JAVA_HOME, or set the plugin goal for maven-surefire-plugin to be `<configuration><jvm>${env.your_jre_7_home}/bin/java.exe</jvm></configuration>` in the parent pom.
 
+- **Google App Engine**: Raygun4java is confirmed to work with projects built with GAE, however only limited environment data is available due to JDK library restrictions.
+
 Changelog
 ---------
 
-Version 1.3: Clarified documentation
+Version 1.2.7: Fixed bug when using core in Google App Engine threw an exception that wasn't caught when attempting to get environment data. Clarified documentation
 
 Version 1.2.6: Version now automatically reads Specification-Version then Implementation-Version in manifest, and provided method for manually specifying version
 
