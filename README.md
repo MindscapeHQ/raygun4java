@@ -1,17 +1,23 @@
 raygun4java
 ===========
 
-Version 1.2.6
+Version 1.2.7
 
-This provider is now a Maven package; see the changelog below.
+## Installation
 
-## Installation with Maven and Eclipse
+###  With Maven and Eclipse/another IDE
 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add com.mindscape.raygun4java and com.mindscapehq.core, version 1.2.6. If you are working in a web environment, get the webprovider jar too. If you wish to grab the example project, you can also get the sampleapp jar.
+2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.2.7.
+
+    If you are working in a web environment, add **com.mindscapehq.webprovider** jar too.
+
+    If you wish to grab the example project, you can also get the sampleapp jar.
 3. Save your POM, and the dependencies should appear in Maven Dependencies.
+
+### With Maven and a command shell
 
 If you are in a shell/text editor environment, you can run `mvn install` from the directory containing your project's pom.xml.
 The pom.xml will need to contain something like:
@@ -23,17 +29,17 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.2.6</version>
+    	<version>1.2.7</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.2.6</version>
+    	<version>1.2.7</version>
     </dependency>
 </dependencies>
 ```
 
-*POM for Web Projects*
+**POM for Web Projects**
 
 If you're using servlets, JSPs or similar, you'll need to also add:
 
@@ -41,13 +47,19 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
 </dependency>
 ```
 
-Again, if you are in a web environment, you will also need to add a dependency node for the `webprovider` package.
+### With Ant or other build tools
 
-This process downloads the JARs to your ~/.m2 directory. If you do not have a Maven project, you could create a dummy one, add the dependencies, install it to grab the JARs then copy them to your actual project.
+Download the JARs for the latest version from here:
+
+[raygun-core](http://mvnrepository.com/artifact/com.mindscapehq/core): *required*
+
+[raygun-webprovider](http://mvnrepository.com/artifact/com.mindscapehq/webprovider): *optional* - if you want to receive HTTP request data from JSPs, servlets, GAE, web frameworks etc.
+
+[gson](http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar): *required* - you will also need the Gson dependency in your classpath.
 
 ## Usage
 
@@ -60,7 +72,7 @@ public class MyApp
 {
 	public static void main(String[] args) throws Throwable
 	{
-			Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());			
+			Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
 	}
 }
 
@@ -70,8 +82,8 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 	public void uncaughtException(Thread t, Throwable e) {
 		RaygunClient client = new RaygunClient("YOUR_APP_API_KEY");
 		client.Send(e);
-		
-	}	
+
+	}
 }
 ```
 
@@ -94,10 +106,10 @@ Inside error.jsp
 <%@ page isErrorPage="true" %>
 <%@ page import="com.mindscapehq.raygun4java.webprovider.RaygunServletClient" %>
 
-<% 
+<%
 RaygunServletClient client = new RaygunServletClient("YOUR_APP_API_KEY", request);
 
-client.Send(exception);    
+client.Send(exception);
 %>
 ```
 
@@ -121,8 +133,12 @@ In 1.2.6, a SetVersion(string) method was added to manually specify this version
 
 - When Maven runs the tests locally, Surefire might complain of unsupported major.minor version 51.0 - ensure you have JDK 7 set as your JAVA_HOME, or set the plugin goal for maven-surefire-plugin to be `<configuration><jvm>${env.your_jre_7_home}/bin/java.exe</jvm></configuration>` in the parent pom.
 
+- **Google App Engine**: Raygun4java is confirmed to work with projects built with GAE, however only limited environment data is available due to JDK library restrictions.
+
 Changelog
 ---------
+
+Version 1.2.7: Fixed bug when using core in Google App Engine threw an exception that wasn't caught when attempting to get environment data. Clarified documentation
 
 Version 1.2.6: Version now automatically reads Specification-Version then Implementation-Version in manifest, and provided method for manually specifying version
 
