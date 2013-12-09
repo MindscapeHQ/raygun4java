@@ -1,7 +1,7 @@
 raygun4java
 ===========
 
-Version 1.3
+Version 1.2.7
 
 This provider is now a Maven package; see the changelog below.
 
@@ -27,12 +27,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.3</version>
+    	<version>1.2.7</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.3</version>
+    	<version>1.2.7</version>
     </dependency>
 </dependencies>
 ```
@@ -45,7 +45,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.3</version>
+    <version>1.2.7</version>
 </dependency>
 ```
 
@@ -53,7 +53,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 
 Grab the JARs for the latest version from here: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.mindscapehq%22
 
-**raygun-core** is required. If you are in a web environment, you will also need to grab the **webprovider** JAR. The sampleapp JAR contains an example project.
+**core-1.2.7** is required. If you are in a web environment, you will also need to grab the **webprovider** JAR. The sampleapp JAR contains an example project.
 
 ## Usage
 
@@ -130,7 +130,7 @@ In 1.2.6, a SetVersion(string) method was added to manually specify this version
 Changelog
 ---------
 
-Version 1.3: Renamed module **core** to **raygun-core**, clarified documentation
+Version 1.3: Clarified documentation
 
 Version 1.2.6: Version now automatically reads Specification-Version then Implementation-Version in manifest, and provided method for manually specifying version
 
