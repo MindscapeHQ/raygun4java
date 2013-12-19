@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -35,7 +38,7 @@ public class RaygunServletClient extends RaygunClient
   {
     if (throwable != null)
     {
-      return Post(BuildServletMessage(throwable));
+      return Post(BuildServletMessage(throwable, tags));
     }
     return -1;
   }
@@ -44,9 +47,44 @@ public class RaygunServletClient extends RaygunClient
   {
     if (throwable != null)
     {
-      return Post(BuildServletMessage(throwable));
+      return Post(BuildServletMessage(throwable, tags, userCustomData));
     }
     return -1;
+  }
+
+  public void SendAsync(Throwable throwable)
+  {
+    PostAsync(BuildServletMessage(throwable));
+  }
+
+  public void SendAsync(Throwable throwable, List<?> tags)
+  {
+    if (throwable != null)
+    {
+      PostAsync(BuildServletMessage(throwable, tags));
+    }
+  }
+
+  public void SendAsync(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
+  {
+    if (throwable != null)
+    {
+      PostAsync(BuildServletMessage(throwable, tags, userCustomData));
+    }
+  }
+
+  private void PostAsync(final RaygunMessage message)
+  {
+    Runnable r = new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        Post(message);
+      }
+    };
+
+    Executors.newSingleThreadExecutor().submit(r);
   }
 
 	private RaygunMessage BuildServletMessage(Throwable throwable)

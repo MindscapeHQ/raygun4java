@@ -45,6 +45,20 @@ public class RaygunServletClientTest
   }
 
   @Test
+  public void post_AsyncWithInvalidKey_MinusOneReturned()
+  {
+    this.raygunClient = new RaygunServletClient("", requestMock);
+
+    try{
+      throw new Exception("Test");
+    }
+    catch (Exception e)
+    {
+      this.raygunClient.SendAsync(e);
+    }
+  }
+
+  @Test
   public void post_ValidResponse_Returns202() throws MalformedURLException, IOException
   {
     HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
@@ -82,5 +96,4 @@ public class RaygunServletClientTest
     customData.put(0, "zero");
     assertEquals(202, this.raygunClient.Send(new Exception(), tags, customData));
   }
-
 }
