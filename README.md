@@ -158,7 +158,7 @@ A SetVersion(string) method is also available to manually specify this version (
 Changelog
 ---------
 
-- 1.3.0: Added Async Send (beta) functionality to *webprovider* package
+- 1.3.0: Added Async Send (beta) functionality to *webprovider* package; populate HTTP Headers and Form data in web context
 
 - 1.2.7: Fixed bug when using core in Google App Engine threw an exception that wasn't caught when attempting to get environment data. Clarified documentation
 
