@@ -1,7 +1,7 @@
-raygun4java
+Raygun4java
 ===========
 
-Version 1.2.7
+Version 1.3
 
 ## Installation
 
@@ -29,12 +29,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.2.7</version>
+    	<version>1.3</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.2.7</version>
+    	<version>1.3</version>
     </dependency>
 </dependencies>
 ```
@@ -47,7 +47,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.2.7</version>
+    <version>1.3</version>
 </dependency>
 ```
 
@@ -119,6 +119,26 @@ Note: all Java dynamic web page projects should have core-1.2.*.jar, webprovider
 
 ## Documentation
 
+### Sending asynchronously
+
+New in 1.3, web projects that use RaygunServletClient can now call SendAsync(), to transmit messages asynchronously. When SendAsync is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
+
+####SendAsync()
+
+Overloads:
+
+void SendAsync(*Throwable* throwable)
+
+void SendAsync(*Throwable* throwable, *List* tags)
+
+void SendAsync(*Throwable* throwable, *List* tags, Map userCustomData)
+
+This provides a huge speedup versus the blocking Send() method, and appears to be near instantaneous from the user's perspective.
+
+No HTTP status code is returned from this method as the calling thread will have terminated by the time the response is returned from the Raygun API. A logging option will be available in future.
+
+This feature is considered to be in Beta, and it is advised to test it in a staging environment before deploying to production. When in production it should be monitored to ensure no spurious behaviour (especially in high traffic scenarios) while the feature is in beta. Feedback is appreciated.
+
 ### Unique user tracking
 
 You can call client.SetUser(string), where the string parameter is the username or email address of the current user of the calling application. This will be attached to the message and visible in the dashboard. This method is optional, if you do not call this user tracking will not be enabled. If you use this, and the user changes (log in/out), be sure to call it again passing in the new user.
@@ -127,7 +147,7 @@ You can call client.SetUser(string), where the string parameter is the username 
 
 Raygun4Java reads the version of your application from your manifest.mf file in the calling package. It first attempts to read this from Specification-Version, then Implementation-Version if the first doesn't exist.
 
-In 1.2.6, a SetVersion(string) method was added to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
+A SetVersion(string) method is also available to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
 
 ## Troubleshooting
 
@@ -138,18 +158,20 @@ In 1.2.6, a SetVersion(string) method was added to manually specify this version
 Changelog
 ---------
 
-Version 1.2.7: Fixed bug when using core in Google App Engine threw an exception that wasn't caught when attempting to get environment data. Clarified documentation
+- 1.3.0: Added Async Send (beta) functionality to *webprovider* package
 
-Version 1.2.6: Version now automatically reads Specification-Version then Implementation-Version in manifest, and provided method for manually specifying version
+- 1.2.7: Fixed bug when using core in Google App Engine threw an exception that wasn't caught when attempting to get environment data. Clarified documentation
 
-Version 1.2.5: Fix a bug where the package used to populate the environment data was not available in certain runtime environments (OSGi, some JVMs)
+- 1.2.6: Version now automatically reads Specification-Version then Implementation-Version in manifest, and provided method for manually specifying version
 
-Version 1.2.4: Refactored webprovider package; added SetUser method for unique user tracking; added authenticated proxy support.
+- 1.2.5: Fix a bug where the package used to populate the environment data was not available in certain runtime environments (OSGi, some JVMs)
 
-Version 1.2.3: Added tags and user custom data method overloads for Send. See usage in the updated Sampleapp class.
+- 1.2.4: Refactored webprovider package; added SetUser method for unique user tracking; added authenticated proxy support.
 
-Version 1.2.1: **Breaking change:** Completed change from ant to maven for packaging and building. The three parts are now maven modules, core, webprovider and sampleapp. The main provider is now located in the *core* namespace, and the JSP and Servlet module is located in *webprovider*.
+- 1.2.3: Added tags and user custom data method overloads for Send. See usage in the updated Sampleapp class.
 
-Version 1.0: Maven package refactor.
+- 1.2.1: Breaking change: Completed change from ant to maven for packaging and building. The three parts are now maven modules, core, webprovider and sampleapp. The main provider is now located in the *core* namespace, and the JSP and Servlet module is located in *webprovider*.
 
-Version 0.0.1: Initial version.
+- 1.0: Maven package refactor.
+
+- 0.0.1: Initial version.
