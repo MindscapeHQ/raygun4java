@@ -11,8 +11,8 @@ public class RaygunClientMessage {
 	public RaygunClientMessage()
 	{
 		setName("Raygun4Java");
-		setVersion("1.0.0.0");
-		setClientUrlString("https://github.com/MindscapeHQ/raygun4net");
+		setVersion("1.3.1");
+		setClientUrlString("https://github.com/MindscapeHQ/raygun4java");
 	}
 
 	public String getVersion() {
