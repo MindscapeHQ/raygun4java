@@ -1,7 +1,7 @@
 Raygun4java
 ===========
 
-Version 1.3
+Version 1.3.1
 
 ## Installation
 
@@ -163,6 +163,8 @@ A SetVersion(string) method is also available to manually specify this version (
 
 Changelog
 ---------
+
+- 1.3.1: Client message update
 
 - 1.3.0: Added Async Send (beta) functionality to *webprovider* package; populate HTTP Headers and Form data in web context
 
