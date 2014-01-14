@@ -139,6 +139,8 @@ No HTTP status code is returned from this method as the calling thread will have
 
 This feature is considered to be in Beta, and it is advised to test it in a staging environment before deploying to production. When in production it should be monitored to ensure no spurious behaviour (especially in high traffic scenarios) while the feature is in beta. Feedback is appreciated.
 
+**Google app engine:** This method will not work from code running on GAE - see the troubleshooting section below.
+
 ### Unique user tracking
 
 You can call client.SetUser(string), where the string parameter is the username or email address of the current user of the calling application. This will be attached to the message and visible in the dashboard. This method is optional, if you do not call this user tracking will not be enabled. If you use this, and the user changes (log in/out), be sure to call it again passing in the new user.
@@ -153,7 +155,11 @@ A SetVersion(string) method is also available to manually specify this version (
 
 - When Maven runs the tests locally, Surefire might complain of unsupported major.minor version 51.0 - ensure you have JDK 7 set as your JAVA_HOME, or set the plugin goal for maven-surefire-plugin to be `<configuration><jvm>${env.your_jre_7_home}/bin/java.exe</jvm></configuration>` in the parent pom.
 
-- **Google App Engine**: Raygun4java is confirmed to work with projects built with GAE, however only limited environment data is available due to JDK library restrictions.
+- **Google App Engine**: Raygun4Java is confirmed to work with projects built with GAE, however only limited environment data is available due to JDK library restrictions.
+			 The SendAsync methods also will not work, however you can place the Send() call in the Run() body of a [background thread], or one of the other threading features in the App Engine API.
+
+[background thread]: https://developers.google.com/appengine/docs/python/backends/background_thread
+
 
 Changelog
 ---------
