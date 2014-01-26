@@ -1,7 +1,7 @@
 Raygun4java
 ===========
 
-Version 1.3.1
+Version 1.3.2
 
 ## Installation
 
@@ -10,7 +10,7 @@ Version 1.3.1
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.3.1.
+2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.3.2.
 
     If you are working in a web environment, add **com.mindscapehq.webprovider** jar too.
 
@@ -29,12 +29,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.3</version>
+    	<version>1.3.2</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.3</version>
+    	<version>1.3.2</version>
     </dependency>
 </dependencies>
 ```
@@ -47,7 +47,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.3</version>
+    <version>1.3.2</version>
 </dependency>
 ```
 
@@ -163,6 +163,8 @@ A SetVersion(string) method is also available to manually specify this version (
 
 Changelog
 ---------
+
+- 1.3.2: Fix in core: check for NRE when getUser called from RayguntMesssageBuilder without setUser called first; this happened when RaygunServletMessageBuilder was used directly
 
 - 1.3.1: Client message update
 

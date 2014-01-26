@@ -96,4 +96,29 @@ public class RaygunServletClientTest
     customData.put(0, "zero");
     assertEquals(202, this.raygunClient.Send(new Exception(), tags, customData));
   }
+
+
+  @Test
+  public void send_WithoutUser_Returns202() throws MalformedURLException, IOException
+  {
+    HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+    when(httpURLConnection.getResponseCode()).thenReturn(202);
+    when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+    when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
+
+    assertEquals(202, this.raygunClient.Send(new Exception()));
+  }
+
+  @Test
+  public void send_WithUser_Returns202() throws MalformedURLException, IOException
+  {
+    HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+    when(httpURLConnection.getResponseCode()).thenReturn(202);
+    when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+    when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
+
+    this.raygunClient.SetUser("abc");
+
+    assertEquals(202, this.raygunClient.Send(new Exception()));
+  }
 }
