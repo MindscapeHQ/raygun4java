@@ -14,51 +14,70 @@ public class RaygunMessageDetails {
 	private Map<?, ?> userCustomData;
   private RaygunIdentifier user;
 	
-	public String getMachineName() {
+	public String getMachineName()
+  {
 		return machineName;
 	}
-	public void setMachineName(String machineName) {
+	public void setMachineName(String machineName)
+  {
 		this.machineName = machineName;
 	}
-	public String getVersion() {
+	public String getVersion()
+  {
 		return version;
 	}
-	public void setVersion(String version) {
+	public void setVersion(String version)
+  {
 		this.version = version;
 	}
-	public RaygunErrorMessage getError() {
+	public RaygunErrorMessage getError()
+  {
 		return error;
 	}
-	public void setError(RaygunErrorMessage error) {
+	public void setError(RaygunErrorMessage error)
+  {
 		this.error = error;
 	}
-	public RaygunEnvironmentMessage getEnvironment() {
+	public RaygunEnvironmentMessage getEnvironment()
+  {
 		return environment;
 	}
-	public void setEnvironment(RaygunEnvironmentMessage environment) {
+	public void setEnvironment(RaygunEnvironmentMessage environment)
+  {
 		this.environment = environment;
 	}
-	public RaygunClientMessage getClient() {
+	public RaygunClientMessage getClient()
+  {
 		return client;
 	}
-	public void setClient(RaygunClientMessage client) {
+	public void setClient(RaygunClientMessage client)
+  {
 		this.client = client;
 	}
-	public List<?> getTags() {
+	public List<?> getTags()
+  {
 		return tags;
 	}
-	public void setTags(List<?> tags) {
+	public void setTags(List<?> tags)
+  {
 		this.tags = tags;
 	}
-	public void setUserCustomData(Map<?, ?> userCustomData) {
+	public void setUserCustomData(Map<?, ?> userCustomData)
+  {
 		this.userCustomData = userCustomData;		
 	}
-	public Map<?, ?> getUserCustomData() {
+	public Map<?, ?> getUserCustomData()
+  {
 		return this.userCustomData;
 	}
   public String getUser()
   {
-    return user.getIdentifier();
+    if (user != null)
+    {
+      return user.getIdentifier();
+    }
+
+    return null;
   }
   public void setUser(String user)
   {
