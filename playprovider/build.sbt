@@ -1,10 +1,9 @@
 libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean,
-  cache
+  cache,
+  "com.mindscapehq" % "core" % "1.3.1"
 )
-
-play.Project.playJavaSettings
 
 def fromEnv(name: String) = System.getenv(name) match {
     case null => None
