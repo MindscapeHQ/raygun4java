@@ -1,6 +1,6 @@
 package com.mindscapehq.raygun4java.playprovider;
 
-import play.api.mvc.Request;
+import play.mvc.Http.Request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +27,9 @@ public class RaygunPlayRequestMessage
 		  ipAddress = request.remoteAddress();
 		  hostName = request.host();
 		  url = request.uri();
-      queryString = request.rawQueryString();
+      queryString = flattenMap(request.queryString());
 
-      headers = flattenMap(request.headers().toSimpleMap());
+      headers = flattenMap(request.headers());
 
       form = flattenMap(request.body().asFormUrlEncoded());
     }
