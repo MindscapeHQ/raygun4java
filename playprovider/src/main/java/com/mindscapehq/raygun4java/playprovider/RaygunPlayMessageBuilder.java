@@ -30,8 +30,16 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
     return _raygunServletMessage;
   }
 	
-	public IRaygunPlayMessageBuilder SetRequestDetails(Request request) {
-    _raygunServletMessage.getDetails().setRequest(new RaygunPlayRequestMessage(request));
+	public IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest) {
+    if (javaRequest != null)
+    {
+      _raygunServletMessage.getDetails().setRequest(new RaygunPlayJavaRequestMessage(javaRequest));
+    }
+    else if (scalaRequest != null)
+    {
+      _raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestMessage(scalaRequest));
+    }
+
 		return this;
 	}
 

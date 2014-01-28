@@ -1,45 +1,21 @@
 package com.mindscapehq.raygun4java.playprovider;
 
-import play.mvc.Http.Request;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class RaygunPlayRequestMessage
 {
+  protected String hostName;
+  protected String url;
+  protected String httpMethod;
+  protected String ipAddress;
+  protected Map<String, String> queryString;
+  protected Map<String, String> data;
+  protected Map<String, String> form;
+  protected Map<String, String> headers;
+  protected String rawData;
 
-	private String hostName;
-	private String url;
-	private String httpMethod;
-	private String ipAddress;
-	private Map<String, String> queryString;
-	private Map<String, String> data;
-	private Map<String, String> form;
-	private Map<String, String> headers;
-	private String rawData;
-
-	public RaygunPlayRequestMessage(Request request)
-	{
-    try
-    {
-		  httpMethod = request.method();
-		  ipAddress = request.remoteAddress();
-		  hostName = request.host();
-		  url = request.uri();
-      queryString = flattenMap(request.queryString());
-
-      headers = flattenMap(request.headers());
-
-      form = flattenMap(request.body().asFormUrlEncoded());
-    }
-    catch (NullPointerException e)
-    {
-      Logger.getLogger("Raygun4Java").info("Couldn't get all request params: " + e.getMessage());
-    }
-	}
-
-  private Map<String, String> flattenMap(Map<String, String[]> map)
+  protected Map<String, String> flattenMap(Map<String, String[]> map)
   {
     Map<String, String> result = new HashMap<String, String>();
 
@@ -49,5 +25,18 @@ public class RaygunPlayRequestMessage
     }
 
     return result;
+  }
+
+  protected Map queryStringToMap(String query)
+  {
+    String[] params = query.split("&");
+    Map<String, String> map = new HashMap<String, String>();
+    for (String param : params)
+    {
+      String name = param.split("=")[0];
+      String value = param.split("=")[1];
+      map.put(name, value);
+    }
+    return map;
   }
 }

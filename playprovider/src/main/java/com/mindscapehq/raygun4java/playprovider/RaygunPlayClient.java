@@ -14,11 +14,18 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 public class RaygunPlayClient extends RaygunClient {
 
     private Request httpRequest;
+    private play.api.mvc.Request scalaRequest;
 
     public RaygunPlayClient(String apiKey, Request request)
     {
       super(apiKey);
       this.httpRequest = request;
+    }
+
+    public RaygunPlayClient(String apiKey, play.api.mvc.Request request)
+    {
+      super(apiKey);
+      this.scalaRequest = request;
     }
 
     public int Send(Throwable throwable)
@@ -88,7 +95,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(httpRequest)
+            .SetRequestDetails(httpRequest, scalaRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)
@@ -109,7 +116,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(httpRequest)
+            .SetRequestDetails(httpRequest, scalaRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)
@@ -131,7 +138,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(httpRequest)
+            .SetRequestDetails(httpRequest, scalaRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)

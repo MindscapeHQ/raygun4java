@@ -9,7 +9,10 @@ public class RaygunPlayMessageDetails extends RaygunMessageDetails {
 	public RaygunPlayRequestMessage getRequest() {
 		return request;
 	}
-	public void setRequest(RaygunPlayRequestMessage request) {
+	public void setRequest(RaygunPlayJavaRequestMessage request) {
 		this.request = request;
 	}
+  public void setRequest(RaygunPlayScalaRequestMessage request) {
+    this.request = request;
+  }
 }
