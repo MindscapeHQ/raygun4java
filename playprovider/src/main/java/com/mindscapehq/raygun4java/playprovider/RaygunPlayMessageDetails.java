@@ -2,7 +2,7 @@ package com.mindscapehq.raygun4java.playprovider;
 
 import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
 
-public class RaygunServletMessageDetails extends RaygunMessageDetails {
+public class RaygunPlayMessageDetails extends RaygunMessageDetails {
 
 	private RaygunPlayRequestMessage request;
 

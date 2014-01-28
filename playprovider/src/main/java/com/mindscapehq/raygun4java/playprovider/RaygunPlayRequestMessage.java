@@ -1,12 +1,10 @@
 package com.mindscapehq.raygun4java.playprovider;
 
-import java.util.Enumeration;
+import play.api.mvc.Request;
+
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import play.mvc.Http.Request;
 
 public class RaygunPlayRequestMessage
 {
@@ -29,15 +27,27 @@ public class RaygunPlayRequestMessage
 		  ipAddress = request.remoteAddress();
 		  hostName = request.host();
 		  url = request.uri();
-      queryString = (Map<String, String>) request.queryString();
+      queryString = request.rawQueryString();
 
-      headers = (Map<String, String>) request.headers();
+      headers = flattenMap(request.headers().toSimpleMap());
 
-      form = (Map<String, String>) request.body().asFormUrlEncoded();
+      form = flattenMap(request.body().asFormUrlEncoded());
     }
     catch (NullPointerException e)
     {
       Logger.getLogger("Raygun4Java").info("Couldn't get all request params: " + e.getMessage());
     }
 	}
+
+  private Map<String, String> flattenMap(Map<String, String[]> map)
+  {
+    Map<String, String> result = new HashMap<String, String>();
+
+    for (String key : map.keySet())
+    {
+      result.put(key, map.get(key).toString());
+    }
+
+    return result;
+  }
 }

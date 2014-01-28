@@ -1,15 +1,15 @@
 package com.mindscapehq.raygun4java.playprovider;
 
+import play.api.mvc.Request;
 import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
-import play.mvc.Http.Request;
 
 public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IRaygunPlayMessageBuilder {
 
-	private RaygunServletMessage _raygunServletMessage;
+	private RaygunPlayMessage _raygunServletMessage;
 
   public RaygunPlayMessageBuilder()
 	{
-    _raygunServletMessage = new RaygunServletMessage();
+    _raygunServletMessage = new RaygunPlayMessage();
 	}
 
   public static RaygunPlayMessageBuilder New() {
@@ -17,7 +17,7 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
   }
 
   @Override
-  public RaygunServletMessage Build()
+  public RaygunPlayMessage Build()
   {
     _raygunServletMessage.getDetails().setEnvironment(_raygunMessage.getDetails().getEnvironment());
     _raygunServletMessage.getDetails().setMachineName(_raygunMessage.getDetails().getMachineName());
