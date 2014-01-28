@@ -13,12 +13,12 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 public class RaygunPlayClient extends RaygunClient {
 
-    private Request playRequest;
+    private Request httpRequest;
 
-    public RaygunPlayClient(String apiKey)//, HttpServletRequest request)
+    public RaygunPlayClient(String apiKey, Request request)
     {
       super(apiKey);
-      //this.servletRequest = request;
+      this.httpRequest = request;
     }
 
     public int Send(Throwable throwable)
@@ -88,7 +88,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(playRequest)
+            .SetRequestDetails(httpRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)
@@ -109,7 +109,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(playRequest)
+            .SetRequestDetails(httpRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)
@@ -131,7 +131,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(playRequest)
+            .SetRequestDetails(httpRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
             .SetExceptionDetails(throwable)

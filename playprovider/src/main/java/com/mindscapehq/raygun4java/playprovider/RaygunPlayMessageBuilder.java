@@ -1,10 +1,9 @@
 package com.mindscapehq.raygun4java.playprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
+import play.mvc.Http.Request;
 
-import javax.servlet.http.HttpServletRequest;
-
-public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IRaygunHttpMessageBuilder {
+public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IRaygunPlayMessageBuilder {
 
 	private RaygunServletMessage _raygunServletMessage;
 
@@ -31,7 +30,7 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
     return _raygunServletMessage;
   }
 	
-	public IRaygunHttpMessageBuilder SetRequestDetails(Request request) {
+	public IRaygunPlayMessageBuilder SetRequestDetails(Request request) {
     _raygunServletMessage.getDetails().setRequest(new RaygunPlayRequestMessage(request));
 		return this;
 	}
