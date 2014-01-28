@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import play.mvc.Http.Request;
+
 public class RaygunPlayRequestMessage
 {
 
@@ -23,65 +25,19 @@ public class RaygunPlayRequestMessage
 	{
     try
     {
-		  httpMethod = request.getMethod();
-		  ipAddress = request.getRemoteAddr();
-		  hostName = request.getRemoteHost();
-		  url = request.getRequestURI();
-      String qS = request.getQueryString();
-      if (qS != null)
-      {
-        queryString = QueryStringToMap(qS);
-      }
+		  httpMethod = request.method();
+		  ipAddress = request.remoteAddress();
+		  hostName = request.host();
+		  url = request.uri();
+      queryString = (Map<String, String>) request.queryString();
 
-      headers = new LinkedHashMap<String, String>();
-      {
-        Enumeration<?> e = request.getHeaderNames();
-        while (e.hasMoreElements())
-        {
-          String name = (String)e.nextElement();
-          String value = request.getHeader(name).toString();
-          headers.put(name, value);
-        };
-      }
+      headers = (Map<String, String>) request.headers();
 
-      form = new LinkedHashMap<String, String>();
-      {
-        Enumeration<?> e = request.getParameterNames();
-
-        StringBuilder builder;
-
-        while (e.hasMoreElements())
-        {
-          builder = new StringBuilder();
-
-          String name = (String)e.nextElement();
-          String[] values = request.getParameterValues(name);
-
-          for (String s : values)
-          {
-            builder.append(s).append(";");
-          }
-
-          form.put(name, builder.toString());
-        }
-      }
+      form = (Map<String, String>) request.body().asFormUrlEncoded();
     }
     catch (NullPointerException e)
     {
       Logger.getLogger("Raygun4Java").info("Couldn't get all request params: " + e.getMessage());
     }
 	}
-	
-	public Map QueryStringToMap(String query)
-	{	   
-	    String[] params = query.split("&");
-	    Map<String, String> map = new HashMap<String, String>();
-	    for (String param : params)
-	    {
-	        String name = param.split("=")[0];
-	        String value = param.split("=")[1];
-	        map.put(name, value);
-	    }
-	    return map;
-	}	
 }
