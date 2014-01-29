@@ -1,4 +1,4 @@
-package com.mindscapehq.raygun4java.playprovider;
+package com.mindscapehq.raygun4java.play2;
 
 import java.net.InetAddress;
 import java.util.List;

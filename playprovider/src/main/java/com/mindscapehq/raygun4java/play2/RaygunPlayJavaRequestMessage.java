@@ -1,4 +1,4 @@
-package com.mindscapehq.raygun4java.playprovider;
+package com.mindscapehq.raygun4java.play2;
 
 import java.util.Map;
 import java.util.logging.Logger;
