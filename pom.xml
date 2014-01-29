@@ -18,6 +18,7 @@
   	<module>/core</module>
   	<module>/sampleapp</module>
   	<module>/webprovider</module>
+    <module>/playprovider</module>
   </modules>
   <developers>
   	<developer>
@@ -35,7 +36,7 @@
   <scm>
   	<url>https://github.com/mindscapehq/raygun4java</url>
   	<connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
-  	<developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>  	
+  	<developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
   </scm>
   <build>
     <plugins>
@@ -52,15 +53,15 @@
             </goals>
           </execution>
         </executions>
-      </plugin>     
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.13</version>
-        <configuration>        
+        <configuration>
           <jvm>${env.JAVA_HOME_7}</jvm>
         </configuration>
-      </plugin>   
+      </plugin>
     </plugins>
   </build>
     <dependencies>
