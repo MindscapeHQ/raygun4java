@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.playprovider;
 
+import java.util.Map;
 import java.util.logging.Logger;
 import play.mvc.Http.Request;
 
@@ -14,11 +15,21 @@ public class RaygunPlayJavaRequestMessage extends RaygunPlayRequestMessage
       ipAddress = request.remoteAddress();
       hostName = request.host();
       url = request.uri();
-      queryString = flattenMap(request.queryString());
-
       headers = flattenMap(request.headers());
 
-      form = flattenMap(request.body().asFormUrlEncoded());
+      Map<String, String[]> queryMap = request.queryString();
+
+      if (queryMap != null)
+      {
+        queryString = flattenMap(queryMap);
+      }
+
+      Map<String, String[]> formMap = request.body().asFormUrlEncoded();
+
+      if (formMap != null)
+      {
+        form = flattenMap(formMap);
+      }
     }
     catch (NullPointerException e)
     {

@@ -19,10 +19,14 @@ public class RaygunPlayScalaRequestMessage extends RaygunPlayRequestMessage
       ipAddress = request.remoteAddress();
       hostName = request.host();
       url = request.uri();
-      queryString = queryStringToMap(request.rawQueryString());
-      headers = JavaConverters.mapAsJavaMapConverter(request.headers().toSimpleMap()).asJava();
 
-      //form = request.body().toString();
+      headers = JavaConverters.mapAsJavaMapConverter(request.headers().toSimpleMap()).asJava();
+      String rawQuery = request.rawQueryString();
+
+      if (!rawQuery.isEmpty())
+      {
+        queryString = queryStringToMap(rawQuery);
+      }
     }
     catch (NullPointerException e)
     {
