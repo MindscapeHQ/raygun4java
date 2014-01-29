@@ -1,11 +1,7 @@
 package com.mindscapehq.raygun4java.playprovider;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
-
 import scala.collection.JavaConverters;
-import scala.collection.JavaConverters.*;
 import play.api.mvc.Request;
 
 public class RaygunPlayScalaRequestMessage extends RaygunPlayRequestMessage
