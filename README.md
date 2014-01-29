@@ -1,7 +1,9 @@
 Raygun4java
 ===========
 
-Version 1.3.2
+Version 1.4.0
+
+This provider provides support for sending exceptions from desktop Java, Scala, Sevlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
 
 ## Installation
 
@@ -117,6 +119,27 @@ When an exception is thrown from another JSP, this page will take care of the se
 
 Note: all Java dynamic web page projects should have core-1.2.*.jar, webprovider-1.2.*.jar and gson-2.1.jar on their classpath.
 
+## Scala and Play 2 Framework
+
+**Note: Java Play 2 projects are also supported**
+
+Feb 2014: This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. This is currently considered alpha but confirmed working; feedback is appreciated. You can use the plain core-1.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
+
+### Usage
+
+Download raygun4java-play2-1.x.x.jar from Maven or add the dependency to to your maven pom.xml. Then, write code that sends an exception in your controller:
+
+```scala
+import play.api.mvc.{Action, Controller, Request}
+import com.mindscapehq.raygun4java.play2.RaygunPlayClient;
+
+def index = Action { implicit request =>
+    val rg = new RaygunPlayClient("your_api_key", request)
+    val result = rg.Send(new Exception("From Scala"))
+    Ok(views.html.index(result.toString))
+  }
+```
+
 ## Documentation
 
 ### Sending asynchronously
@@ -163,6 +186,8 @@ A SetVersion(string) method is also available to manually specify this version (
 
 Changelog
 ---------
+
+- 1.4.0: Added alpha version of Play 2 provider
 
 - 1.3.2: Fix in core: check for NRE when getUser called from RayguntMesssageBuilder without setUser called first; this happened when RaygunServletMessageBuilder was used directly
 
