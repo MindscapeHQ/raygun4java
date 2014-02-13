@@ -1,7 +1,7 @@
 Raygun4java
 ===========
 
-Version 1.4.0
+Version 1.4.2
 
 This provider provides support for sending exceptions from desktop Java, Scala, Sevlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
 
@@ -140,11 +140,13 @@ def index = Action { implicit request =>
   }
 ```
 
+play2-0.4.4: RaygunPlayClient now includes a third overload on its second parameter, which allows you to pass in a RequestHeader from Scala Play2, for instance which is available from your app/Global.scala's onError function.
+
 ## Documentation
 
 ### Sending asynchronously
 
-New in 1.3, web projects that use RaygunServletClient can now call SendAsync(), to transmit messages asynchronously. When SendAsync is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
+Web projects that use RaygunServletClient can call SendAsync(), to transmit messages asynchronously. When SendAsync is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
 
 ####SendAsync()
 
@@ -186,6 +188,8 @@ A SetVersion(string) method is also available to manually specify this version (
 
 Changelog
 ---------
+
+- 1.4.2: Added Scala RequestHeader overload in constructor for Play 2 provider (rg4j-play2 is now at 0.4.4)
 
 - 1.4.0: Added alpha version of Play 2 provider
 

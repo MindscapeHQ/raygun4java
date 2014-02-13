@@ -26,7 +26,7 @@ public class RaygunPlayScalaRequestMessage extends RaygunPlayRequestMessage
     }
     catch (NullPointerException e)
     {
-      Logger.getLogger("Raygun4Java").info("Couldn't get all request params: " + e.getMessage());
+      Logger.getLogger("Raygun4Java-Play2").info("Couldn't get all request params: " + e.getMessage());
     }
   }
 }

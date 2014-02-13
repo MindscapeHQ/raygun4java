@@ -80,6 +80,7 @@
                 <configuration>
                     <lib>target/lib</lib>
                     <buildDist>false</buildDist>
+                    <buildWar>false</buildWar>
                 </configuration>
             </plugin>
             <plugin>
