@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.play2;
 
+import play.api.mvc.RequestHeader;
 import play.mvc.Http.Request;
 import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
@@ -30,7 +31,7 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
     return _raygunServletMessage;
   }
 	
-	public IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest) {
+	public IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader) {
     if (javaRequest != null)
     {
       _raygunServletMessage.getDetails().setRequest(new RaygunPlayJavaRequestMessage(javaRequest));
@@ -38,6 +39,10 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
     else if (scalaRequest != null)
     {
       _raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestMessage(scalaRequest));
+    }
+    else if (scalaRequestHeader != null)
+    {
+      _raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestHeaderMessage(scalaRequestHeader));
     }
 
 		return this;
