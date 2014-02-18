@@ -140,7 +140,16 @@ def index = Action { implicit request =>
   }
 ```
 
-play2-0.4.4: RaygunPlayClient now includes a third overload on its second parameter, which allows you to pass in a RequestHeader from Scala Play2, for instance which is available from your app/Global.scala's onError function.
+play2-0.4.4: For use in your Scala Play2 app's global error handler, RaygunPlayClient now includes an overload which allows you to pass in a RequestHeader from Scala Play2:
+
+**app/Global.scala**
+```scala
+override def onError(request: RequestHeader, ex: Throwable) = {
+  val rg = new RaygunPlayClient("your_api_key", request)
+  val result = rg.Send(ex)
+  super.onError(request, ex)
+}
+```
 
 ## Documentation
 
