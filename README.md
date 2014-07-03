@@ -1,7 +1,7 @@
 Raygun4java
 ===========
 
-Version 1.4.2
+Version 1.5.0
 
 This provider provides support for sending exceptions from desktop Java, Scala, Sevlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
 
@@ -12,7 +12,7 @@ This provider provides support for sending exceptions from desktop Java, Scala, 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.3.2.
+2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.5.0.
 
     If you are working in a web environment, add **com.mindscapehq.webprovider** jar too.
 
@@ -31,12 +31,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.3.2</version>
+    	<version>1.5.0</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.3.2</version>
+    	<version>1.5.0</version>
     </dependency>
 </dependencies>
 ```
@@ -49,7 +49,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.3.2</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
@@ -117,7 +117,7 @@ client.Send(exception);
 
 When an exception is thrown from another JSP, this page will take care of the sending.
 
-Note: all Java dynamic web page projects should have core-1.2.*.jar, webprovider-1.2.*.jar and gson-2.1.jar on their classpath.
+Note: all Java dynamic web page projects should have core-1.x.x.jar, webprovider-1.x.x.jar and gson-2.1.jar on their classpath.
 
 ## Scala and Play 2 Framework
 
@@ -181,7 +181,7 @@ You can call `client.SetUser(RaygunIdentifier)` to set the current user's data, 
 
 The other overload contains all the available properties, some or all of which can be null and can be also be set individually on the RaygunIdentifier object.
 
-The previous method, SetUser(string) has been deprecated as of 1.5.
+The previous method, SetUser(string) has been deprecated as of 1.5.0.
 
 ### Version tracking
 
@@ -201,6 +201,8 @@ A SetVersion(string) method is also available to manually specify this version (
 
 Changelog
 ---------
+
+- 1.5.0: Added enhanced user data support with SetUser(RaygunIdentifier) - this deprecates SetUser(string)
 
 - 1.4.2: Added Scala RequestHeader overload in constructor for Play 2 provider (rg4j-play2 is now at 0.4.4)
 
