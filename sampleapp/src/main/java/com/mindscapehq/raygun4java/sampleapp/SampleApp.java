@@ -1,10 +1,12 @@
 package com.mindscapehq.raygun4java.sampleapp;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SampleApp {
 
@@ -15,7 +17,7 @@ public class SampleApp {
 	{
 		Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
 		
-		throw new Throwable("Congratulations, Raygun4Java is installed and set up correctly!");
+		throw new Exception("Raygun4Java user info v2");
 	}
 }
 
@@ -23,8 +25,18 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 {
 
 	public void uncaughtException(Thread t, Throwable e) {
-		RaygunClient client = new RaygunClient("{{your_api_key}}"); // Copy your API key from your Raygun dashboard, then paste it here
-		
+		RaygunClient client = new RaygunClient("api_key"); // Copy your API key from your Raygun dashboard, then paste it here
+
+    RaygunIdentifier userIdentity = new RaygunIdentifier("a@b.com");
+
+    userIdentity.Email = "a@b.com";
+    userIdentity.FirstName = "Foo";
+    userIdentity.FullName = "Foo Bar";
+    userIdentity.IsAnonymous = false;
+    userIdentity.Uuid = UUID.randomUUID().toString();
+
+    client.SetUser(userIdentity);
+
 		ArrayList<Object> tags = new ArrayList<Object>();
 		tags.add("Place tags about this version/release in this object");
 		

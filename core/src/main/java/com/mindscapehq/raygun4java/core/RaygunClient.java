@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.core;
 
 import com.google.gson.Gson;
+import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.io.OutputStreamWriter;
@@ -20,7 +21,7 @@ public class RaygunClient {
 	public void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
 
 	protected String _apiKey;
-  protected String _user;
+  protected RaygunIdentifier _user;
   protected String _context;
   protected String _version = null;
 
@@ -42,9 +43,17 @@ public class RaygunClient {
 		}		
 	}
 
+  public void SetUser(RaygunIdentifier userIdentity)
+  {
+    _user = userIdentity;
+  }
+
+  @Deprecated
   public void SetUser(String user)
   {
-    _user = user;
+    RaygunIdentifier ident = new RaygunIdentifier(user);
+
+    _user = ident;
   }
 
   public void SetVersion(String version)
