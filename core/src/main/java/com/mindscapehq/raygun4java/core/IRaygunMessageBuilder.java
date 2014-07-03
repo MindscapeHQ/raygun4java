@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface IRaygunMessageBuilder {
     
     IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData);
 
-  IRaygunMessageBuilder SetUser(String user);
+  IRaygunMessageBuilder SetUser(RaygunIdentifier user);
 }

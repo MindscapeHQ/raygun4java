@@ -70,11 +70,11 @@ public class RaygunMessageDetails {
   {
 		return this.userCustomData;
 	}
-  public String getUser()
+  public RaygunIdentifier getUser()
   {
     if (user != null)
     {
-      return user.getIdentifier();
+      return user;
     }
 
     return null;
@@ -83,8 +83,16 @@ public class RaygunMessageDetails {
   {
     if (this.user == null)
     {
-      this.user = new RaygunIdentifier();
+      this.user = new RaygunIdentifier(user);
     }
-    this.user.setIdentifier(user);
+    else
+    {
+      this.user = new RaygunIdentifier("");
+    }
+  }
+
+  public void setUser(RaygunIdentifier identifier)
+  {
+    this.user = identifier;
   }
 }

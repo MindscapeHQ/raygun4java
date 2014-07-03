@@ -1,9 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.messages.RaygunClientMessage;
-import com.mindscapehq.raygun4java.core.messages.RaygunEnvironmentMessage;
-import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import com.mindscapehq.raygun4java.core.messages.*;
 
 import java.net.URL;
 import java.util.List;
@@ -73,7 +70,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 		return this;
 	}
 
-  public IRaygunMessageBuilder SetUser(String user)
+  public IRaygunMessageBuilder SetUser(RaygunIdentifier user)
   {
     _raygunMessage.getDetails().setUser(user);
     return this;
