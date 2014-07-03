@@ -177,7 +177,11 @@ This feature is considered to be in Beta, and it is advised to test it in a stag
 
 ### Unique user tracking
 
-You can call client.SetUser(string), where the string parameter is the username or email address of the current user of the calling application. This will be attached to the message and visible in the dashboard. This method is optional, if you do not call this user tracking will not be enabled. If you use this, and the user changes (log in/out), be sure to call it again passing in the new user.
+You can call `client.SetUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the uniqueUserIdentifier. This should be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
+
+The other overload contains all the available properties, some or all of which can be null and can be also be set individually on the RaygunIdentifier object.
+
+The previous method, SetUser(string) has been deprecated as of 1.5.
 
 ### Version tracking
 
