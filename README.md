@@ -183,6 +183,27 @@ The other overload contains all the available properties, some or all of which c
 
 The previous method, SetUser(string) has been deprecated as of 1.5.0.
 
+### Custom user data and tags
+
+To attach custom data or tags, use these overloads on Send:
+
+```java
+RaygunClient client = new RaygunClient("apikey");
+Exception exception;
+
+ArrayList tags = new ArrayList<String>();
+tags.add("tag1");
+
+Map<string, int> userCustomData = new HashMap<string, int>();
+userCustomData.put("data", 1);
+
+client.Send(exception, tags);
+// or
+client.Send(exception, tags, userCustomData);
+```
+
+Tags can be null if you only wish to transmit custom data. Send calls can take these objects inside a catch block (if you want one instance to contain specific local variables), or in a global exception handler ()if you want every exception to contain a set of tags/custom data, initialized on construction).
+
 ### Version tracking
 
 Raygun4Java reads the version of your application from your manifest.mf file in the calling package. It first attempts to read this from Specification-Version, then Implementation-Version if the first doesn't exist.
