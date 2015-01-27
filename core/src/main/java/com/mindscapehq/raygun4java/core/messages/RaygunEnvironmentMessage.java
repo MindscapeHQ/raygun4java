@@ -26,20 +26,20 @@ public class RaygunEnvironmentMessage {
 	private int diskSpaceFree;
 	private double utcOffset;
 	private static String message = "Couldn't access all environment data. If you are running in GAE or a restricted environment this is expected";
-	private static Logger logger = Logger.getLogger("Raygun4Java");
+	private static Logger logger = Logger.getLogger("Raygun4Java.environment");
 
 	public RaygunEnvironmentMessage() {
 		try {
 			utcOffset = TimeZone.getDefault().getRawOffset() / 3600000.0;
 		} catch (Throwable t) {
-			logger.log(Level.WARNING, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
 			locale = Locale.getDefault().getLanguage() + "-"
 					+ Locale.getDefault().getCountry();
 		} catch (Throwable t) {
-			logger.log(Level.WARNING, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
@@ -48,13 +48,13 @@ public class RaygunEnvironmentMessage {
 			windowBoundsHeight = GraphicsEnvironment
 					.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 		} catch (Throwable t) {
-			logger.log(Level.WARNING, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
 			processorCount = Runtime.getRuntime().availableProcessors();
 		} catch (Throwable t) {
-			logger.log(Level.WARNING, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
@@ -65,7 +65,7 @@ public class RaygunEnvironmentMessage {
 			availableVirtualMemory = memBean.getHeapMemoryUsage().getUsed()
 					+ memBean.getNonHeapMemoryUsage().getUsed();
 		} catch (Throwable t) {
-			logger.log(Level.WARNING, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
@@ -74,7 +74,7 @@ public class RaygunEnvironmentMessage {
 			architecture = osMXBean.getArch();
 			osVersion = osMXBean.getName() + " - " + osMXBean.getVersion();
 		} catch (Throwable t) {
-			logger.log(Level.WARNING, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
 		}
 	}
 }
