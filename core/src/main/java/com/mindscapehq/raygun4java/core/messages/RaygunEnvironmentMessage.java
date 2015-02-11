@@ -6,6 +6,7 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RaygunEnvironmentMessage {
@@ -22,31 +23,58 @@ public class RaygunEnvironmentMessage {
 	private long availablePhysicalMemory;
 	private long totalVirtualMemory;
 	private long availableVirtualMemory;
-	private int diskSpaceFree;	
+	private int diskSpaceFree;
 	private double utcOffset;
-	
-	public RaygunEnvironmentMessage()
-	{
-    try
-    {
-      utcOffset = TimeZone.getDefault().getRawOffset() / 3600000.0;
-      locale = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry();
-      windowBoundsWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-      windowBoundsHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	private static String message = "Couldn't access all environment data. If you are running in GAE or a restricted environment this is expected";
+	private static Logger logger = Logger.getLogger("Raygun4Java.environment");
 
-      processorCount = Runtime.getRuntime().availableProcessors();
+	public RaygunEnvironmentMessage() {
+		try {
+			utcOffset = TimeZone.getDefault().getRawOffset() / 3600000.0;
+		} catch (Throwable t) {
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+		}
 
-      MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+		try {
+			locale = Locale.getDefault().getLanguage() + "-"
+					+ Locale.getDefault().getCountry();
+		} catch (Throwable t) {
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+		}
 
-      totalVirtualMemory = memBean.getHeapMemoryUsage().getMax() + memBean.getNonHeapMemoryUsage().getMax();
-      availableVirtualMemory = memBean.getHeapMemoryUsage().getUsed() + memBean.getNonHeapMemoryUsage().getUsed();
+		try {
+			windowBoundsWidth = GraphicsEnvironment
+					.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+			windowBoundsHeight = GraphicsEnvironment
+					.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+		} catch (Throwable t) {
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+		}
 
-      OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
-      architecture = osMXBean.getArch();
-      osVersion = osMXBean.getName() + " - " + osMXBean.getVersion();
-    } catch (Throwable t)
-    {
-      Logger.getLogger("Raygun4Java").warning("Couldn't access all environment data. If you are running in GAE or a restricted environment this is expected");
-    }
+		try {
+			processorCount = Runtime.getRuntime().availableProcessors();
+		} catch (Throwable t) {
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+		}
+
+		try {
+			MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+
+			totalVirtualMemory = memBean.getHeapMemoryUsage().getMax()
+					+ memBean.getNonHeapMemoryUsage().getMax();
+			availableVirtualMemory = memBean.getHeapMemoryUsage().getUsed()
+					+ memBean.getNonHeapMemoryUsage().getUsed();
+		} catch (Throwable t) {
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+		}
+
+		try {
+			OperatingSystemMXBean osMXBean = ManagementFactory
+					.getOperatingSystemMXBean();
+			architecture = osMXBean.getArch();
+			osVersion = osMXBean.getName() + " - " + osMXBean.getVersion();
+		} catch (Throwable t) {
+			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+		}
 	}
 }
