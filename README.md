@@ -1,7 +1,7 @@
 Raygun4java
 ===========
 
-Version 1.5.0
+Version 1.6.0
 
 This provider provides support for sending exceptions from desktop Java, Scala, Sevlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
 
@@ -12,7 +12,7 @@ This provider provides support for sending exceptions from desktop Java, Scala, 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.5.0.
+2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.6.0.
 
     If you are working in a web environment, add **com.mindscapehq.webprovider** jar too.
 
@@ -31,12 +31,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.5.0</version>
+    	<version>1.6.0</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.5.0</version>
+    	<version>1.6.0</version>
     </dependency>
 </dependencies>
 ```
@@ -49,7 +49,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
 </dependency>
 ```
 
@@ -222,6 +222,8 @@ A SetVersion(string) method is also available to manually specify this version (
 
 Changelog
 ---------
+
+- 1.6.0: Envionemnt log statements now guarded and namespaced under Raygun4java.enironment; upgrade Play to 2.3/support Scala 2.10/2.11
 
 - 1.5.0: Added enhanced user data support with SetUser(RaygunIdentifier) - this deprecates SetUser(string)
 
