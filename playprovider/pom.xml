@@ -13,7 +13,7 @@
     </scm>
     <artifactId>raygun4java-play2</artifactId>
     <version>1.6.1-SNAPSHOT</version>
-    <packaging>play2</packaging>
+    <packaging>jar</packaging>
 
     <name>raygun4java-play2</name>
     <url>http://raygun.io</url>

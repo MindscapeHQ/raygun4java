@@ -223,6 +223,8 @@ A SetVersion(string) method is also available to manually specify this version (
 Changelog
 ---------
 
+- 1.6.1: Fix incorrect Play2 packaging
+
 - 1.6.0: Envionemnt log statements now guarded and namespaced under Raygun4java.enironment; upgrade Play to 2.3/support Scala 2.10/2.11
 
 - 1.5.0: Added enhanced user data support with SetUser(RaygunIdentifier) - this deprecates SetUser(string)
