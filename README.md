@@ -1,7 +1,7 @@
 Raygun4java
 ===========
 
-Version 1.6.0
+Version 1.6.1
 
 This provider provides support for sending exceptions from desktop Java, Scala, Sevlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
 
