@@ -29,11 +29,11 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 
     RaygunIdentifier userIdentity = new RaygunIdentifier("a@b.com");
 
-    userIdentity.Email = "a@b.com";
-    userIdentity.FirstName = "Foo";
-    userIdentity.FullName = "Foo Bar";
-    userIdentity.IsAnonymous = false;
-    userIdentity.Uuid = UUID.randomUUID().toString();
+    userIdentity.setEmail("a@b.com");
+    userIdentity.setFirstName("Foo");
+    userIdentity.setFullName("Foo Bar");
+    userIdentity.setIsAnonymous(false);
+    userIdentity.setUuid(UUID.randomUUID().toString());
 
     client.SetUser(userIdentity);
 
