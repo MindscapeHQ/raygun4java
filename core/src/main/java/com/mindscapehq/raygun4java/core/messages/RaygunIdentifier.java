@@ -2,17 +2,17 @@ package com.mindscapehq.raygun4java.core.messages;
 
 public class RaygunIdentifier
 {
-  public Boolean IsAnonymous;
+  private Boolean isAnonymous;
 
-  public String Email;
+  private String email;
 
-  public String FullName;
+  private String fullName;
 
-  public String FirstName;
+  private String firstName;
 
-  public String Uuid;
+  private String uuid;
 
-  private String Identifier;
+  private String identifier;
 
   /**
    * Set the current user's info to be transmitted - any parameters can be null if the data is not available or
@@ -29,12 +29,12 @@ public class RaygunIdentifier
    */
   public RaygunIdentifier(String uniqueUserIdentifier, String firstName, String fullName, String emailAddress, String uuid, Boolean isAnonymous)
   {
-    FirstName = firstName;
-    FullName = fullName;
-    Email = emailAddress;
-    Uuid = uuid;
-    IsAnonymous = isAnonymous;
-    Identifier = uniqueUserIdentifier;
+    this.setFirstName(firstName);
+    this.setFullName(fullName);
+    this.setEmail(emailAddress);
+    this.setUuid(uuid);
+    this.setIsAnonymous(isAnonymous);
+    this.setIdentifier(uniqueUserIdentifier);
   }
 
   /**
@@ -45,6 +45,54 @@ public class RaygunIdentifier
    */
   public RaygunIdentifier(String uniqueUserIdentifier)
   {
-    Identifier = uniqueUserIdentifier;
+    this.setIdentifier(uniqueUserIdentifier);
   }
+
+  public Boolean getIsAnonymous() {
+    return isAnonymous;
+  }
+	
+  public void setIsAnonymous(Boolean isAnonymous) {
+    this.isAnonymous = isAnonymous;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+	
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }  
 }
