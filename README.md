@@ -1,8 +1,6 @@
 Raygun4java
 ===========
 
-Version 1.6.1
-
 This provider provides support for sending exceptions from desktop Java, Scala, Sevlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
 
 ## Installation
@@ -31,12 +29,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>1.6.0</version>
+    	<version>2.0.0</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>1.6.0</version>
+    	<version>2.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -49,7 +47,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>1.6.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
