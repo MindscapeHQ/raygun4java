@@ -10,7 +10,7 @@ This provider provides support for sending exceptions from desktop Java, Scala, 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 1.6.0.
+2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 2.0.0.
 
     If you are working in a web environment, add **com.mindscapehq.webprovider** jar too.
 
