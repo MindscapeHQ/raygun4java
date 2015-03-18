@@ -1,17 +1,17 @@
 package com.mindscapehq.raygun4java.core.messages;
 
 public class RaygunClientMessage {
-	
+
 	private String version;
-	
+
 	private String clientUrlString;
-	
+
 	private String name;
-	
+
 	public RaygunClientMessage()
 	{
 		setName("Raygun4Java");
-		setVersion("1.5.0");
+		setVersion("2.0.0");
 		setClientUrlString("https://github.com/MindscapeHQ/raygun4java");
 	}
 
@@ -33,5 +33,5 @@ public class RaygunClientMessage {
 	public void setName(String name) {
 		this.name = name;
 	}
-		
+
 }
