@@ -1,3 +1,5 @@
+- 2.1.0: Updated Play2 provider to accept RaygunIdentifier objects to SetUser
+
 - 2.0.0: Fixed a bug with incorrect casing of user fields - breaking change for RaygunIdentifier as several of its fields are now private.
 
 - 1.6.1: Fix incorrect Play2 packaging

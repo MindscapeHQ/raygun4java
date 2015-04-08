@@ -123,7 +123,7 @@ Note: all Java dynamic web page projects should have core-1.x.x.jar, webprovider
 
 **Note: Java Play 2 projects are also supported**
 
-Feb 2014: This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. This is currently considered alpha but confirmed working; feedback is appreciated. You can use the plain core-1.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
+This provider contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. You can use the plain core-x.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
 
 ### Usage
 
@@ -140,7 +140,7 @@ def index = Action { implicit request =>
   }
 ```
 
-play2-0.4.4: For use in your Scala Play2 app's global error handler, RaygunPlayClient now includes an overload which allows you to pass in a RequestHeader from Scala Play2:
+For use in your Scala Play2 app's global error handler, RaygunPlayClient now includes an overload which allows you to pass in a RequestHeader from Scala Play2:
 
 **app/Global.scala**
 ```scala
