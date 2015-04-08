@@ -3,6 +3,7 @@ package com.mindscapehq.raygun4java.play2;
 import play.api.mvc.RequestHeader;
 import play.mvc.Http.Request;
 import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
+import com.mindscapehq.raygun4java.core.messages.*;
 
 public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IRaygunPlayMessageBuilder {
 
@@ -27,10 +28,14 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
     _raygunServletMessage.getDetails().setVersion(_raygunMessage.getDetails().getVersion());
     _raygunServletMessage.getDetails().setTags(_raygunMessage.getDetails().getTags());
     _raygunServletMessage.getDetails().setUserCustomData(_raygunMessage.getDetails().getUserCustomData());
-    _raygunServletMessage.getDetails().setUser(_raygunMessage.getDetails().getUser());
+
+    RaygunIdentifier id = _raygunMessage.getDetails().getUser();
+
+    _raygunServletMessage.getDetails().setUser(id);
+
     return _raygunServletMessage;
   }
-	
+
 	public IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader) {
     if (javaRequest != null)
     {

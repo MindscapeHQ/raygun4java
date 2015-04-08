@@ -30,7 +30,7 @@ public class RaygunClient {
 		_apiKey = apiKey;
 		this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
 	}
-	
+
 	protected Boolean ValidateApiKey() throws Exception
 	{
 		if (_apiKey.isEmpty())
@@ -39,8 +39,8 @@ public class RaygunClient {
 		}
 		else
 		{
-			return true;	
-		}		
+			return true;
+		}
 	}
 
   public void SetUser(RaygunIdentifier userIdentity)
@@ -60,22 +60,22 @@ public class RaygunClient {
   {
     _version = version;
   }
-	
+
 	public int Send(Throwable throwable)
 	{
 		return Post(BuildMessage(throwable));
 	}
-	
+
 	public int Send(Throwable throwable, List<?> tags)
-	{		
+	{
 		return Post(BuildMessage(throwable, tags));
 	}
-	
+
 	public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
-	{	
+	{
 		return Post(BuildMessage(throwable, tags, userCustomData));
 	}
-	
+
 	private RaygunMessage BuildMessage(Throwable throwable)
 	{
 		try
@@ -95,12 +95,12 @@ public class RaygunClient {
 		}
 		return null;
 	}
-	
+
 	private RaygunMessage BuildMessage(Throwable throwable, List<?> tags)
 	{
 		try
 		{
-			return RaygunMessageBuilder.New()					
+			return RaygunMessageBuilder.New()
 					.SetEnvironmentDetails()
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
@@ -116,12 +116,12 @@ public class RaygunClient {
 		}
 		return null;
 	}
-	
+
 	private RaygunMessage BuildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
 	{
 		try
 		{
-			return RaygunMessageBuilder.New()					
+			return RaygunMessageBuilder.New()
 					.SetEnvironmentDetails()
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
@@ -138,24 +138,24 @@ public class RaygunClient {
 		}
 		return null;
 	}
-	
+
 	public int Post(RaygunMessage raygunMessage)
 	{
 		try
 		{
 			if (ValidateApiKey())
-			{ 
-				String jsonPayload = new Gson().toJson(raygunMessage);				
-				
+			{
+				String jsonPayload = new Gson().toJson(raygunMessage);
+
 				HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
-				
+
 				OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 				writer.write(jsonPayload);
 				writer.flush();
-				writer.close();				
+				writer.close();
 				connection.disconnect();
 				return connection.getResponseCode();
-				
+
 			}
 		}
 		catch (Exception e)
@@ -164,5 +164,5 @@ public class RaygunClient {
 		}
 		return -1;
 	}
-		
+
 }

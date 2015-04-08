@@ -8,6 +8,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,10 +36,7 @@ public class RaygunClientTest {
 	
 	@Test
 	public void post_ValidResponse_Returns202() throws MalformedURLException, IOException {
-		HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);		
-		when(httpURLConnection.getResponseCode()).thenReturn(202);
-		when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
-		when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
+		mockConnection();
 		
 		assertEquals(202, this.raygunClient.Send(new Exception()));
 	}
@@ -45,14 +44,30 @@ public class RaygunClientTest {
   @Test
   public void post_SendWithUser_Returns202() throws IOException
   {
-    HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
-    when(httpURLConnection.getResponseCode()).thenReturn(202);
-    when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
-    when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
+    mockConnection();
 
     this.raygunClient.SetUser("user");
 
     assertEquals(202, this.raygunClient.Send(new Exception()));
+  }
+
+  @Test
+  public void post_NullTags_CustomData_Returns202() throws IOException
+  {
+    mockConnection();
+
+    Map<Integer, Integer> customData = new HashMap<Integer, Integer>();
+    customData.put(1, 1);
+
+    assertEquals(202, this.raygunClient.Send(new Exception(), null, customData));
+  }
+
+  private void mockConnection() throws IOException
+  {
+    HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+    when(httpURLConnection.getResponseCode()).thenReturn(202);
+    when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+    when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
   }
 
 }

@@ -10,6 +10,7 @@ import play.api.mvc.RequestHeader;
 import play.mvc.Http.Request;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 public class RaygunPlayClient extends RaygunClient {
