@@ -32,14 +32,14 @@ public class RaygunEnvironmentMessage {
 		try {
 			utcOffset = TimeZone.getDefault().getRawOffset() / 3600000.0;
 		} catch (Throwable t) {
-			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.FINEST, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
 			locale = Locale.getDefault().getLanguage() + "-"
 					+ Locale.getDefault().getCountry();
 		} catch (Throwable t) {
-			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.FINEST, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
@@ -48,13 +48,13 @@ public class RaygunEnvironmentMessage {
 			windowBoundsHeight = GraphicsEnvironment
 					.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 		} catch (Throwable t) {
-			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.FINEST, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
 			processorCount = Runtime.getRuntime().availableProcessors();
 		} catch (Throwable t) {
-			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.FINEST, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
@@ -65,7 +65,7 @@ public class RaygunEnvironmentMessage {
 			availableVirtualMemory = memBean.getHeapMemoryUsage().getUsed()
 					+ memBean.getNonHeapMemoryUsage().getUsed();
 		} catch (Throwable t) {
-			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.FINEST, RaygunEnvironmentMessage.message, t);
 		}
 
 		try {
@@ -74,7 +74,7 @@ public class RaygunEnvironmentMessage {
 			architecture = osMXBean.getArch();
 			osVersion = osMXBean.getName() + " - " + osMXBean.getVersion();
 		} catch (Throwable t) {
-			logger.log(Level.INFO, RaygunEnvironmentMessage.message, t);
+			logger.log(Level.FINEST, RaygunEnvironmentMessage.message, t);
 		}
 	}
 }
