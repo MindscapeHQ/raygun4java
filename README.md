@@ -173,7 +173,7 @@ This feature is considered to be in Beta, and it is advised to test it in a stag
 
 **Google app engine:** This method will not work from code running on GAE - see the troubleshooting section below.
 
-### Unique user tracking
+### Affected user tracking
 
 You can call `client.SetUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the uniqueUserIdentifier. This should be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
 
