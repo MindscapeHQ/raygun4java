@@ -2,6 +2,7 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import com.mindscapehq.raygun4java.webprovider.RaygunServletFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -18,10 +19,18 @@ import java.util.logging.Logger;
 public class RaygunServletClient extends RaygunClient
 {
   private HttpServletRequest servletRequest;
+  private RaygunServletFilter messageFilter;
 
   public RaygunServletClient(String apiKey, HttpServletRequest request)
   {
     super(apiKey);
+    this.servletRequest = request;
+  }
+
+  public RaygunServletClient(String apiKey, HttpServletRequest request, RaygunServletFilter filter)
+  {
+    super(apiKey);
+    this.messageFilter = filter;
     this.servletRequest = request;
   }
 
@@ -91,7 +100,7 @@ public class RaygunServletClient extends RaygunClient
   {
     try
     {
-      return RaygunServletMessageBuilder.New()
+      RaygunMessage message = RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
@@ -100,6 +109,11 @@ public class RaygunServletClient extends RaygunClient
             .SetVersion(_version)
             .SetUser(_user)
             .Build();
+
+      if (messageFilter != null) {
+        messageFilter.filter((RaygunServletMessage)  message);
+      }
+      return message;
     }
     catch (Exception e)
     {
@@ -112,7 +126,7 @@ public class RaygunServletClient extends RaygunClient
   {
     try
     {
-      return RaygunServletMessageBuilder.New()
+      RaygunMessage message = RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
@@ -122,6 +136,11 @@ public class RaygunServletClient extends RaygunClient
             .SetUser(_user)
             .SetTags(tags)
             .Build();
+
+      if (messageFilter != null) {
+        messageFilter.filter((RaygunServletMessage) message);
+      }
+      return message;
     }
     catch (Exception e)
     {
@@ -134,7 +153,7 @@ public class RaygunServletClient extends RaygunClient
   {
     try
     {
-      return RaygunServletMessageBuilder.New()
+      RaygunMessage message = RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
@@ -145,6 +164,12 @@ public class RaygunServletClient extends RaygunClient
             .SetTags(tags)
             .SetUserCustomData(userCustomData)
             .Build();
+
+      if (messageFilter != null) {
+        messageFilter.filter((RaygunServletMessage) message);
+      }
+      return message;
+
     }
     catch (Exception e)
     {
@@ -153,3 +178,4 @@ public class RaygunServletClient extends RaygunClient
     return null;
   }
 }
+

@@ -26,8 +26,8 @@
   <dependencies>
     <dependency>
  			<groupId>com.mindscapehq</groupId>
- 			<artifactId>core</artifactId> 	
- 			<version>${project.version}</version>		
+ 			<artifactId>core</artifactId>
+ 			<version>${project.version}</version>
  		</dependency>
         <dependency>
 	    	<groupId>javax.servlet</groupId>
