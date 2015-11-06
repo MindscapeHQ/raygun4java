@@ -17,13 +17,13 @@ import java.util.logging.Logger;
  */
 public class RaygunServletClient extends RaygunClient
 {
-	private HttpServletRequest servletRequest;
+  private HttpServletRequest servletRequest;
 
-	public RaygunServletClient(String apiKey, HttpServletRequest request)
-	{
+  public RaygunServletClient(String apiKey, HttpServletRequest request)
+  {
     super(apiKey);
-		this.servletRequest = request;
-	}
+    this.servletRequest = request;
+  }
 
   public int Send(Throwable throwable)
   {
@@ -87,11 +87,11 @@ public class RaygunServletClient extends RaygunClient
     Executors.newSingleThreadExecutor().submit(r);
   }
 
-	private RaygunMessage BuildServletMessage(Throwable throwable)
-	{
-		try
-		{			
-			return RaygunServletMessageBuilder.New()
+  private RaygunMessage BuildServletMessage(Throwable throwable)
+  {
+    try
+    {
+      return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
@@ -100,19 +100,19 @@ public class RaygunServletClient extends RaygunClient
             .SetVersion(_version)
             .SetUser(_user)
             .Build();
-		}
-		catch (Exception e)
-		{
+    }
+    catch (Exception e)
+    {
       Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-		}
-		return null;
-	}
+    }
+    return null;
+  }
 
-	private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags)
-	{
-		try
-		{
-			return RaygunServletMessageBuilder.New()
+  private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags)
+  {
+    try
+    {
+      return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
@@ -121,20 +121,20 @@ public class RaygunServletClient extends RaygunClient
             .SetVersion(_version)
             .SetUser(_user)
             .SetTags(tags)
-					  .Build();
-		}
-		catch (Exception e)
-		{
+            .Build();
+    }
+    catch (Exception e)
+    {
       Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-		}
-		return null;
-	}
-	
-	private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
-	{
-		try
-		{
-			return RaygunServletMessageBuilder.New()
+    }
+    return null;
+  }
+
+  private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
+  {
+    try
+    {
+      return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
             .SetMachineName(InetAddress.getLocalHost().getHostName())
@@ -144,12 +144,12 @@ public class RaygunServletClient extends RaygunClient
             .SetUser(_user)
             .SetTags(tags)
             .SetUserCustomData(userCustomData)
-					  .Build();
-		}
-		catch (Exception e)
-		{
+            .Build();
+    }
+    catch (Exception e)
+    {
       Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-		}
-		return null;
-	}
+    }
+    return null;
+  }
 }

@@ -6,12 +6,12 @@ import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
 public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IRaygunPlayMessageBuilder {
 
-	private RaygunPlayMessage _raygunServletMessage;
+  private RaygunPlayMessage _raygunServletMessage;
 
   public RaygunPlayMessageBuilder()
-	{
+  {
     _raygunServletMessage = new RaygunPlayMessage();
-	}
+  }
 
   public static RaygunPlayMessageBuilder New() {
     return new RaygunPlayMessageBuilder();
@@ -30,8 +30,8 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
     _raygunServletMessage.getDetails().setUser(_raygunMessage.getDetails().getUser());
     return _raygunServletMessage;
   }
-	
-	public IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader) {
+
+  public IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader) {
     if (javaRequest != null)
     {
       _raygunServletMessage.getDetails().setRequest(new RaygunPlayJavaRequestMessage(javaRequest));
@@ -45,7 +45,7 @@ public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IR
       _raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestHeaderMessage(scalaRequestHeader));
     }
 
-		return this;
-	}
+    return this;
+  }
 
 }

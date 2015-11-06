@@ -5,71 +5,71 @@ import java.util.Map;
 
 public class RaygunMessageDetails {
 
-	private String machineName;
-	private String version;
-	private RaygunErrorMessage error;	
-	private RaygunEnvironmentMessage environment;
-	private RaygunClientMessage client;
-	private List<?> tags;
-	private Map<?, ?> userCustomData;
+  private String machineName;
+  private String version;
+  private RaygunErrorMessage error;
+  private RaygunEnvironmentMessage environment;
+  private RaygunClientMessage client;
+  private List<?> tags;
+  private Map<?, ?> userCustomData;
   private RaygunIdentifier user;
-	
-	public String getMachineName()
+
+  public String getMachineName()
   {
-		return machineName;
-	}
-	public void setMachineName(String machineName)
+    return machineName;
+  }
+  public void setMachineName(String machineName)
   {
-		this.machineName = machineName;
-	}
-	public String getVersion()
+    this.machineName = machineName;
+  }
+  public String getVersion()
   {
-		return version;
-	}
-	public void setVersion(String version)
+    return version;
+  }
+  public void setVersion(String version)
   {
-		this.version = version;
-	}
-	public RaygunErrorMessage getError()
+    this.version = version;
+  }
+  public RaygunErrorMessage getError()
   {
-		return error;
-	}
-	public void setError(RaygunErrorMessage error)
+    return error;
+  }
+  public void setError(RaygunErrorMessage error)
   {
-		this.error = error;
-	}
-	public RaygunEnvironmentMessage getEnvironment()
+    this.error = error;
+  }
+  public RaygunEnvironmentMessage getEnvironment()
   {
-		return environment;
-	}
-	public void setEnvironment(RaygunEnvironmentMessage environment)
+    return environment;
+  }
+  public void setEnvironment(RaygunEnvironmentMessage environment)
   {
-		this.environment = environment;
-	}
-	public RaygunClientMessage getClient()
+    this.environment = environment;
+  }
+  public RaygunClientMessage getClient()
   {
-		return client;
-	}
-	public void setClient(RaygunClientMessage client)
+    return client;
+  }
+  public void setClient(RaygunClientMessage client)
   {
-		this.client = client;
-	}
-	public List<?> getTags()
+    this.client = client;
+  }
+  public List<?> getTags()
   {
-		return tags;
-	}
-	public void setTags(List<?> tags)
+    return tags;
+  }
+  public void setTags(List<?> tags)
   {
-		this.tags = tags;
-	}
-	public void setUserCustomData(Map<?, ?> userCustomData)
+    this.tags = tags;
+  }
+  public void setUserCustomData(Map<?, ?> userCustomData)
   {
-		this.userCustomData = userCustomData;		
-	}
-	public Map<?, ?> getUserCustomData()
+    this.userCustomData = userCustomData;
+  }
+  public Map<?, ?> getUserCustomData()
   {
-		return this.userCustomData;
-	}
+    return this.userCustomData;
+  }
   public RaygunIdentifier getUser()
   {
     if (user != null)

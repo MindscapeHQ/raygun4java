@@ -5,16 +5,16 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
 public class RaygunPlayMessageDetails extends RaygunMessageDetails
 {
 
-	private RaygunPlayRequestMessage request;
+  private RaygunPlayRequestMessage request;
 
-	public RaygunPlayRequestMessage getRequest()
+  public RaygunPlayRequestMessage getRequest()
   {
-		return request;
-	}
-	public void setRequest(RaygunPlayJavaRequestMessage request)
+    return request;
+  }
+  public void setRequest(RaygunPlayJavaRequestMessage request)
   {
-		this.request = request;
-	}
+    this.request = request;
+  }
   public void setRequest(RaygunPlayScalaRequestMessage request)
   {
     this.request = request;

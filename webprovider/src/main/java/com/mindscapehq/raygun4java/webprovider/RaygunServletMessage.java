@@ -4,17 +4,17 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 public class RaygunServletMessage extends RaygunMessage
 {
-	
-	public RaygunServletMessage()
-	{
-		details = new RaygunServletMessageDetails();
-	}
 
-	public RaygunServletMessageDetails getDetails() {
-		return (RaygunServletMessageDetails) details;
-	}
+  public RaygunServletMessage()
+  {
+    details = new RaygunServletMessageDetails();
+  }
 
-	public void setDetails(RaygunServletMessageDetails _details) {
-		this.details = _details;
-	}
+  public RaygunServletMessageDetails getDetails() {
+    return (RaygunServletMessageDetails) details;
+  }
+
+  public void setDetails(RaygunServletMessageDetails _details) {
+    this.details = _details;
+  }
 }

@@ -6,12 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 
 public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements IRaygunHttpMessageBuilder {
 
-	private RaygunServletMessage _raygunServletMessage;
+  private RaygunServletMessage _raygunServletMessage;
 
   public RaygunServletMessageBuilder()
-	{
+  {
     _raygunServletMessage = new RaygunServletMessage();
-	}
+  }
 
   public static RaygunServletMessageBuilder New() {
     return new RaygunServletMessageBuilder();
@@ -30,10 +30,10 @@ public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements
     _raygunServletMessage.getDetails().setUser(_raygunMessage.getDetails().getUser());
     return _raygunServletMessage;
   }
-	
-	public IRaygunHttpMessageBuilder SetRequestDetails(HttpServletRequest request) {
+
+  public IRaygunHttpMessageBuilder SetRequestDetails(HttpServletRequest request) {
     _raygunServletMessage.getDetails().setRequest(new RaygunRequestMessage(request));
-		return this;
-	}
+    return this;
+  }
 
 }

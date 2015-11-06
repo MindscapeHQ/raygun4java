@@ -12,41 +12,41 @@ import java.util.logging.Logger;
 
 public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 
-	protected RaygunMessage _raygunMessage;
-	
-	public RaygunMessageBuilder()
-	{
-		_raygunMessage = new RaygunMessage();
-	}
-		
-	public RaygunMessage Build()
-	{
-		return _raygunMessage;
-	}
+  protected RaygunMessage _raygunMessage;
 
-	public static RaygunMessageBuilder New() {
-		return new RaygunMessageBuilder();
-	}
+  public RaygunMessageBuilder()
+  {
+    _raygunMessage = new RaygunMessage();
+  }
 
-	public IRaygunMessageBuilder SetMachineName(String machineName) {
-		_raygunMessage.getDetails().setMachineName(machineName);
-		return this;
-	}	
+  public RaygunMessage Build()
+  {
+    return _raygunMessage;
+  }
 
-	public IRaygunMessageBuilder SetExceptionDetails(Throwable throwable) {
-		_raygunMessage.getDetails().setError(new RaygunErrorMessage(throwable));
-		return this;
-	}
+  public static RaygunMessageBuilder New() {
+    return new RaygunMessageBuilder();
+  }
 
-	public IRaygunMessageBuilder SetClientDetails() {
-		_raygunMessage.getDetails().setClient(new RaygunClientMessage());
-		return this;
-	}
+  public IRaygunMessageBuilder SetMachineName(String machineName) {
+    _raygunMessage.getDetails().setMachineName(machineName);
+    return this;
+  }
 
-	public IRaygunMessageBuilder SetEnvironmentDetails() {
-		_raygunMessage.getDetails().setEnvironment(new RaygunEnvironmentMessage());
-		return this;
-	}
+  public IRaygunMessageBuilder SetExceptionDetails(Throwable throwable) {
+    _raygunMessage.getDetails().setError(new RaygunErrorMessage(throwable));
+    return this;
+  }
+
+  public IRaygunMessageBuilder SetClientDetails() {
+    _raygunMessage.getDetails().setClient(new RaygunClientMessage());
+    return this;
+  }
+
+  public IRaygunMessageBuilder SetEnvironmentDetails() {
+    _raygunMessage.getDetails().setEnvironment(new RaygunEnvironmentMessage());
+    return this;
+  }
 
   public IRaygunMessageBuilder SetVersion(String version) {
     if (version != null)
@@ -59,39 +59,39 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
     }
     return this;
   }
-	
-	public IRaygunMessageBuilder SetTags(List<?> tags) {
-		_raygunMessage.getDetails().setTags(tags);
-		return this;
-	}
 
-	public IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData) {
-		_raygunMessage.getDetails().setUserCustomData(userCustomData);
-		return this;
-	}
+  public IRaygunMessageBuilder SetTags(List<?> tags) {
+    _raygunMessage.getDetails().setTags(tags);
+    return this;
+  }
+
+  public IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData) {
+    _raygunMessage.getDetails().setUserCustomData(userCustomData);
+    return this;
+  }
 
   public IRaygunMessageBuilder SetUser(RaygunIdentifier user)
   {
     _raygunMessage.getDetails().setUser(user);
     return this;
   }
-	
-	private String ReadVersion()
-	{
-		StackTraceElement[] stack = Thread.currentThread ().getStackTrace ();
-	    StackTraceElement main = stack[stack.length - 1];
-	    String mainClass = main.getClassName ();
-	    	
-	    try {
-	    	Class<?> cl = getClass().getClassLoader().loadClass(mainClass);
-	    	String className = cl.getSimpleName() + ".class";
-	    	String classPath = cl.getResource(className).toString();
-	    	if (!classPath.startsWith("jar")) {
-	    	  return null;
-	    	}
-	    	String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +  "/META-INF/MANIFEST.MF";
-	    	Manifest manifest = new Manifest(new URL(manifestPath).openStream());
-	    	Attributes attr = manifest.getMainAttributes();
+
+  private String ReadVersion()
+  {
+    StackTraceElement[] stack = Thread.currentThread ().getStackTrace ();
+      StackTraceElement main = stack[stack.length - 1];
+      String mainClass = main.getClassName ();
+
+      try {
+        Class<?> cl = getClass().getClassLoader().loadClass(mainClass);
+        String className = cl.getSimpleName() + ".class";
+        String classPath = cl.getResource(className).toString();
+        if (!classPath.startsWith("jar")) {
+          return null;
+        }
+        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +  "/META-INF/MANIFEST.MF";
+        Manifest manifest = new Manifest(new URL(manifestPath).openStream());
+        Attributes attr = manifest.getMainAttributes();
 
         if (attr.getValue("Specification-Version") != null)
         {
@@ -101,10 +101,10 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         {
           return attr.getValue("Implementation-Version");
         }
-		
-		} catch (Exception e) {
+
+    } catch (Exception e) {
         Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
-		}
-		return "Not supplied";
-	}
+    }
+    return "Not supplied";
+  }
 }
