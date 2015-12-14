@@ -110,10 +110,10 @@ public class RaygunClient {
           .SetUser(_user)
 					.Build();
 		}
-		catch (Exception e)
-		{
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-		}
+    catch (Throwable t)
+    {
+      Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage-t", t);
+    }
 		return null;
 	}
 	
@@ -121,7 +121,7 @@ public class RaygunClient {
 	{
 		try
 		{
-			return RaygunMessageBuilder.New()					
+			return RaygunMessageBuilder.New()
 					.SetEnvironmentDetails()
 					.SetMachineName(InetAddress.getLocalHost().getHostName())
 					.SetExceptionDetails(throwable)
@@ -132,10 +132,10 @@ public class RaygunClient {
           .SetUser(_user)
 					.Build();
 		}
-		catch (Exception e)
-		{
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-		}
+    catch (Throwable t)
+    {
+      Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage-t-m", t);
+    }
 		return null;
 	}
 	
@@ -158,9 +158,9 @@ public class RaygunClient {
 				
 			}
 		}
-		catch (Exception e)
+		catch (Throwable t)
 		{
-      Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + e.getMessage());
+      Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + t.getMessage());
 		}
 		return -1;
 	}

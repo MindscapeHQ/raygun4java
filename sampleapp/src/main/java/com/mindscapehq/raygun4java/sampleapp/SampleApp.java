@@ -28,7 +28,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 {
 
 	public void uncaughtException(Thread t, Throwable e) {
-		RaygunClient client = new RaygunClient("paste_your_api_key_here"); // Copy your API key from your Raygun dashboard, then paste it here
+		RaygunClient client = new RaygunClient("paste_your_apikey_here"); // Copy your API key from your Raygun dashboard, then paste it here
 
 		RaygunIdentifier userIdentity = new RaygunIdentifier("a@b.com");
 
