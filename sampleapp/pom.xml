@@ -3,11 +3,11 @@
   <parent>
   	<groupId>com.mindscapehq</groupId>
   	<artifactId>raygun4java</artifactId>
-  	<version>2.0.1-SNAPSHOT</version>
+  	<version>2.0.0</version>
   	<relativePath>../</relativePath>
   </parent>
   <artifactId>sampleapp</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <version>2.0.0</version>
   <packaging>jar</packaging>
 
   <name>sampleapp</name>
@@ -35,8 +35,39 @@
  		<dependency>
  			<groupId>com.mindscapehq</groupId>
  			<artifactId>core</artifactId>
- 			<version>2.0.1-SNAPSHOT</version>
+ 			<version>2.0.0</version>
  		</dependency>
  	</dependencies>
  </dependencyManagement>
+<build>
+  <plugins>
+    <plugin>
+      <!-- Build an executable JAR -->
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <version>2.4</version>
+     </plugin>
+<plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+    <archive>
+      <manifest>
+        <mainClass>com.mindscapehq.raygun4java.sampleapp.SampleApp</mainClass>
+      </manifest>
+    </archive>
+        </configuration>
+      </plugin>
+  </plugins>
+</build>
 </project>

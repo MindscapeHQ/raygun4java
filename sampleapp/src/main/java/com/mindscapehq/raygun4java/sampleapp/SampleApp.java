@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SampleApp {
 
@@ -15,9 +17,10 @@ public class SampleApp {
 	 */
 	public static void main(String[] args) throws Throwable
 	{
+
 		Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
 		
-		throw new Exception("Raygun4Java user info v2");
+		throw new Exception("Raygun4Java test exception");
 	}
 }
 
@@ -25,17 +28,17 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 {
 
 	public void uncaughtException(Thread t, Throwable e) {
-		RaygunClient client = new RaygunClient("api_key"); // Copy your API key from your Raygun dashboard, then paste it here
+		RaygunClient client = new RaygunClient("paste_your_api_key_here"); // Copy your API key from your Raygun dashboard, then paste it here
 
-    RaygunIdentifier userIdentity = new RaygunIdentifier("a@b.com");
+		RaygunIdentifier userIdentity = new RaygunIdentifier("a@b.com");
 
-    userIdentity.setEmail("a@b.com");
-    userIdentity.setFirstName("Foo");
-    userIdentity.setFullName("Foo Bar");
-    userIdentity.setIsAnonymous(false);
-    userIdentity.setUuid(UUID.randomUUID().toString());
+		userIdentity.setEmail("a@b.com");
+		userIdentity.setFirstName("Foo");
+		userIdentity.setFullName("Foo Bar");
+		userIdentity.setIsAnonymous(false);
+		userIdentity.setUuid(UUID.randomUUID().toString());
 
-    client.SetUser(userIdentity);
+		client.SetUser(userIdentity);
 
 		ArrayList<Object> tags = new ArrayList<Object>();
 		tags.add("Place tags about this version/release in this object");
@@ -45,6 +48,5 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 		customData.put(2, "Like sprints, branches, data from the program...");
 		
 		client.Send(e, tags, customData);
-		
 	}	
 }

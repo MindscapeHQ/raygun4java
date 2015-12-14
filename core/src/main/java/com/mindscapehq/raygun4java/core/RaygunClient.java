@@ -86,12 +86,12 @@ public class RaygunClient {
 					.SetExceptionDetails(throwable)
 					.SetClientDetails()
 					.SetVersion(_version)
-          .SetUser(_user)
+					.SetUser(_user)
 					.Build();
 		}
-		catch (Exception e)
+		catch (Throwable t)
 		{
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
+		         Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage", t);
 		}
 		return null;
 	}
