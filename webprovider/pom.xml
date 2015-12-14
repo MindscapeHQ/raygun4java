@@ -3,11 +3,11 @@
   <parent>
   	<groupId>com.mindscapehq</groupId>
   	<artifactId>raygun4java</artifactId>
-  	<version>2.0.1-SNAPSHOT</version>
+  	<version>2.0.1</version>
   	<relativePath>../</relativePath>
   </parent>
   <artifactId>webprovider</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <version>2.0.1</version>
   <packaging>jar</packaging>
 
   <name>raygun-webprovider</name>
