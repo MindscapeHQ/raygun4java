@@ -1,3 +1,5 @@
+- 2.1.0: Add and expose OnBeforeSend and setGroupingKey implementations
+
 - 2.0.1: Improved logging
 
 - 2.0.0: Fixed a bug with incorrect casing of user fields - breaking change for RaygunIdentifier as several of its fields are now private.

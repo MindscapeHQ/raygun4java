@@ -208,6 +208,79 @@ Raygun4Java reads the version of your application from your manifest.mf file in 
 
 A SetVersion(string) method is also available to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
 
+### Getting/setting/cancelling the error before it is sent
+
+This provider has an OnBeforeSend API to support accessing or mutating the candidate error payload immediately before it is sent, or cancelling the send outright.
+
+This is provided as the public method `RaygunClient.SetOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `RaygunOnBeforeSend` interface. Your class needs a public `OnBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
+
+By example:
+
+```java
+class BeforeSendImplementation implements RaygunOnBeforeSend {
+    @Override
+    public RaygunMessage OnBeforeSend(RaygunMessage message) {
+        // About to post to Raygun, returning the payload as is...
+        return message;
+    }
+}
+
+class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
+    public void uncaughtException(Thread t, Throwable e) {
+        RaygunClient client = new RaygunClient("paste_your_api_key_here");
+        client.SetOnBeforeSend(new BeforeSendImplementation());
+        client.Send(e, tags, customData);
+    }
+}
+
+
+public class MyProgram {
+    public static void main(String[] args) throws Throwable {
+        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
+    }
+}
+```
+
+In the example above, the overridden `OnBeforeSend` method will log an info message every time an error is sent.
+
+To mutate the error payload, for instance to change the message:
+
+```java
+@Override
+public RaygunMessage OnBeforeSend(RaygunMessage message) {
+    RaygunMessageDetails details = message.getDetails();
+    RaygunErrorMessage error = details.getError();
+    error.setMessage("Mutated message");
+    
+    return message;
+}
+```
+
+To cancel the send (prevent the error from reaching the Raygun dashboard) by returning null:
+
+```java
+@Override
+public RaygunMessage OnBeforeSend(RaygunMessage message) {
+    //Cancelling sending message to Raygun...
+    return null;
+}
+```
+
+### Custom error grouping
+
+You can override Raygun's default grouping logic for Java exceptions by setting the grouping key manually in OnBeforeSend (see above):
+
+```java
+@Override
+public RaygunMessage OnBeforeSend(RaygunMessage message) {
+    RaygunMessageDetails details = message.getDetails();
+    details.setGroupingKey("foo");
+    return message;
+}
+```
+
+Any error instances with a certain key will be grouped together. The example above will place all errors within one group (as the key is hardcoded to 'foo'). The grouping key is a String and must be between 1 and 100 characters long. You should send all data you care about (for instance, parts of the exception message, stacktrace frames, class names etc) to a hash function (for instance MD5), then pass that to `setGroupingKey`.
+
 ## Troubleshooting
 
 - When Maven runs the tests locally, Surefire might complain of unsupported major.minor version 51.0 - ensure you have JDK 7 set as your JAVA_HOME, or set the plugin goal for maven-surefire-plugin to be `<configuration><jvm>${env.your_jre_7_home}/bin/java.exe</jvm></configuration>` in the parent pom.
