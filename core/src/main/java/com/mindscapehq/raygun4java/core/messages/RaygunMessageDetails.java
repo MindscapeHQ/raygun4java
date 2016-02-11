@@ -92,4 +92,6 @@ public class RaygunMessageDetails {
     }
 
     public void setGroupingKey(String groupingKey) { this.groupingKey = groupingKey; }
+
+    public String getGroupingKey() { return this.groupingKey; }
 }
