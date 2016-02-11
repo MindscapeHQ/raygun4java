@@ -27,6 +27,7 @@ public class RaygunClient {
     protected RaygunIdentifier _user;
     protected String _context;
     protected String _version = null;
+    private static RaygunOnBeforeSend _onBeforeSend;
 
     public RaygunClient(String apiKey) {
         _apiKey = apiKey;
@@ -70,14 +71,15 @@ public class RaygunClient {
 
     private RaygunMessage BuildMessage(Throwable throwable) {
         try {
-            return RaygunMessageBuilder.New()
+            RaygunMessage message = RaygunMessageBuilder.New()
                     .SetEnvironmentDetails()
                     .SetMachineName(InetAddress.getLocalHost().getHostName())
                     .SetExceptionDetails(throwable)
                     .SetClientDetails()
                     .SetVersion(_version)
                     .SetUser(_user)
-                    .Build();
+                .Build();
+            return message;
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage", t);
         }
@@ -122,6 +124,10 @@ public class RaygunClient {
     public int Post(RaygunMessage raygunMessage) {
         try {
             if (ValidateApiKey()) {
+                if (_onBeforeSend != null) {
+                    raygunMessage = _onBeforeSend.OnBeforeSend(raygunMessage);
+                }
+
                 String jsonPayload = new Gson().toJson(raygunMessage);
 
                 HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
@@ -139,4 +145,6 @@ public class RaygunClient {
         }
         return -1;
     }
+
+    public static void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) { _onBeforeSend = onBeforeSend; }
 }
