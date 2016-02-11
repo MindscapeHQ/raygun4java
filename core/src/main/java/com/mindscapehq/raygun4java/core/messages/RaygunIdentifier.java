@@ -25,7 +25,6 @@ public class RaygunIdentifier
    * @param uniqueUserIdentifier Unique identifier for this user. Set this to the internal identifier you use to look up users,
    *                   or a correlation ID for anonymous users if you have one. It doesn't have to be unique, but we will treat
    *                   any duplicated values as the same user. If you use their email address here, pass it in as the 'emailAddress' parameter too.
-   * @return HTTP result code - 202 if successful, 403 if API key invalid, 400 if bad message (invalid properties)
    */
   public RaygunIdentifier(String uniqueUserIdentifier, String firstName, String fullName, String emailAddress, String uuid, Boolean isAnonymous)
   {

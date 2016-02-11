@@ -24,10 +24,11 @@ public class RaygunSettings {
 		return this.defaultApiEndPoint;
 	}
 	
-	private Proxy proxy;	
+	private Proxy proxy;
+
 	/**
-	 * The proxy class used when communicating with the Raygun server, this is instantiated with
-	 * setHttpProxy
+	 * The proxy class used when communicating with the Raygun server, this is instantiated with setHttpProxy
+     * @return The Proxy instance held and used to communicate with the Raygun API
 	 */
 	public Proxy getProxy() {
 		return this.proxy;
@@ -49,8 +50,8 @@ public class RaygunSettings {
     	This will allow different proxy authentication credentials to be used for different
     	target urls. 
 	 * 
-	 * @param host
-	 * @param port
+	 * @param host The host name
+	 * @param port The TCP port
 	 */
 	public void setHttpProxy(String host, int port) {		
 		this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));		
