@@ -78,9 +78,16 @@ public class RaygunRequestMessage {
 	    Map<String, String> map = new HashMap<String, String>();
 	    for (String param : params)
 	    {
-	        String name = param.split("=")[0];
-	        String value = param.split("=")[1];
-	        map.put(name, value);
+            int equalIndex = param.indexOf("=");
+            String key = param;
+            String value = null;
+            if(equalIndex > 0){
+                key = param.substring(0, equalIndex);
+                if(param.length() > equalIndex + 1){
+                    value = param.substring(equalIndex + 1);
+                }
+            }
+            map.put(key, value);
 	    }
 	    return map;
 	}	
