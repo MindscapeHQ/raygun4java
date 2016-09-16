@@ -23,10 +23,11 @@ public class RaygunRequestMessage {
 	{
     try
     {
-		  httpMethod = request.getMethod();
-		  ipAddress = request.getRemoteAddr();
-		  hostName = request.getRemoteHost();
-		  url = request.getRequestURI();
+      httpMethod = request.getMethod();
+      ipAddress = request.getRemoteAddr();
+      hostName = request.getRemoteHost();
+      url = request.getRequestURI();
+
       String qS = request.getQueryString();
       if (qS != null)
       {

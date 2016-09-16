@@ -126,6 +126,10 @@ public class RaygunClient {
             if (ValidateApiKey()) {
                 if (_onBeforeSend != null) {
                     raygunMessage = _onBeforeSend.OnBeforeSend(raygunMessage);
+
+                    if (raygunMessage == null) {
+                        return -1;
+                    }
                 }
 
                 String jsonPayload = new Gson().toJson(raygunMessage);
