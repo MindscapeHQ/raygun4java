@@ -94,7 +94,7 @@ public class RaygunServletClient extends RaygunClient
 			return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
-            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
             .SetVersion(_version)
@@ -103,7 +103,7 @@ public class RaygunServletClient extends RaygunClient
 		}
 		catch (Exception e)
 		{
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
+            Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}
@@ -115,13 +115,13 @@ public class RaygunServletClient extends RaygunClient
 			return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
-            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
             .SetVersion(_version)
             .SetUser(_user)
             .SetTags(tags)
-					  .Build();
+            .Build();
 		}
 		catch (Exception e)
 		{
@@ -137,18 +137,18 @@ public class RaygunServletClient extends RaygunClient
 			return RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
-            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
             .SetVersion(_version)
             .SetUser(_user)
             .SetTags(tags)
             .SetUserCustomData(userCustomData)
-					  .Build();
+            .Build();
 		}
 		catch (Exception e)
 		{
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
+            Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
 		}
 		return null;
 	}

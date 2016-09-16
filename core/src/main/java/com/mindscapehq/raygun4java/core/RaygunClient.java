@@ -7,6 +7,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -42,6 +43,18 @@ public class RaygunClient {
         }
     }
 
+    protected String GetMachineName() {
+        String machineName = "Unknown machine";
+
+        try {
+            InetAddress address = InetAddress.getLocalHost();
+            machineName = address.getHostName();
+        } catch (UnknownHostException e) {
+        }
+
+        return machineName;
+    }
+
     public void SetUser(RaygunIdentifier userIdentity) {
         _user = userIdentity;
     }
@@ -73,7 +86,7 @@ public class RaygunClient {
         try {
             RaygunMessage message = RaygunMessageBuilder.New()
                     .SetEnvironmentDetails()
-                    .SetMachineName(InetAddress.getLocalHost().getHostName())
+                    .SetMachineName(GetMachineName())
                     .SetExceptionDetails(throwable)
                     .SetClientDetails()
                     .SetVersion(_version)
@@ -90,7 +103,7 @@ public class RaygunClient {
         try {
             return RaygunMessageBuilder.New()
                     .SetEnvironmentDetails()
-                    .SetMachineName(InetAddress.getLocalHost().getHostName())
+                    .SetMachineName(GetMachineName())
                     .SetExceptionDetails(throwable)
                     .SetClientDetails()
                     .SetVersion(_version)
@@ -107,7 +120,7 @@ public class RaygunClient {
         try {
             return RaygunMessageBuilder.New()
                     .SetEnvironmentDetails()
-                    .SetMachineName(InetAddress.getLocalHost().getHostName())
+                    .SetMachineName(GetMachineName())
                     .SetExceptionDetails(throwable)
                     .SetClientDetails()
                     .SetVersion(_version)
