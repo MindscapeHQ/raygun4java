@@ -121,4 +121,22 @@ public class RaygunServletClientTest
 
     assertEquals(202, this.raygunClient.Send(new Exception()));
   }
+
+  @Test
+  public void send_WithQueryString_Returns202() throws MalformedURLException, IOException
+  {
+    HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+    when(httpURLConnection.getResponseCode()).thenReturn(202);
+    ByteArrayOutputStream requestBody = new ByteArrayOutputStream();
+    when(httpURLConnection.getOutputStream()).thenReturn(requestBody);
+    when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
+
+    when(this.requestMock.getQueryString()).thenReturn("paramA=valueA&paramB=&");
+
+    int send = this.raygunClient.Send(new Exception());
+    assertEquals(202, send);
+    String requestBodyAsString = requestBody.toString();
+    assertEquals(true, requestBodyAsString.contains("paramA"));
+    assertEquals(true, requestBodyAsString.contains("valueA"));
+  }
 }

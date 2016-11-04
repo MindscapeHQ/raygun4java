@@ -18,20 +18,20 @@ import java.util.logging.Logger;
  */
 public class RaygunServletClient extends RaygunClient
 {
-  private HttpServletRequest servletRequest;
+	private HttpServletRequest servletRequest;
   private RaygunServletFilter messageFilter;
 
-  public RaygunServletClient(String apiKey, HttpServletRequest request)
-  {
+	public RaygunServletClient(String apiKey, HttpServletRequest request)
+	{
     super(apiKey);
-    this.servletRequest = request;
-  }
+		this.servletRequest = request;
+	}
 
   public RaygunServletClient(String apiKey, HttpServletRequest request, RaygunServletFilter filter)
   {
     super(apiKey);
-    this.messageFilter = filter;
     this.servletRequest = request;
+    this.messageFilter = filter;
   }
 
   public int Send(Throwable throwable)
@@ -96,14 +96,14 @@ public class RaygunServletClient extends RaygunClient
     Executors.newSingleThreadExecutor().submit(r);
   }
 
-  private RaygunMessage BuildServletMessage(Throwable throwable)
-  {
-    try
-    {
-      RaygunMessage message = RaygunServletMessageBuilder.New()
+	private RaygunMessage BuildServletMessage(Throwable throwable)
+	{
+		try
+		{
+			RaygunMessage message = RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
-            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
             .SetVersion(_version)
@@ -114,49 +114,48 @@ public class RaygunServletClient extends RaygunClient
         messageFilter.filter((RaygunServletMessage)  message);
       }
       return message;
-    }
-    catch (Exception e)
-    {
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-    }
-    return null;
-  }
+		}
+		catch (Exception e)
+		{
+            Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
+		}
+		return null;
+	}
 
-  private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags)
-  {
-    try
-    {
-      RaygunMessage message = RaygunServletMessageBuilder.New()
+	private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags)
+	{
+		try
+		{
+			RaygunMessage message = RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
-            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
             .SetVersion(_version)
             .SetUser(_user)
             .SetTags(tags)
             .Build();
-
       if (messageFilter != null) {
-        messageFilter.filter((RaygunServletMessage) message);
+        messageFilter.filter((RaygunServletMessage)  message);
       }
       return message;
-    }
-    catch (Exception e)
-    {
+		}
+		catch (Exception e)
+		{
       Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-    }
-    return null;
-  }
-
-  private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
-  {
-    try
-    {
-      RaygunMessage message = RaygunServletMessageBuilder.New()
+		}
+		return null;
+	}
+	
+	private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
+	{
+		try
+		{
+			RaygunMessage message = RaygunServletMessageBuilder.New()
             .SetRequestDetails(servletRequest)
             .SetEnvironmentDetails()
-            .SetMachineName(InetAddress.getLocalHost().getHostName())
+            .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
             .SetClientDetails()
             .SetVersion(_version)
@@ -164,18 +163,15 @@ public class RaygunServletClient extends RaygunClient
             .SetTags(tags)
             .SetUserCustomData(userCustomData)
             .Build();
-
       if (messageFilter != null) {
-        messageFilter.filter((RaygunServletMessage) message);
+        messageFilter.filter((RaygunServletMessage)  message);
       }
       return message;
-
-    }
-    catch (Exception e)
-    {
+		}
+		catch (Exception e)
+		{
       Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-    }
-    return null;
-  }
+		}
+		return null;
+	}
 }
-

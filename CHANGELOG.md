@@ -1,3 +1,16 @@
+* 2.1.1
+
+    * Query string parsing no longer breaks with invalid `=?` input
+    * Returning null from an onBeforeSend callback now cancels the send correctly
+    * Guards against UnknownHostException when getting the machine name
+    * Fixes test scope for junit dependency
+
+
+
+- 2.1.0: Add and expose OnBeforeSend and setGroupingKey implementations
+
+- 2.0.1: Improved logging
+
 - 2.0.0: Fixed a bug with incorrect casing of user fields - breaking change for RaygunIdentifier as several of its fields are now private.
 
 - 1.6.1: Fix incorrect Play2 packaging

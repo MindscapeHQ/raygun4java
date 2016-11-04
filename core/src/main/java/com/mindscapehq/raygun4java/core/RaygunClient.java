@@ -7,6 +7,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,152 +18,150 @@ import java.util.logging.Logger;
  */
 public class RaygunClient {
 
-  private RaygunConnection raygunConnection;
-  public void setRaygunConnection(RaygunConnection raygunConnection) { this.raygunConnection = raygunConnection; }
+    private RaygunConnection raygunConnection;
 
-  protected String _apiKey;
-  protected RaygunIdentifier _user;
-  protected String _context;
-  protected String _version = null;
-
-  public RaygunClient(String apiKey)
-  {
-    _apiKey = apiKey;
-    this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
-  }
-
-  protected Boolean ValidateApiKey() throws Exception
-  {
-    if (_apiKey.isEmpty())
-    {
-      throw new Exception("API key has not been provided, exception will not be logged");
+    public void setRaygunConnection(RaygunConnection raygunConnection) {
+        this.raygunConnection = raygunConnection;
     }
-    else
-    {
-      return true;
+
+    protected String _apiKey;
+    protected RaygunIdentifier _user;
+    protected String _context;
+    protected String _version = null;
+    private static RaygunOnBeforeSend _onBeforeSend;
+
+    public RaygunClient(String apiKey) {
+        _apiKey = apiKey;
+        this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
     }
-  }
 
-  public void SetUser(RaygunIdentifier userIdentity)
-  {
-    _user = userIdentity;
-  }
-
-  @Deprecated
-  public void SetUser(String user)
-  {
-    RaygunIdentifier ident = new RaygunIdentifier(user);
-
-    _user = ident;
-  }
-
-  public void SetVersion(String version)
-  {
-    _version = version;
-  }
-
-  public int Send(Throwable throwable)
-  {
-    return Post(BuildMessage(throwable));
-  }
-
-  public int Send(Throwable throwable, List<?> tags)
-  {
-    return Post(BuildMessage(throwable, tags));
-  }
-
-  public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
-  {
-    return Post(BuildMessage(throwable, tags, userCustomData));
-  }
-
-  private RaygunMessage BuildMessage(Throwable throwable)
-  {
-    try
-    {
-      return RaygunMessageBuilder.New()
-          .SetEnvironmentDetails()
-          .SetMachineName(InetAddress.getLocalHost().getHostName())
-          .SetExceptionDetails(throwable)
-          .SetClientDetails()
-          .SetVersion(_version)
-          .SetUser(_user)
-          .Build();
+    protected Boolean ValidateApiKey() throws Exception {
+        if (_apiKey.isEmpty()) {
+            throw new Exception("API key has not been provided, exception will not be logged");
+        } else {
+            return true;
+        }
     }
-    catch (Exception e)
-    {
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-    }
-    return null;
-  }
 
-  private RaygunMessage BuildMessage(Throwable throwable, List<?> tags)
-  {
-    try
-    {
-      return RaygunMessageBuilder.New()
-          .SetEnvironmentDetails()
-          .SetMachineName(InetAddress.getLocalHost().getHostName())
-          .SetExceptionDetails(throwable)
-          .SetClientDetails()
-          .SetVersion(_version)
-          .SetTags(tags)
-          .SetUser(_user)
-          .Build();
-    }
-    catch (Exception e)
-    {
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-    }
-    return null;
-  }
+    protected String GetMachineName() {
+        String machineName = "Unknown machine";
 
-  private RaygunMessage BuildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData)
-  {
-    try
-    {
-      return RaygunMessageBuilder.New()
-          .SetEnvironmentDetails()
-          .SetMachineName(InetAddress.getLocalHost().getHostName())
-          .SetExceptionDetails(throwable)
-          .SetClientDetails()
-          .SetVersion(_version)
-          .SetTags(tags)
-          .SetUserCustomData(userCustomData)
-          .SetUser(_user)
-          .Build();
+        try {
+            InetAddress address = InetAddress.getLocalHost();
+            machineName = address.getHostName();
+        } catch (UnknownHostException e) {
+        }
+
+        return machineName;
     }
-    catch (Exception e)
-    {
-      Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
+
+    public void SetUser(RaygunIdentifier userIdentity) {
+        _user = userIdentity;
     }
-    return null;
-  }
 
-  public int Post(RaygunMessage raygunMessage)
-  {
-    try
-    {
-      if (ValidateApiKey())
-      {
-        String jsonPayload = new Gson().toJson(raygunMessage);
+    @Deprecated
+    public void SetUser(String user) {
+        RaygunIdentifier ident = new RaygunIdentifier(user);
 
-        HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
-
-        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-        writer.write(jsonPayload);
-        writer.flush();
-        writer.close();
-        connection.disconnect();
-        return connection.getResponseCode();
-
-      }
+        _user = ident;
     }
-    catch (Exception e)
-    {
-      Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + e.getMessage());
-    }
-    return -1;
-  }
 
+    public void SetVersion(String version) {
+        _version = version;
+    }
+
+    public int Send(Throwable throwable) {
+        return Post(BuildMessage(throwable));
+    }
+
+    public int Send(Throwable throwable, List<?> tags) {
+        return Post(BuildMessage(throwable, tags));
+    }
+
+    public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+        return Post(BuildMessage(throwable, tags, userCustomData));
+    }
+
+    private RaygunMessage BuildMessage(Throwable throwable) {
+        try {
+            RaygunMessage message = RaygunMessageBuilder.New()
+                    .SetEnvironmentDetails()
+                    .SetMachineName(GetMachineName())
+                    .SetExceptionDetails(throwable)
+                    .SetClientDetails()
+                    .SetVersion(_version)
+                    .SetUser(_user)
+                .Build();
+            return message;
+        } catch (Throwable t) {
+            Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage", t);
+        }
+        return null;
+    }
+
+    private RaygunMessage BuildMessage(Throwable throwable, List<?> tags) {
+        try {
+            return RaygunMessageBuilder.New()
+                    .SetEnvironmentDetails()
+                    .SetMachineName(GetMachineName())
+                    .SetExceptionDetails(throwable)
+                    .SetClientDetails()
+                    .SetVersion(_version)
+                    .SetTags(tags)
+                    .SetUser(_user)
+                    .Build();
+        } catch (Throwable t) {
+            Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage-t", t);
+        }
+        return null;
+    }
+
+    private RaygunMessage BuildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+        try {
+            return RaygunMessageBuilder.New()
+                    .SetEnvironmentDetails()
+                    .SetMachineName(GetMachineName())
+                    .SetExceptionDetails(throwable)
+                    .SetClientDetails()
+                    .SetVersion(_version)
+                    .SetTags(tags)
+                    .SetUserCustomData(userCustomData)
+                    .SetUser(_user)
+                    .Build();
+        } catch (Throwable t) {
+            Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage-t-m", t);
+        }
+        return null;
+    }
+
+    public int Post(RaygunMessage raygunMessage) {
+        try {
+            if (ValidateApiKey()) {
+                if (_onBeforeSend != null) {
+                    raygunMessage = _onBeforeSend.OnBeforeSend(raygunMessage);
+
+                    if (raygunMessage == null) {
+                        return -1;
+                    }
+                }
+
+                String jsonPayload = new Gson().toJson(raygunMessage);
+
+                HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
+
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(jsonPayload);
+                writer.flush();
+                writer.close();
+                connection.disconnect();
+                return connection.getResponseCode();
+
+            }
+        } catch (Throwable t) {
+            Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + t.getMessage());
+        }
+        return -1;
+    }
+
+    public static void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) { _onBeforeSend = onBeforeSend; }
 }

@@ -24,5 +24,7 @@ public interface IRaygunMessageBuilder {
 
     IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData);
 
-  IRaygunMessageBuilder SetUser(RaygunIdentifier user);
+    IRaygunMessageBuilder SetUser(RaygunIdentifier user);
+
+    IRaygunMessageBuilder SetGroupingKey(String groupingKey);
 }
