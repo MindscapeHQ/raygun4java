@@ -149,7 +149,7 @@ public class RaygunClient {
 
                 HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
 
-                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(),"UTF8");
                 writer.write(jsonPayload);
                 writer.flush();
                 writer.close();
