@@ -50,7 +50,7 @@ public class RaygunIdentifier
   public Boolean getIsAnonymous() {
     return isAnonymous;
   }
-	
+
   public void setIsAnonymous(Boolean isAnonymous) {
     this.isAnonymous = isAnonymous;
   }
@@ -58,7 +58,7 @@ public class RaygunIdentifier
   public String getEmail() {
     return email;
   }
-	
+
   public void setEmail(String email) {
     this.email = email;
   }
@@ -93,5 +93,5 @@ public class RaygunIdentifier
 
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
-  }  
+  }
 }

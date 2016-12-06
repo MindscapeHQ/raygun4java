@@ -49,8 +49,8 @@ public class RaygunEnvironmentMessage {
 		} catch (Throwable t) {
 		}
 
-		try {
-			MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+    try {
+      MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
 
 			totalVirtualMemory = memBean.getHeapMemoryUsage().getMax()
 					+ memBean.getNonHeapMemoryUsage().getMax();
