@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.play2;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class RaygunPlayRequestMessage
 
     for (String key : map.keySet())
     {
-      result.put(key, map.get(key).toString());
+      result.put(key, Arrays.toString(map.get(key)));
     }
 
     return result;
