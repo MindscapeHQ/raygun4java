@@ -1,3 +1,7 @@
+* 2.2.0
+
+    * Add support for Play 2 using Java
+
 * 2.1.1
 
     * Query string parsing no longer breaks with invalid `=?` input
