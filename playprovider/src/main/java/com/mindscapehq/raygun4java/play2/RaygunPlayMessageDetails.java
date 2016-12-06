@@ -21,4 +21,8 @@ public class RaygunPlayMessageDetails extends RaygunMessageDetails {
     public void setRequest(RaygunPlayScalaRequestHeaderMessage requestHeader) {
         this.request = requestHeader;
     }
+
+    public void setRequest(RaygunPlayJavaRequestHeaderMessage requestHeader) {
+        this.request = requestHeader;
+    }
 }
