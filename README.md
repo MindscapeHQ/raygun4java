@@ -29,12 +29,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>2.1.1</version>
+    	<version>2.2.0</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>2.1.1</version>
+    	<version>2.2.0</version>
     </dependency>
 </dependencies>
 ```
@@ -47,7 +47,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
@@ -72,7 +72,7 @@ public class MyApp
 {
 	public static void main(String[] args) throws Throwable
 	{
-			Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
+	    Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
 	}
 }
 
@@ -82,7 +82,6 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 	public void uncaughtException(Thread t, Throwable e) {
 		RaygunClient client = new RaygunClient("YOUR_APP_API_KEY");
 		client.Send(e);
-
 	}
 }
 ```
@@ -96,8 +95,8 @@ The concept is the same for the above - set up an Unhandled Exception handler, t
 Inside web.xml
 ```xml
 <error-page>
-		<exception-type>java.lang.Throwable</exception-type>
-		<location>/error.jsp</location>
+	<exception-type>java.lang.Throwable</exception-type>
+	<location>/error.jsp</location>
 </error-page>
 ```
 
@@ -117,37 +116,85 @@ When an exception is thrown from another JSP, this page will take care of the se
 
 Note: all Java dynamic web page projects should have core-1.x.x.jar, webprovider-1.x.x.jar and gson-2.1.jar on their classpath.
 
-## Scala and Play 2 Framework
+## Play 2 Framework for Java and Scala
 
-**Note: Java Play 2 projects are also supported**
+This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. Feedback is appreciated if you use this provider in a Play 2 app. You can use the plain core-2.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
 
-Feb 2014: This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. This is currently considered alpha but confirmed working; feedback is appreciated. You can use the plain core-1.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
+### Installation
+
+#### With SBT
+
+Add the following line to your build.sbt's libraryDependencies:
+
+```
+libraryDependencies ++= Seq(
+    "com.mindscapehq" % "raygun4java-play2" % "2.2.0"
+)
+```
+
+#### With Maven
+
+Add the raygun4java-play2-2.x.x dependency to your pom.xml (following the instructions under 'With Maven and a command shell' at the top of this file).
 
 ### Usage
 
-Download raygun4java-play2-1.x.x.jar from Maven or add the dependency to to your maven pom.xml. Then, write code that sends an exception in your controller:
+For automatic exception sending, in your Play 2 app's global error handler, RaygunPlayClient has a method which allows you to pass in a RequestHeader and send a Throwable:
 
-```scala
-import play.api.mvc.{Action, Controller, Request}
-import com.mindscapehq.raygun4java.play2.RaygunPlayClient;
-
-def index = Action { implicit request =>
-    val rg = new RaygunPlayClient("your_api_key", request)
-    val result = rg.Send(new Exception("From Scala"))
-    Ok(views.html.index(result.toString))
-  }
-```
-
-play2-0.4.4: For use in your Scala Play2 app's global error handler, RaygunPlayClient now includes an overload which allows you to pass in a RequestHeader from Scala Play2:
+**In Scala**
 
 **app/Global.scala**
 ```scala
 override def onError(request: RequestHeader, ex: Throwable) = {
   val rg = new RaygunPlayClient("your_api_key", request)
   val result = rg.Send(ex)
+  
   super.onError(request, ex)
 }
 ```
+
+**In Java**
+
+**app/Global.java**
+```java
+import play.*;
+import play.mvc.*;
+import play.mvc.Http.*;
+import play.libs.F.*;
+
+import com.mindscapehq.raygun4java.play2.RaygunPlayClient;
+
+import static play.mvc.Results.*;
+
+public class Global extends GlobalSettings {
+
+    private String apiKey = "paste_your_api_key_here";
+
+    public Promise<Result> onError(RequestHeader request, Throwable t) {
+        RaygunPlayClient rg = new RaygunPlayClient(apiKey, request);
+        rg.SendAsync(t);
+
+        return Promise.<Result>pure(internalServerError(
+            views.html.myErrorPage.render(t)
+        ));
+    }
+}
+```
+
+Or, write code that sends an exception in your controller:
+
+```scala
+import play.api.mvc.{Action, Controller, Request}
+import com.mindscapehq.raygun4java.play2.RaygunPlayClient;
+
+def index = Action { implicit request =>
+    val rg = new RaygunPlayClient("paste_your_api_key_here", request)
+    val result = rg.Send(new Exception("From Scala"))
+
+    Ok(views.html.index(result.toString))
+  }
+```
+
+
 
 ## Documentation
 
