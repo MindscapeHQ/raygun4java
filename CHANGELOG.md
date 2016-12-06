@@ -1,3 +1,8 @@
+* 2.2.0
+
+    * Add support for Play 2 using Java
+    * Fix Environment tab encoding issues due to it not being UTF-8 previously
+
 * 2.1.1
 
     * Query string parsing no longer breaks with invalid `=?` input

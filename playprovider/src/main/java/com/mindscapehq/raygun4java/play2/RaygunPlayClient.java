@@ -15,13 +15,22 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 public class RaygunPlayClient extends RaygunClient {
 
     private Request httpRequest;
+
+
     private play.api.mvc.Request scalaRequest;
     private RequestHeader scalaRequestHeader;
+    private play.mvc.Http.RequestHeader javaRequestHeader;
 
     public RaygunPlayClient(String apiKey, RequestHeader requestHeader)
     {
       super(apiKey);
       this.scalaRequestHeader = requestHeader;
+    }
+
+    public RaygunPlayClient(String apiKey, play.mvc.Http.RequestHeader requestHeader)
+    {
+        super(apiKey);
+        this.javaRequestHeader = requestHeader;
     }
 
     public RaygunPlayClient(String apiKey, Request request)
@@ -103,7 +112,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(httpRequest, scalaRequest, scalaRequestHeader)
+            .SetRequestDetails(httpRequest, scalaRequest, scalaRequestHeader, javaRequestHeader)
             .SetEnvironmentDetails()
             .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
@@ -124,7 +133,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(httpRequest, scalaRequest, scalaRequestHeader)
+            .SetRequestDetails(httpRequest, scalaRequest, scalaRequestHeader, javaRequestHeader)
             .SetEnvironmentDetails()
             .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)
@@ -146,7 +155,7 @@ public class RaygunPlayClient extends RaygunClient {
       try
       {
         return RaygunPlayMessageBuilder.New()
-            .SetRequestDetails(httpRequest, scalaRequest, scalaRequestHeader)
+            .SetRequestDetails(httpRequest, scalaRequest, scalaRequestHeader, javaRequestHeader)
             .SetEnvironmentDetails()
             .SetMachineName(GetMachineName())
             .SetExceptionDetails(throwable)

@@ -6,5 +6,5 @@ import com.mindscapehq.raygun4java.core.IRaygunMessageBuilder;
 
 public interface IRaygunPlayMessageBuilder extends IRaygunMessageBuilder
 {
-  IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader);
+  IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader, play.mvc.Http.RequestHeader javaRequestHeader);
 }
