@@ -15,40 +15,40 @@
     <version>7</version>
   </parent>
   <modules>
-  	<module>/core</module>
-  	<module>/sampleapp</module>
-  	<module>/webprovider</module>
+    <module>/core</module>
+    <module>/sampleapp</module>
+    <module>/webprovider</module>
     <module>/playprovider</module>
   </modules>
   <developers>
-  	<developer>
-  		<id>callum</id>
-  		<name>Callum Gavin</name>
-  		<email>hello@raygun.io</email>
-  		<organisation>Mindscape</organisation>
-  		<organisationUrl>http://raygun.io</organisationUrl>
-  		<roles>
-  			<role>developer</role>
-  		</roles>
-  		<timezone>+12</timezone>
-  	</developer>
+    <developer>
+      <id>callum</id>
+      <name>Callum Gavin</name>
+      <email>hello@raygun.io</email>
+      <organisation>Mindscape</organisation>
+      <organisationUrl>http://raygun.io</organisationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+12</timezone>
+    </developer>
   </developers>
   <scm>
-  	<url>https://github.com/mindscapehq/raygun4java</url>
-  	<connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
-  	<developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
+    <url>https://github.com/mindscapehq/raygun4java</url>
+    <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
   </scm>
   <build>
     <plugins>
-    <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.0</version>
         <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+          <source>1.5</source>
+          <target>1.5</target>
         </configuration>
-    </plugin>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -73,29 +73,24 @@
       </plugin>
     </plugins>
   </build>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.4</version>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
