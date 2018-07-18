@@ -8,20 +8,20 @@ import java.util.Map;
 
 public interface IRaygunMessageBuilder {
 
-	RaygunMessage Build();
-	
-	IRaygunMessageBuilder SetMachineName(String machineName);
-	
-	IRaygunMessageBuilder SetExceptionDetails(Throwable throwable);
-	
-	IRaygunMessageBuilder SetClientDetails();
+    RaygunMessage Build();
+
+    IRaygunMessageBuilder SetMachineName(String machineName);
+
+    IRaygunMessageBuilder SetExceptionDetails(Throwable throwable);
+
+    IRaygunMessageBuilder SetClientDetails();
 
     IRaygunMessageBuilder SetEnvironmentDetails();
 
     IRaygunMessageBuilder SetVersion(String version);
-    
+
     IRaygunMessageBuilder SetTags(List<?> tags);
-    
+
     IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData);
 
     IRaygunMessageBuilder SetUser(RaygunIdentifier user);

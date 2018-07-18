@@ -91,7 +91,11 @@ public class RaygunMessageDetails {
         this.user = identifier;
     }
 
-    public void setGroupingKey(String groupingKey) { this.groupingKey = groupingKey; }
+    public void setGroupingKey(String groupingKey) {
+        this.groupingKey = groupingKey;
+    }
 
-    public String getGroupingKey() { return this.groupingKey; }
+    public String getGroupingKey() {
+        return this.groupingKey;
+    }
 }

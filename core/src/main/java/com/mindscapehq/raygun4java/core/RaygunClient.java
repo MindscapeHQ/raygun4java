@@ -91,7 +91,7 @@ public class RaygunClient {
                     .SetClientDetails()
                     .SetVersion(_version)
                     .SetUser(_user)
-                .Build();
+                    .Build();
             return message;
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage", t);
@@ -149,7 +149,7 @@ public class RaygunClient {
 
                 HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
 
-                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(),"UTF8");
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF8");
                 writer.write(jsonPayload);
                 writer.flush();
                 writer.close();
@@ -163,5 +163,7 @@ public class RaygunClient {
         return -1;
     }
 
-    public static void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) { _onBeforeSend = onBeforeSend; }
+    public static void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
+        _onBeforeSend = onBeforeSend;
+    }
 }

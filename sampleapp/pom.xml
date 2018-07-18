@@ -1,81 +1,84 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-  	<groupId>com.mindscapehq</groupId>
-  	<artifactId>raygun4java</artifactId>
-  	<version>2.2.1-SNAPSHOT</version>
-  	<relativePath>../</relativePath>
-  </parent>
-  <artifactId>sampleapp</artifactId>
-  <version>2.2.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.mindscapehq</groupId>
+        <artifactId>raygun4java</artifactId>
+        <version>2.2.1-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+    <artifactId>sampleapp</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <name>sampleapp</name>
-  <url>http://raygun.io</url>
-  <licenses>
-  	<license>
-  		<name>The MIT License</name>
-  		<url>http://www.opensource.org/licenses/mit-license.php</url>
-  		<distribution />
-  	</license>
-  </licenses>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
- <description>The official provider for the Raygun error tracking  service. This is an example project, using raygun4java.core.</description>
- <dependencies>
-   <dependency>
-   	<groupId>com.mindscapehq</groupId>
-   	<artifactId>core</artifactId>
-   	<version>${project.version}</version>
-   </dependency>
- </dependencies>
- <dependencyManagement>
- 	<dependencies>
- 		<dependency>
- 			<groupId>com.mindscapehq</groupId>
- 			<artifactId>core</artifactId>
- 			<version>${project.version}</version>
- 		</dependency>
- 	</dependencies>
- </dependencyManagement>
-<build>
-  <plugins>
-    <plugin>
-      <!-- Build an executable JAR -->
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-jar-plugin</artifactId>
-      <version>2.4</version>
-     </plugin>
-<plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-    <archive>
-      <manifest>
-        <mainClass>com.mindscapehq.raygun4java.sampleapp.SampleApp</mainClass>
-      </manifest>
-    </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-              <source>1.6</source>
-              <target>1.6</target>
-          </configuration>
-      </plugin>
-  </plugins>
-</build>
+    <name>sampleapp</name>
+    <url>http://raygun.io</url>
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution/>
+        </license>
+    </licenses>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <description>The official provider for the Raygun error tracking service. This is an example project, using
+        raygun4java.core.
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>com.mindscapehq</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.mindscapehq</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.mindscapehq.raygun4java.sampleapp.SampleApp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
