@@ -313,6 +313,16 @@ public RaygunMessage OnBeforeSend(RaygunMessage message) {
 }
 ```
 
+There are several provided classes for filtering, and use can use the `RaygunOnBeforeSendChain` to execute multiple `RaygunOnBeforeSend`
+```java
+raygunClient.SetOnBeforeSend(new RaygunOnBeforeSendChain()
+        .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
+        .filterWith(new RaygunRequestHeaderFilter("header1", "header2"))
+        .filterWith(new RaygunRequestFormFilter("form1", "form2"))
+);
+```
+
+
 ### Custom error grouping
 
 You can override Raygun's default grouping logic for Java exceptions by setting the grouping key manually in OnBeforeSend (see above):
