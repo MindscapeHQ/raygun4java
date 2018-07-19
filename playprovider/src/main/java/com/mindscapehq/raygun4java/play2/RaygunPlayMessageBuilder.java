@@ -1,8 +1,8 @@
 package com.mindscapehq.raygun4java.play2;
 
+import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 import play.api.mvc.RequestHeader;
 import play.mvc.Http.Request;
-import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
 public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IRaygunPlayMessageBuilder {
 
