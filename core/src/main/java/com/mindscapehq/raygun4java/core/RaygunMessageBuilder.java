@@ -50,8 +50,14 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         if (version != null) {
             _raygunMessage.getDetails().setVersion(version);
         } else {
-            _raygunMessage.getDetails().setVersion(ReadVersion());
+            _raygunMessage.getDetails().setVersion(ReadVersion(null));
         }
+        return this;
+    }
+
+    public IRaygunMessageBuilder SetVersionFrom(Class versionFrom) {
+        _raygunMessage.getDetails().setVersion(ReadVersion(versionFrom));
+
         return this;
     }
 
@@ -75,10 +81,16 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         return this;
     }
 
-    private String ReadVersion() {
-        StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-        StackTraceElement main = stack[stack.length - 1];
-        String mainClass = main.getClassName();
+    private String ReadVersion(Class readVersionFrom) {
+
+        String mainClass;
+        if (readVersionFrom == null) {
+            StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+            StackTraceElement main = stack[stack.length - 1];
+            mainClass = main.getClassName();
+        } else {
+            mainClass = readVersionFrom.getName();
+        }
 
         try {
             Class<?> cl = getClass().getClassLoader().loadClass(mainClass);

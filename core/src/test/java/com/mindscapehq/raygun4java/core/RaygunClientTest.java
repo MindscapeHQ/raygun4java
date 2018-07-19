@@ -1,5 +1,8 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.google.gson.Gson;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -52,6 +55,13 @@ public class RaygunClientTest {
         this.raygunClient.SetUser("user");
 
         assertEquals(202, this.raygunClient.Send(new Exception()));
+    }
+
+    @Test
+    public void RaygunMessageDetailsGetVersion_FromClass_ReturnsClassManifestVersion() {
+        this.raygunClient.SetVersionFrom(org.apache.commons.io.IOUtils.class);
+
+        assertEquals("2.5", this.raygunClient._version);
     }
 
 }

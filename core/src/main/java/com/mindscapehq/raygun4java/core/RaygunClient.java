@@ -70,6 +70,10 @@ public class RaygunClient {
         _version = version;
     }
 
+    public void SetVersionFrom(Class getVersionFrom) {
+        _version = new RaygunMessageBuilder().SetVersionFrom(getVersionFrom).Build().getDetails().getVersion();
+    }
+
     public int Send(Throwable throwable) {
         return Post(BuildMessage(throwable));
     }
