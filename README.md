@@ -253,7 +253,15 @@ Tags can be null if you only wish to transmit custom data. Send calls can take t
 
 Raygun4Java reads the version of your application from your manifest.mf file in the calling package. It first attempts to read this from Specification-Version, then Implementation-Version if the first doesn't exist.
 
+In the case where your jar is not the main executing jar (ie. in a web container etc) you will have to pass in a class from your jar so that the correct version can be extracted ie
+```java
+client.SetVersionFrom(AClassFromMyApplication.class);
+```
+
 A SetVersion(string) method is also available to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
+```java
+client.SetVersion("1.2.3.4");
+```
 
 ### Getting/setting/cancelling the error before it is sent
 
