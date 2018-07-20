@@ -109,8 +109,12 @@ For out-of-the-box implementation of capturing exceptions thrown out of your con
     ```java
     RaygunServletClientFactory factory = RaygunServletClientFactory(apiKey, servletContext);
     ``` 
-2. In the servlet configuration step in your container that allows you to add filters, add a `new DefaultRaygunServletFilter()`
-3. Throughout your code, while in the context of a http request, you can use the `RaygunClient.Get()` method to return the requests instance of the client
+2. Initialize the RaygunClient static accessor with the factory
+    ```java
+    RaygunClient.Initialize(factory);
+    ```
+2. In the servlet configuration step in your container that allows you to add servlet filters, add a `new DefaultRaygunServletFilter()`
+3. Throughout your code, while in the context of a http request, you can use the `RaygunClient.Get()` method to return the current instance of the client for that request.
 
 ## Play 2 Framework for Java and Scala
 
@@ -247,9 +251,12 @@ Tags can be null if you only wish to transmit custom data. Send calls can take t
 
 ### Version tracking
 
-By default, Raygun4Java reads the version from the manifest.mf file in the main executing `.jar`. It first attempts to read this from Specification-Version, then Implementation-Version if the first doesn't exist.
+By default, Raygun4Java reads the manifest file for Specification-Version or Implementation-Version - make sure that your pom packaging sets either of them correctly.
 
-In the case where your jar is not the main executing jar (ie. in a web container etc) you will have to pass in a class from your jar so that the correct version can be extracted ie
+When using Raygun4Java `core` the `/META-INF/MANIFEST.MF` file in the main executing `.jar` is used. 
+When using Raygun4Java `webprovider` the `/META-INF/MANIFEST.MF` from the `.war` file.
+
+In the case where your code is neither of the stated situations, you can pass in a class from your jar so that the correct version can be extracted ie
 ```java
 client.SetVersionFrom(AClassFromMyApplication.class);
 ```
