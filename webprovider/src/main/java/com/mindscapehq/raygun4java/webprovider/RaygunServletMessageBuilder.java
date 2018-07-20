@@ -2,7 +2,11 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements IRaygunHttpMessageBuilder {
 
@@ -32,7 +36,19 @@ public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements
 
     public IRaygunHttpMessageBuilder SetRequestDetails(HttpServletRequest request) {
         _raygunServletMessage.getDetails().setRequest(new RaygunRequestMessage(request));
+
         return this;
+    }
+
+    public String getVersion(ServletContext context) {
+        try {
+            URL resource = context.getResource("/META-INF/MANIFEST.MF");
+            System.out.println(resource.toString());
+            return readVersionFromManifest(resource.openStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return noManifestVersion();
     }
 
 }

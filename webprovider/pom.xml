@@ -39,13 +39,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.mindscapehq.raygun4java</groupId>
-                <artifactId>core</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>

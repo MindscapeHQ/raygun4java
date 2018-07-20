@@ -2,6 +2,8 @@ package com.mindscapehq.raygun4java.core;
 
 import com.mindscapehq.raygun4java.core.messages.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +90,19 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
                 return null;
             }
             String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
-            Manifest manifest = new Manifest(new URL(manifestPath).openStream());
+
+            return readVersionFromManifest(new URL(manifestPath).openStream());
+
+        } catch (Exception e) {
+            Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
+        }
+
+        return noManifestVersion();
+    }
+
+    protected String readVersionFromManifest(InputStream manifestInputStream)  {
+        try {
+            Manifest manifest = new Manifest(manifestInputStream);
             Attributes attr = manifest.getMainAttributes();
 
             if (attr.getValue("Specification-Version") != null) {
@@ -96,10 +110,13 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
             } else if (attr.getValue("Implementation-Version") != null) {
                 return attr.getValue("Implementation-Version");
             }
-
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
         }
+        return noManifestVersion();
+    }
+
+    protected String noManifestVersion() {
         return "Not supplied";
     }
 }
