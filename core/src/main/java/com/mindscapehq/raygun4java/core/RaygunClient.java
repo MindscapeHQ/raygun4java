@@ -167,7 +167,7 @@ public class RaygunClient {
         return -1;
     }
 
-    public void setOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
+    public void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
         _onBeforeSend = onBeforeSend;
     }
 }

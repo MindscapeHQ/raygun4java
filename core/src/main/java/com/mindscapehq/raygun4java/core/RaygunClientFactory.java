@@ -58,7 +58,7 @@ public class RaygunClientFactory {
      */
     public RaygunClient newClient() {
         RaygunClient client = new RaygunClient(apiKey);
-        client.setOnBeforeSend(onBeforeSend);
+        client.SetOnBeforeSend(onBeforeSend);
         client._version = version;
         return client;
     }

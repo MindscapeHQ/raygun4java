@@ -51,7 +51,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      */
     public RaygunServletClient getClient(HttpServletRequest request) {
         RaygunServletClient client = new RaygunServletClient(apiKey, request);
-        client.setOnBeforeSend(onBeforeSend);
+        client.SetOnBeforeSend(onBeforeSend);
         client.SetVersion(version);
         return client;
     }

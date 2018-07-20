@@ -47,7 +47,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         client.SetUser(userIdentity);
 
-        client.setOnBeforeSend(new BeforeSendImplementation());
+        client.SetOnBeforeSend(new BeforeSendImplementation());
 
         ArrayList<Object> tags = new ArrayList<Object>();
         tags.add("Place tags about this version/release in this object");
