@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 
 import javax.servlet.ServletContext;
@@ -19,8 +20,17 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     private String version;
 
     public RaygunServletClientFactory(String apiKey, ServletContext context) {
+        this(apiKey, new RaygunServletMessageBuilder().getVersion(context));
+    }
+
+    public RaygunServletClientFactory(String apiKey, Class versionFromClass) {
+        this(apiKey, new RaygunMessageBuilder().SetVersionFrom(versionFromClass).Build().getDetails().getVersion());
+
+    }
+
+    public RaygunServletClientFactory(String apiKey, String version) {
         this.apiKey = apiKey;
-        version = new RaygunServletMessageBuilder().getVersion(context);
+        this.version = version;
     }
 
     /**
