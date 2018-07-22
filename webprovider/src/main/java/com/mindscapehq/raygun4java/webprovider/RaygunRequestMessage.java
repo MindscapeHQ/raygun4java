@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.webprovider;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class RaygunRequestMessage {
     private Map<String, String> data;
     private Map<String, String> form;
     private Map<String, String> headers;
+    private Map<String, String> cookies;
     private String rawData;
 
     public RaygunRequestMessage(HttpServletRequest request) {
@@ -39,6 +41,19 @@ public class RaygunRequestMessage {
                     headers.put(name, value);
                 }
                 ;
+            }
+
+            cookies = new LinkedHashMap<String, String>();
+            {
+                Cookie[] rawCookies = request.getCookies();
+                if (rawCookies != null && rawCookies.length != 0) {
+                    for (Cookie cookie : rawCookies) {
+                        String name = cookie.getName();
+                        String value = cookie.getValue();
+                        cookies.put(name, value);
+                    }
+                }
+                headers.remove("Cookie");
             }
 
             form = new LinkedHashMap<String, String>();
@@ -96,6 +111,10 @@ public class RaygunRequestMessage {
 
     public Map<String, String> getQueryString() {
         return queryString;
+    }
+
+    public Map<String, String> getCookies() {
+        return cookies;
     }
 
     public String getHostName() {

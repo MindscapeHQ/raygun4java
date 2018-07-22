@@ -3,6 +3,7 @@ package com.mindscapehq.raygun4java.webprovider;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.RaygunConnection;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
+import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestCookieFilter;
 import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestFormFilter;
 import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestHeaderFilter;
 import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestQueryStringFilter;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -114,6 +116,12 @@ public class RaygunServletClientTest {
         when(requestMock.getHeader("header1")).thenReturn("headerValue1");
         when(requestMock.getHeader("header2")).thenReturn("headerValue2");
         when(requestMock.getHeader("header3")).thenReturn("headerValue3");
+        when(requestMock.getHeader("Cookies")).thenReturn("someCookies");
+
+        Cookie[] cookies = new Cookie[2];
+        cookies[0] = new Cookie("cookie1", "cookieValue1");
+        cookies[1] = new Cookie("cookie2", "cookieValue2");
+        when(requestMock.getCookies()).thenReturn(cookies);
 
         when(requestMock.getParameterNames()).thenReturn(new Vector<String>(Arrays.asList("form1", "form2", "form3")).elements());
         when(requestMock.getParameterValues("form1")).thenReturn(new String[]{"formValue1"});
@@ -142,6 +150,11 @@ public class RaygunServletClientTest {
         assertTrue(requestBodyAsString.contains("header3"));
         assertTrue(requestBodyAsString.contains("headerValue3"));
 
+        assertTrue(requestBodyAsString.contains("cookie1"));
+        assertTrue(requestBodyAsString.contains("cookieValue1"));
+        assertTrue(requestBodyAsString.contains("cookie2"));
+        assertTrue(requestBodyAsString.contains("cookieValue2"));
+
         assertTrue(requestBodyAsString.contains("form1"));
         assertTrue(requestBodyAsString.contains("formValue1"));
         assertTrue(requestBodyAsString.contains("form2"));
@@ -158,6 +171,7 @@ public class RaygunServletClientTest {
                 .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
                 .filterWith(new RaygunRequestHeaderFilter("header1", "header2").replaceWith("?"))
                 .filterWith(new RaygunRequestFormFilter("form1", "form2").replaceWith(""))
+                .filterWith(new RaygunRequestCookieFilter("cookie2"))
         );
 
         int send = raygunClient.Send(new Exception());
@@ -176,6 +190,11 @@ public class RaygunServletClientTest {
         assertFalse(requestBodyAsString.contains("headerValue2"));
         assertTrue(requestBodyAsString.contains("header3"));
         assertTrue(requestBodyAsString.contains("headerValue3"));
+
+        assertTrue(requestBodyAsString.contains("cookie1"));
+        assertTrue(requestBodyAsString.contains("cookieValue1"));
+        assertTrue(requestBodyAsString.contains("cookie2"));
+        assertFalse(requestBodyAsString.contains("cookieValue2"));
 
         assertTrue(requestBodyAsString.contains("form1"));
         assertFalse(requestBodyAsString.contains("formValue1"));

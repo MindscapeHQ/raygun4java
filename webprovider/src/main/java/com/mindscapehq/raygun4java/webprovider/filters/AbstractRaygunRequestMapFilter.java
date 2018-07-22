@@ -18,7 +18,7 @@ public abstract class AbstractRaygunRequestMapFilter<T> implements RaygunOnBefor
         this.keysToFilter = keysToFilter;
     }
 
-    public abstract Map<String, String> GetMapToFilter(RaygunRequestMessage requestMessage);
+    public abstract Map<String, String> getMapToFilter(RaygunRequestMessage requestMessage);
 
     protected void setReplacement(String replacement) {
         this.replacement = replacement;
@@ -30,16 +30,20 @@ public abstract class AbstractRaygunRequestMapFilter<T> implements RaygunOnBefor
             RaygunServletMessageDetails requestMessageDetails = (RaygunServletMessageDetails) message.getDetails();
 
             if (requestMessageDetails.getRequest() != null) {
-                Map<String, String> mapToFilter = GetMapToFilter(requestMessageDetails.getRequest());
+                Map<String, String> mapToFilter = getMapToFilter(requestMessageDetails.getRequest());
 
-                for (String key : keysToFilter) {
-                    if (mapToFilter.containsKey(key)) {
-                        mapToFilter.put(key, replacement);
-                    }
-                }
+                applyFilter(mapToFilter);
             }
         }
 
         return message;
+    }
+
+    protected void applyFilter(Map<String, String> mapToFilter) {
+        for (String key : keysToFilter) {
+            if (mapToFilter.containsKey(key)) {
+                mapToFilter.put(key, replacement);
+            }
+        }
     }
 }
