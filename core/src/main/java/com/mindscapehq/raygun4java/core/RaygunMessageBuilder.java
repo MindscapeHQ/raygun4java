@@ -98,9 +98,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
             Class<?> cl = getClass().getClassLoader().loadClass(mainClass);
             String className = cl.getSimpleName() + ".class";
             String classPath = cl.getResource(className).toString();
-            if (!classPath.startsWith("jar")) {
-                return null;
-            }
+
             String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
 
             return readVersionFromManifest(new URL(manifestPath).openStream());
