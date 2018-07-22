@@ -37,7 +37,7 @@ public class RaygunServletClientTest {
         raygunClient = new RaygunServletClient("1234", requestMock);
         raygunConnectionMock = mock(RaygunConnection.class);
         raygunClient.setRaygunConnection(raygunConnectionMock);
-        RaygunClient.SetOnBeforeSend(null);
+        raygunClient.SetOnBeforeSend(null);
 
         HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
         when(httpURLConnection.getResponseCode()).thenReturn(202);

@@ -1,19 +1,24 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.google.gson.Gson;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.Any;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RaygunClientTest {
@@ -23,10 +28,15 @@ public class RaygunClientTest {
     private RaygunConnection raygunConnectionMock;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         this.raygunClient = new RaygunClient("1234");
         this.raygunConnectionMock = mock(RaygunConnection.class);
         this.raygunClient.setRaygunConnection(raygunConnectionMock);
+
+        HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+        when(httpURLConnection.getResponseCode()).thenReturn(202);
+        when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+        when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
     }
 
     @Test
@@ -37,24 +47,37 @@ public class RaygunClientTest {
 
     @Test
     public void post_ValidResponse_Returns202() throws MalformedURLException, IOException {
-        HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
-        when(httpURLConnection.getResponseCode()).thenReturn(202);
-        when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
-        when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
-
         assertEquals(202, this.raygunClient.Send(new Exception()));
     }
 
     @Test
     public void post_SendWithUser_Returns202() throws IOException {
-        HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
-        when(httpURLConnection.getResponseCode()).thenReturn(202);
-        when(httpURLConnection.getOutputStream()).thenReturn(new ByteArrayOutputStream());
-        when(this.raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
-
         this.raygunClient.SetUser("user");
 
         assertEquals(202, this.raygunClient.Send(new Exception()));
+    }
+
+    @Test
+    public void post_SendWithTagsCustomData_Returns202() throws IOException {
+        List<?> tags = Arrays.asList("these", "are", "tag");
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("hello", "world");
+
+        assertEquals(202, this.raygunClient.Send(new Exception(), tags));
+        assertEquals(202, this.raygunClient.Send(new Exception(), null, data));
+        assertEquals(202, this.raygunClient.Send(new Exception(), tags, data));
+    }
+
+    @Test
+    public void post_SendWithOnBeforeSend_Returns202() throws IOException {
+        RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
+        RaygunMessage message = new RaygunMessage();
+        when(handler.OnBeforeSend((RaygunMessage) anyObject())).thenReturn(message);
+        this.raygunClient.SetOnBeforeSend(handler);
+
+        assertEquals(202, this.raygunClient.Send(new Exception()));
+
+        verify(handler).OnBeforeSend((RaygunMessage) anyObject());
     }
 
     @Test

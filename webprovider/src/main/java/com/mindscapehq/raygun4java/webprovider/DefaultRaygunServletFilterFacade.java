@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class DefaultRaygunServletFilterFacade implements IRaygunServletFilterFacade {
     public void initializeRequest(ServletRequest servletRequest) {
-        RaygunClient.Initialize((HttpServletRequest)servletRequest);
+        RaygunClient.initialize((HttpServletRequest)servletRequest);
     }
 
     public void send(Throwable throwable) {
         try {
-            RaygunClient.Get().Send(throwable);
+            RaygunClient.get().Send(throwable);
         } catch (Exception raygunException){}
     }
 
     public void done() {
-        RaygunClient.Done();
+        RaygunClient.done();
     }
 }

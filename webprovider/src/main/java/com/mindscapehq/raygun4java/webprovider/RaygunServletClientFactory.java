@@ -25,7 +25,6 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
 
     public RaygunServletClientFactory(String apiKey, Class versionFromClass) {
         this(apiKey, new RaygunMessageBuilder().SetVersionFrom(versionFromClass).Build().getDetails().getVersion());
-
     }
 
     public RaygunServletClientFactory(String apiKey, String version) {

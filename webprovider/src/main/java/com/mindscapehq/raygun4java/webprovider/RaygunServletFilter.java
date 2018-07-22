@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 public class RaygunServletFilter implements Filter {
 
-    private IRaygunServletClientFactory factory;
     private IRaygunServletFilterFacade raygunServletFilterFacade;
 
     public RaygunServletFilter(IRaygunServletFilterFacade raygunServletFilterFacade) {
