@@ -10,7 +10,7 @@ public class RaygunExcludeLocalRequestFilter extends RaygunExcludeRequestFilter 
     public RaygunExcludeLocalRequestFilter() {
         super(new Filter() {
             public boolean shouldFilterOut(RaygunRequestMessage requestMessage) {
-                return requestMessage.getHostName().startsWith(LOCALHOST);
+                return requestMessage.getHostName().toLowerCase().startsWith(LOCALHOST);
             }
         });
     }

@@ -11,7 +11,12 @@ import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestQueryStringF
 import javax.servlet.ServletContext;
 
 /**
- * A convenience class that provides fluent filter construction
+ * A convenience class that provides fluent filter construction ie
+ * raygunClient = new DefaultRaygunServletClientFactory("1234", context))
+ *                 .withRequestFormFilters("form1", "form2")
+ *                 .withRequestHeaderFilters("header1", "header2")
+ *                 .withRequestQueryStringFilters("queryParam1", "queryParam2")
+ *                 .getClient(request);
  */
 public class DefaultRaygunServletClientFactory extends RaygunServletClientFactory {
     private final RaygunOnBeforeSendChain chain;
