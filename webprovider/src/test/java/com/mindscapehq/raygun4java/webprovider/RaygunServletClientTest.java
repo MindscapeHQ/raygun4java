@@ -1,17 +1,12 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.RaygunConnection;
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestCookieFilter;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestFormFilter;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestHeaderFilter;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestQueryStringFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -167,18 +162,19 @@ public class RaygunServletClientTest {
     public void send_WithFilters_FiltersRequest() {
         setupFilterMocks();
 
-        raygunClient.SetOnBeforeSend(new RaygunOnBeforeSendChain()
-                .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
-                .filterWith(new RaygunRequestHeaderFilter("header1", "header2").replaceWith("?"))
-                .filterWith(new RaygunRequestFormFilter("form1", "form2").replaceWith(""))
-                .filterWith(new RaygunRequestCookieFilter("cookie2"))
-        );
+        raygunClient = new DefaultRaygunServletClientFactory("1234", mock(ServletContext.class))
+                .withRequestFormFilters("form1", "form2")
+                .withRequestHeaderFilters("header1", "header2")
+                .withRequestQueryStringFilters("queryParam1", "queryParam2")
+                .withRequestCookieFilters("cookie2")
+                .getClient(requestMock);
+        raygunClient.setRaygunConnection(raygunConnectionMock);
 
         int send = raygunClient.Send(new Exception());
 
         String requestBodyAsString = requestBody.toString();
         assertTrue(requestBodyAsString.contains("queryParam1"));
-        assertTrue(requestBodyAsString.contains("*REDACTED*"));
+        assertFalse(requestBodyAsString.contains("queryValue1"));
         assertTrue(requestBodyAsString.contains("queryParam2"));
         assertFalse(requestBodyAsString.contains("queryValue2"));
         assertTrue(requestBodyAsString.contains("queryParam3"));
