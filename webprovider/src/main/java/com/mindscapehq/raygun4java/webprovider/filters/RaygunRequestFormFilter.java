@@ -13,7 +13,7 @@ public class RaygunRequestFormFilter extends AbstractRaygunRequestMapFilter {
         super(keysToFilter);
     }
 
-    public Map<String, String> GetMapToFilter(RaygunRequestMessage requestMessage) {
+    public Map<String, String> getMapToFilter(RaygunRequestMessage requestMessage) {
         return requestMessage.getForm();
     }
 
