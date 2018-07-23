@@ -10,16 +10,16 @@ This provider provides support for sending exceptions from desktop Java, Scala, 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add **com.mindscape.raygun4java** and **com.mindscapehq.core**, version 2.0.0.
+2. Add `com.mindscape.raygun4java` and `com.mindscapehq.core`, version 2.0.0.
 
-    If you are working in a web environment, add **com.mindscapehq.webprovider** jar too.
+    If you are working in a web environment, add `com.mindscapehq.webprovider` dependency too.
 
-    If you wish to grab the example project, you can also get the sampleapp jar.
+    If you wish to grab the example project, you can also get the `sampleapp` jar.
 3. Save your POM, and the dependencies should appear in Maven Dependencies.
 
 ### With Maven and a command shell
 
-If you are in a shell/text editor environment, you can run `mvn install` from the directory containing your project's pom.xml.
+If editing the `pom.xml` directly, you can run `mvn install` from the directory containing your project's pom.xml.
 The pom.xml will need to contain something like:
 
 ```
@@ -61,60 +61,188 @@ Download the JARs for the latest version from here:
 
 [gson](http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar): *required* - you will also need the Gson dependency in your classpath.
 
-## Usage
+## Basic Usage
+An instance of the `RaygunClient` holds all the data for tracking errors, such as user information, tags etc. Whether you're application is single user desktop application or and multi user server application, it is highly recommended to use a single `RaygunClient` per process. For example, in a web context it is essential to use a new `RaygunClient` for each user request.
 
-### Desktop applications
+The most basic usage of Raygun is as follows:
+1. Setup `RaygunClient` with configuration options
+2. Add meta data such as the current user or tags to `RaygunClient`
+3. Send exceptions using the `RaygunClient`
 
-To catch all exceptions in your application, and to send them to Raygun:
+This example shows the absolute minimum to send an exception to Raygun:
+```java
+new RaygunClient("YOUR_API_KEY").Send(new Exception("my first error"));
+```
+While this is extremely simple, **that is not the recommended usage**: as your application complexity increases, scattering that code snippet throughout your code base will become unwieldy. A good practice is to encapsulate the setup and access to the `RaygunClient` instance in a factory. 
+
+Using a factory and dependency injection to manage your `RaygunClient` use will greatly reduce the complexity of your code. You can make your own factories you use the ones provided with allow the configuring of the main features on the factories, which will produce `RaygunClient`s with that configuration.
+
+For example:
+- Setup 
+```java
+IRaygunClientFactory factory = new RaygunClientFactory("YOUR_API_KEY")
+    .withVersion("1.2.3")
+    .withMessageBuilder(myCustomizedMessageBuilder)
+    .withBeforeSend(myCustomOnBeforeSendHandler);
+```
+
+- Add meta data
+```java
+RaygunClient client = factory.newClient();
+client.SetUser(user);
+```
+
+- Send exceptions
+```java
+client.Send(anException);
+client.Send(anotherException);
+```
+
+### Going further
+Its very good practice to have a new `RaygunClient` instance per process/request/thread, and you can use that throughout your code to add metadata and send errors to Raygun. To make it easily available to your code, you could dependency inject the client, but inevitably you're end up passing the client around. There is, however a simple pattern using `ThreadLocal<RaygunClient>` that can be used to make a single `RaygunClient` instance easily available through out your code (the following class is not included in the core Raygun dependency as its important that this is not shared between multiple libraries using Raygun):
+
+```java
+public class MyErrorTracker {
+    private static ThreadLocal<RaygunClient> client = new ThreadLocal<RaygunClient>();
+    private static IRaygunClientFactory factory;
+
+    /**
+     * Initialize this static accessor with the given factory during application setup
+     * @param factory
+     */
+    public static void initialize(IRaygunClientFactory factory) {
+        RaygunClient.factory = factory;
+    }
+
+    /**
+     * Through out your code, call get() to get a reference to the current instance 
+     * @return the raygun client for this thread
+     */
+    public static RaygunClient get() {
+        RaygunClient raygunClient = client.get();
+        if (raygunClient == null) {
+            raygunClient = factory.newClient();
+            client.set(raygunClient);
+        }
+        return raygunClient;
+    }
+    
+    /**
+     * Custom method to set our user
+     * @param user
+     */
+    public void setUser(User user) {
+        client.get().SetUser(new RaygunIndentifier(new RaygunIdentifier(user.uniqueUserIdentifier, user.firstName, user.fullName, user.emailAddress, user.uuid, true))); 
+    }
+    
+    /**
+     * Custom method to send exception
+     * @param exception
+     */
+    public void send(Exception exception) {
+        client.get().Send(exception); 
+    }
+    
+    /**
+     * At the end of the user process/thread, it is essential to remove the current instance
+     */
+    public static void done() {
+        client.remove();
+    }
+
+    /**
+     * Sets given client to the current thread.
+     * This can be useful when forking multiple processes.
+     * Be sure to unset after use or pain will ensue.
+     * @param toSet
+     */
+    public static void set(RaygunServletClient toSet) {
+        client.set(toSet);
+    }
+
+    public static void destroy() {
+        factory = null;
+    }
+}
+``` 
+With this statically accessed error handling class you can do the following:
+```java
+public class MyApplication {
+    
+    public void startup() {
+        MyErrorTracker.initialize(new RaygunClientFactory("YOUR_API_KEY")
+                                        .withVersion("1.2.3")
+                                        .withMessageBuilder(myCustomizedMessageBuilder)
+                                        .withBeforeSend(myCustomOnBeforeSendHandler));
+    } 
+    
+    public void processUserRequest(User user) {
+        try {
+            MyErrorTracker.setUser(user);
+            
+            ....
+            
+        } catch (Exception e) {
+            MyErrorTracker.send(e);
+        } finally{
+            MyErrorTracker.done();
+        }
+    }
+    
+}
+```
+
+## Desktop applications (catching all unhandled exceptions)
+
+To catch all unhandled exceptions in your application, and to send them to Raygun you need to create your own `Thread.UncaughtExceptionHandler`
 
 ```java
 public class MyApp
 {
-	public static void main(String[] args) throws Throwable
+	public static void main(String[] args)
 	{
-	    Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler());
+	    Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(new RaygunClientFactory("YOUR_API_KEY")));
 	}
 }
 
 class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 {
+    private IRaygunClientFactory raygunClientFactory;
+    
+    public MyExceptionHandler(IRaygunClientFactory factory) {
+        raygunClientFactory = factory;
+    }
+    
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
-		RaygunClient client = new RaygunClient("YOUR_APP_API_KEY");
+		RaygunClient client = raygunClientFactory.newClient();
 		client.Send(e);
 	}
 }
 ```
 
-## Advanced (and recommended) usage
-A `RaygunClientFactory` has been provided to help when constructing more complex clients and to help with dependency injection. 
+## Web applications
+When implementing web applications you can use the `webprovider` dependency to get a lot of out-of-the-box support. For example the `com.mindscapehq.raygun4java.webprovider.RaygunClient` class provides the described `ThreadLocal<RaygunClient>` pattern. The `RaygunServletFilter` creates the `RaygunClient` for each request, intercepts and sends unhandled exceptions to Raygun, and removes the `RaygunClient` at the end of the request.
 
-A single instance of the factory can be created when you are configuring your application. When your application starts a new process `factory.newClient()` can be used to create a client. This client should only be used for the single process and should not be reused. 
-
-A good pattern is to use a `ThreadLocal<RaygunClient>` to make the client available statically just to the process' thread. See `com.mindscapehq.raygun4java.webprovider.RaygunClient` as an example.
-
-The factory is configured with your api key, and optionally: the version of the application (see below Version Tracking) and a before-send handler
-ie
-```java
-RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY", "1.2.3").withBeforeSend(myBeforeSendHandler);
-...
-RaygunClient client = factory.newClient()
-```
-
-### Web applications
-When implementing web applications make sure the `webprovider` dependency is added.
-
-For out-of-the-box implementation of capturing exceptions thrown out of your controllers, simply do the following:
-1. In the servlet configuration step in your container (a method that provides a ServletContext) initialize a `RaygunServletClientFactory`
+For the out-of-the-box implementation of capturing exceptions thrown out of your controllers, simply do the following:
+1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `DefaultRaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
     ```java
-    RaygunServletClientFactory factory = RaygunServletClientFactory(apiKey, servletContext);
-    ``` 
-2. Initialize the RaygunClient static accessor with the factory
-    ```java
+    IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory(apiKey, servletContext);
     RaygunClient.Initialize(factory);
     ```
-2. In the servlet configuration step in your container that allows you to add servlet filters, add a `new DefaultRaygunServletFilter()`
-3. Throughout your code, while in the context of a http request, you can use the `RaygunClient.Get()` method to return the current instance of the client for that request.
+2. In the servlet configuration step in your container that allows you to add servlet filters, add a `new DefaultRaygunServletFilter()` - this filter will use the static accessor above.
+3. Through out your code, while in the context of a http request, you can use the `RaygunClient.Get()` method to return the current instance of the client for that request.
+    ```java
+    RaygunClient.Get().Send(exception);
+    ```
+
+### Web applications - templates/JSP/JSF etc
+
+Intercepting unhandled exceptions is a standard pattern used by the servlet `Filter`, and provided out-of-the-box by the `com.mindscapehq.raygun4java.webprovider.DefaultRaygunServletFilter`
+
+Unfortuanally most web frameworks implement their own exception handling for exceptions that occur inside their presentation layer, and those exceptions are not perculated through the servlet filter, rather they are handled by the framework. (The `DefaultRaygunServletFilter` could be extended to detect the 500 status code without an exception, but by that point all the useful information about the exception is not available).
+
+To capture exceptions that occur within the framework presentation layer (or any other area that is handling exceptions), refer to that frameworks documentation about handling exceptions, and send the exception to Raygun using the techniques described above (the static accessor will help out here)
 
 ## Play 2 Framework for Java and Scala
 
@@ -200,19 +328,19 @@ def index = Action { implicit request =>
 
 ### Sending asynchronously
 
-Web projects that use RaygunServletClient can call SendAsync(), to transmit messages asynchronously. When SendAsync is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
+Web projects that use `RaygunServletClient` can call `SendAsync()`, to transmit messages asynchronously. When `SendAsync` is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
 
 ####SendAsync()
 
 Overloads:
 
+```java
 void SendAsync(*Throwable* throwable)
-
 void SendAsync(*Throwable* throwable, *List* tags)
-
 void SendAsync(*Throwable* throwable, *List* tags, Map userCustomData)
+```
 
-This provides a huge speedup versus the blocking Send() method, and appears to be near instantaneous from the user's perspective.
+This provides a huge speedup versus the blocking `Send()` method, and appears to be near instantaneous from the user's perspective.
 
 No HTTP status code is returned from this method as the calling thread will have terminated by the time the response is returned from the Raygun API. A logging option will be available in future.
 
@@ -222,9 +350,9 @@ This feature is considered to be in Beta, and it is advised to test it in a stag
 
 ### Affected user tracking
 
-You can call `client.SetUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the uniqueUserIdentifier. This should be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
+You can call `client.SetUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the `uniqueUserIdentifier`. This could be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
 
-The other overload contains all the available properties, some or all of which can be null and can be also be set individually on the RaygunIdentifier object.
+The other overload contains all the available properties, some or all of which can be null and can be also be set individually on the `RaygunIdentifier` object.
 
 The previous method, SetUser(string) has been deprecated as of 1.5.0.
 
@@ -233,7 +361,7 @@ The previous method, SetUser(string) has been deprecated as of 1.5.0.
 To attach custom data or tags, use these overloads on Send:
 
 ```java
-RaygunClient client = new RaygunClient("apikey");
+RaygunClient client;
 Exception exception;
 
 ArrayList tags = new ArrayList<String>();
@@ -251,35 +379,25 @@ Tags can be null if you only wish to transmit custom data. Send calls can take t
 
 ### Version tracking
 
-By default, Raygun4Java reads the manifest file for Specification-Version or Implementation-Version - make sure that your pom packaging sets either of them correctly.
+By default, Raygun4Java reads the manifest file for `Specification-Version` or `Implementation-Version` - make sure that your pom packaging sets either of them correctly.
 
 When using Raygun4Java `core` the `/META-INF/MANIFEST.MF` file in the main executing `.jar` is used. 
 When using Raygun4Java `webprovider` the `/META-INF/MANIFEST.MF` from the `.war` file.
 
 In the case where your code is neither of the stated situations, you can pass in a class from your jar so that the correct version can be extracted ie
 ```java
-client.SetVersionFrom(AClassFromMyApplication.class);
-```
-
-or if using the factory:
-```java
-RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY", AClassFromMyApplication.class)
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").SetVersionFrom(AClassFromMyApplication.class);
 ```
 
 A SetVersion(string) method is also available to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
 ```java
-client.SetVersion("1.2.3.4");
-```
-
-or if using the factory:
-```java
-RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY", "1.2.3.4")
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").SetVersion("1.2.3.4");
 ```
 
 
 ### Getting/setting/cancelling the error before it is sent
 
-This provider has an OnBeforeSend API to support accessing or mutating the candidate error payload immediately before it is sent, or cancelling the send outright.
+This provider has an `OnBeforeSend` API to support accessing or mutating the candidate error payload immediately before it is sent, or cancelling the send outright.
 
 This is provided as the public method `RaygunClient.SetOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `RaygunOnBeforeSend` interface. Your class needs a public `OnBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
 
@@ -340,7 +458,6 @@ There are several provided classes for filtering, and use can use the `RaygunOnB
 raygunClient.SetOnBeforeSend(new RaygunOnBeforeSendChain()
         .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
         .filterWith(new RaygunRequestHeaderFilter("header1", "header2"))
-        .filterWith(new RaygunRequestFormFilter("form1", "form2"))
 );
 ```
 
@@ -349,11 +466,10 @@ or if using the factory
 RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBeforeSend(new RaygunOnBeforeSendChain()
         .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
         .filterWith(new RaygunRequestHeaderFilter("header1", "header2"))
-        .filterWith(new RaygunRequestFormFilter("form1", "form2"))
 );
 ```
 
-### Custom error grouping
+#### Custom error grouping
 
 You can override Raygun's default grouping logic for Java exceptions by setting the grouping key manually in OnBeforeSend (see above):
 
@@ -367,6 +483,45 @@ public RaygunMessage OnBeforeSend(RaygunMessage message) {
 ```
 
 Any error instances with a certain key will be grouped together. The example above will place all errors within one group (as the key is hardcoded to 'foo'). The grouping key is a String and must be between 1 and 100 characters long. You should send all data you care about (for instance, parts of the exception message, stacktrace frames, class names etc) to a hash function (for instance MD5), then pass that to `setGroupingKey`.
+
+#### Strip wrapping exceptions
+It is very common for exceptions to be wrapped in other exceptions whose stack trace does not contribute to the report. For example `ServletException`s often wrap the application exception that is of interest. If you don't want the outer/wrapping exception sent, the `RaygunStripWrappedExceptionFilter` can remove them for you:
+```java
+factory.withBeforeSend(new RaygunStripWrappedExceptionFilter(ServletException.class));
+```
+
+
+### Web specific features
+
+#### Ignoring errors from `localhost`
+Often developers will send errors from there local machine with the hostname `localhost`, if this is undesireable add the `RaygunExcludeLocalRequestFilter`
+```java
+factory.withBeforeSend(new RaygunExcludeLocalRequestFilter());
+```
+
+#### Ignoring specific requests
+You can provide your own criteria to ignore requests with `RaygunExcludeRequestFilter`:
+```java
+factory.withBeforeSend(new RaygunExcludeRequestFilter(new Filter () {
+        boolean shouldFilterOut(RaygunRequestMessage requestMessage) {
+            return requestMessage.getIpAddress().equals("127.0.0.1");    
+        }
+    }
+));
+```
+
+#### Redacting/erasing various values
+There are provided filters to remove data before it is sent to Raygun, this is useful for removing personally identifiable information (PII) etc.
+Values can be removed from Cookies, Forms fields, Headers and Query String parameters:
+
+```java
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBeforeSend(new RaygunOnBeforeSendChain()
+        .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
+        .filterWith(new RaygunRequestHeaderFilter("header1", "header2"))
+        .filterWith(new RaygunRequestFormFilter("form1", "form2"))
+        .filterWith(new RaygunRequestCookieFilter("cookie1", "cookie2"))
+);
+```
 
 ## Troubleshooting
 
