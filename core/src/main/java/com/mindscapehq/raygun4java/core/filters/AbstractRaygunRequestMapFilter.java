@@ -1,9 +1,9 @@
-package com.mindscapehq.raygun4java.webprovider.filters;
+package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
-import com.mindscapehq.raygun4java.webprovider.RaygunRequestMessage;
-import com.mindscapehq.raygun4java.webprovider.RaygunServletMessageDetails;
+import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
+import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 
 import java.util.Map;
 
@@ -26,8 +26,8 @@ public abstract class AbstractRaygunRequestMapFilter<T> implements RaygunOnBefor
 
     public RaygunMessage OnBeforeSend(RaygunMessage message) {
 
-        if (message.getDetails() != null && message.getDetails() instanceof RaygunServletMessageDetails) {
-            RaygunServletMessageDetails requestMessageDetails = (RaygunServletMessageDetails) message.getDetails();
+        if (message.getDetails() != null && message.getDetails() instanceof RaygunRequestMessageDetails) {
+            RaygunRequestMessageDetails requestMessageDetails = (RaygunRequestMessageDetails) message.getDetails();
 
             if (requestMessageDetails.getRequest() != null) {
                 Map<String, String> mapToFilter = getMapToFilter(requestMessageDetails.getRequest());

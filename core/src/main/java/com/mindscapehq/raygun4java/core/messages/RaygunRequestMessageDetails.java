@@ -1,8 +1,6 @@
-package com.mindscapehq.raygun4java.webprovider;
+package com.mindscapehq.raygun4java.core.messages;
 
-import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
-
-public class RaygunServletMessageDetails extends RaygunMessageDetails {
+public class RaygunRequestMessageDetails extends RaygunMessageDetails {
 
     private RaygunRequestMessage request;
 

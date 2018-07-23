@@ -2,11 +2,12 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunExcludeLocalRequestFilter;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestCookieFilter;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestFormFilter;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestHeaderFilter;
-import com.mindscapehq.raygun4java.webprovider.filters.RaygunRequestQueryStringFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunRequestCookieFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunRequestFormFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunRequestHeaderFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunRequestQueryStringFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunExcludeLocalRequestFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunStripWrappedExceptionFilter;
 
 import javax.servlet.ServletContext;
 
@@ -54,6 +55,11 @@ public class DefaultRaygunServletClientFactory extends RaygunServletClientFactor
 
     public DefaultRaygunServletClientFactory withRequestCookieFilters(String... cookiesToFilter) {
         addFilter(new RaygunRequestCookieFilter(cookiesToFilter));
+        return this;
+    }
+
+    public DefaultRaygunServletClientFactory withWrappedExceptionStripping(Class... stripWrappers) {
+        addFilter(new RaygunStripWrappedExceptionFilter(stripWrappers));
         return this;
     }
 

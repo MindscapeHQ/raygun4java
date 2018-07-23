@@ -1,8 +1,11 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.messages.*;
+import com.mindscapehq.raygun4java.core.messages.RaygunClientMessage;
+import com.mindscapehq.raygun4java.core.messages.RaygunEnvironmentMessage;
+import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
+import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;

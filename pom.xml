@@ -21,19 +21,6 @@
         <module>/webprovider</module>
         <module>/playprovider</module>
     </modules>
-    <developers>
-        <developer>
-            <id>callum</id>
-            <name>Callum Gavin</name>
-            <email>hello@raygun.io</email>
-            <organisation>Mindscape</organisation>
-            <organisationUrl>http://raygun.io</organisationUrl>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>+12</timezone>
-        </developer>
-    </developers>
     <scm>
         <url>https://github.com/mindscapehq/raygun4java</url>
         <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
