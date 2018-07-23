@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunConnection;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

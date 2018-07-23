@@ -1,6 +1,6 @@
-package com.mindscapehq.raygun4java.webprovider.filters;
+package com.mindscapehq.raygun4java.core.filters;
 
-import com.mindscapehq.raygun4java.webprovider.RaygunRequestMessage;
+import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 
 /**
  * Excludes requests that come from host names starting with "localhost"

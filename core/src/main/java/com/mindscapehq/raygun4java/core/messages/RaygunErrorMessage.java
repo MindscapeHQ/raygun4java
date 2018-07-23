@@ -2,12 +2,14 @@ package com.mindscapehq.raygun4java.core.messages;
 
 public class RaygunErrorMessage {
 
+    private transient Class throwableClass;
     private RaygunErrorMessage innerError;
     private String message;
     private String className;
     private RaygunErrorStackTraceLineMessage[] stackTrace;
 
     public RaygunErrorMessage(Throwable throwable) {
+        throwableClass = throwable.getClass();
         message = throwable.getClass().getSimpleName();
         String throwableMessage = throwable.getMessage();
         if (throwableMessage != null) {
@@ -57,5 +59,9 @@ public class RaygunErrorMessage {
 
     public void setStackTrace(RaygunErrorStackTraceLineMessage[] stackTrace) {
         this.stackTrace = stackTrace;
+    }
+
+    public Class getThrowableClass() {
+        return throwableClass;
     }
 }

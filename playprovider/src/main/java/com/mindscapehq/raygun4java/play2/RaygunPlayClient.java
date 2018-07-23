@@ -78,7 +78,6 @@ public class RaygunPlayClient extends RaygunClient {
 
     private void PostAsync(final RaygunMessage message) {
         Runnable r = new Runnable() {
-            @Override
             public void run() {
                 Post(message);
             }
