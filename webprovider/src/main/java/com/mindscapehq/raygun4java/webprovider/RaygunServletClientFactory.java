@@ -32,6 +32,10 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         this.version = version;
     }
 
+    protected RaygunOnBeforeSend getOnBeforeSend() {
+        return onBeforeSend;
+    }
+
     /**
      * Add a RaygunOnBeforeSend handler
      *
