@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -119,5 +120,17 @@ public class RaygunServletClient extends RaygunClient {
             Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
         }
         return null;
+    }
+
+    String getVersion() {
+        return _version;
+    }
+
+    String getApiKey() {
+        return _apiKey;
+    }
+
+    public RaygunOnBeforeSend getOnBeforeSend() {
+        return _onBeforeSend;
     }
 }

@@ -23,4 +23,13 @@
     <description>The official provider for the Raygun error tracking service. This core project is plugged in to your
         desktop, mobile or web application, and performs the actual sending.
     </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

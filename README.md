@@ -29,12 +29,12 @@ The pom.xml will need to contain something like:
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>raygun4java</artifactId>
     	<type>pom</type>
-    	<version>2.2.0</version>
+    	<version>2.2.1</version>
     </dependency>
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>2.2.0</version>
+    	<version>2.2.1</version>
     </dependency>
 </dependencies>
 ```
@@ -47,7 +47,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 ```
 
@@ -86,35 +86,35 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 }
 ```
 
-Or see the sample app which is where this code originates.
+## Advanced (and recommended) usage
+A `RaygunClientFactory` has been provided to help when constructing more complex clients and to help with dependency injection. 
 
-### JSPs
+A single instance of the factory can be created when you are configuring your application. When your application starts a new process `factory.newClient()` can be used to create a client. This client should only be used for the single process and should not be reused. 
 
-The concept is the same for the above - set up an Unhandled Exception handler, then inside it create a RaygunClient and call Send() on it, passing in the exception. The way this is done will vary based on what framework you are using. Presented below is a naive example that just uses plain JSPs - this architecture is obviously not recommended. A similar method will work for raw servlets if happen to be using those.
+A good pattern is to use a `ThreadLocal<RaygunClient>` to make the client available statically just to the process' thread. See `com.mindscapehq.raygun4java.webprovider.RaygunClient` as an example.
 
-Inside web.xml
-```xml
-<error-page>
-	<exception-type>java.lang.Throwable</exception-type>
-	<location>/error.jsp</location>
-</error-page>
+The factory is configured with your api key, and optionally: the version of the application (see below Version Tracking) and a before-send handler
+ie
+```java
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY", "1.2.3").withBeforeSend(myBeforeSendHandler);
+...
+RaygunClient client = factory.newClient()
 ```
 
-Inside error.jsp
-```jsp
-<%@ page isErrorPage="true" %>
-<%@ page import="com.mindscapehq.raygun4java.webprovider.RaygunServletClient" %>
+### Web applications
+When implementing web applications make sure the `webprovider` dependency is added.
 
-<%
-RaygunServletClient client = new RaygunServletClient("YOUR_APP_API_KEY", request);
-
-client.Send(exception);
-%>
-```
-
-When an exception is thrown from another JSP, this page will take care of the sending.
-
-Note: all Java dynamic web page projects should have core-1.x.x.jar, webprovider-1.x.x.jar and gson-2.1.jar on their classpath.
+For out-of-the-box implementation of capturing exceptions thrown out of your controllers, simply do the following:
+1. In the servlet configuration step in your container (a method that provides a ServletContext) initialize a `RaygunServletClientFactory`
+    ```java
+    RaygunServletClientFactory factory = RaygunServletClientFactory(apiKey, servletContext);
+    ``` 
+2. Initialize the RaygunClient static accessor with the factory
+    ```java
+    RaygunClient.Initialize(factory);
+    ```
+2. In the servlet configuration step in your container that allows you to add servlet filters, add a `new DefaultRaygunServletFilter()`
+3. Throughout your code, while in the context of a http request, you can use the `RaygunClient.Get()` method to return the current instance of the client for that request.
 
 ## Play 2 Framework for Java and Scala
 
@@ -251,9 +251,31 @@ Tags can be null if you only wish to transmit custom data. Send calls can take t
 
 ### Version tracking
 
-Raygun4Java reads the version of your application from your manifest.mf file in the calling package. It first attempts to read this from Specification-Version, then Implementation-Version if the first doesn't exist.
+By default, Raygun4Java reads the manifest file for Specification-Version or Implementation-Version - make sure that your pom packaging sets either of them correctly.
+
+When using Raygun4Java `core` the `/META-INF/MANIFEST.MF` file in the main executing `.jar` is used. 
+When using Raygun4Java `webprovider` the `/META-INF/MANIFEST.MF` from the `.war` file.
+
+In the case where your code is neither of the stated situations, you can pass in a class from your jar so that the correct version can be extracted ie
+```java
+client.SetVersionFrom(AClassFromMyApplication.class);
+```
+
+or if using the factory:
+```java
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY", AClassFromMyApplication.class)
+```
 
 A SetVersion(string) method is also available to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
+```java
+client.SetVersion("1.2.3.4");
+```
+
+or if using the factory:
+```java
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY", "1.2.3.4")
+```
+
 
 ### Getting/setting/cancelling the error before it is sent
 
@@ -322,6 +344,14 @@ raygunClient.SetOnBeforeSend(new RaygunOnBeforeSendChain()
 );
 ```
 
+or if using the factory
+```java
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBeforeSend(new RaygunOnBeforeSendChain()
+        .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
+        .filterWith(new RaygunRequestHeaderFilter("header1", "header2"))
+        .filterWith(new RaygunRequestFormFilter("form1", "form2"))
+);
+```
 
 ### Custom error grouping
 

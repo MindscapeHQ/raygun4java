@@ -2,6 +2,8 @@ package com.mindscapehq.raygun4java.core;
 
 import com.mindscapehq.raygun4java.core.messages.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +52,14 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         if (version != null) {
             _raygunMessage.getDetails().setVersion(version);
         } else {
-            _raygunMessage.getDetails().setVersion(ReadVersion());
+            _raygunMessage.getDetails().setVersion(ReadVersion(null));
         }
+        return this;
+    }
+
+    public IRaygunMessageBuilder SetVersionFrom(Class versionFrom) {
+        _raygunMessage.getDetails().setVersion(ReadVersion(versionFrom));
+
         return this;
     }
 
@@ -75,20 +83,36 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         return this;
     }
 
-    private String ReadVersion() {
-        StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-        StackTraceElement main = stack[stack.length - 1];
-        String mainClass = main.getClassName();
+    private String ReadVersion(Class readVersionFrom) {
+
+        String mainClass;
+        if (readVersionFrom == null) {
+            StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+            StackTraceElement main = stack[stack.length - 1];
+            mainClass = main.getClassName();
+        } else {
+            mainClass = readVersionFrom.getName();
+        }
 
         try {
             Class<?> cl = getClass().getClassLoader().loadClass(mainClass);
             String className = cl.getSimpleName() + ".class";
             String classPath = cl.getResource(className).toString();
-            if (!classPath.startsWith("jar")) {
-                return null;
-            }
+
             String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
-            Manifest manifest = new Manifest(new URL(manifestPath).openStream());
+
+            return readVersionFromManifest(new URL(manifestPath).openStream());
+
+        } catch (Exception e) {
+            Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
+        }
+
+        return noManifestVersion();
+    }
+
+    protected String readVersionFromManifest(InputStream manifestInputStream)  {
+        try {
+            Manifest manifest = new Manifest(manifestInputStream);
             Attributes attr = manifest.getMainAttributes();
 
             if (attr.getValue("Specification-Version") != null) {
@@ -96,10 +120,13 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
             } else if (attr.getValue("Implementation-Version") != null) {
                 return attr.getValue("Implementation-Version");
             }
-
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
         }
+        return noManifestVersion();
+    }
+
+    protected String noManifestVersion() {
         return "Not supplied";
     }
 }

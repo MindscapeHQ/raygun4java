@@ -28,7 +28,7 @@ public class RaygunClient {
     protected RaygunIdentifier _user;
     protected String _context;
     protected String _version = null;
-    private static RaygunOnBeforeSend _onBeforeSend;
+    protected RaygunOnBeforeSend _onBeforeSend;
 
     public RaygunClient(String apiKey) {
         _apiKey = apiKey;
@@ -70,6 +70,10 @@ public class RaygunClient {
         _version = version;
     }
 
+    public void SetVersionFrom(Class getVersionFrom) {
+        _version = new RaygunMessageBuilder().SetVersionFrom(getVersionFrom).Build().getDetails().getVersion();
+    }
+
     public int Send(Throwable throwable) {
         return Post(BuildMessage(throwable));
     }
@@ -84,15 +88,7 @@ public class RaygunClient {
 
     private RaygunMessage BuildMessage(Throwable throwable) {
         try {
-            RaygunMessage message = RaygunMessageBuilder.New()
-                    .SetEnvironmentDetails()
-                    .SetMachineName(GetMachineName())
-                    .SetExceptionDetails(throwable)
-                    .SetClientDetails()
-                    .SetVersion(_version)
-                    .SetUser(_user)
-                    .Build();
-            return message;
+            return BuildMessage(throwable, null, null);
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage", t);
         }
@@ -101,15 +97,7 @@ public class RaygunClient {
 
     private RaygunMessage BuildMessage(Throwable throwable, List<?> tags) {
         try {
-            return RaygunMessageBuilder.New()
-                    .SetEnvironmentDetails()
-                    .SetMachineName(GetMachineName())
-                    .SetExceptionDetails(throwable)
-                    .SetClientDetails()
-                    .SetVersion(_version)
-                    .SetTags(tags)
-                    .SetUser(_user)
-                    .Build();
+            return BuildMessage(throwable, tags, null);
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage-t", t);
         }
@@ -163,7 +151,16 @@ public class RaygunClient {
         return -1;
     }
 
-    public static void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
+    public void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
         _onBeforeSend = onBeforeSend;
+    }
+
+
+    String getVersion() {
+        return _version;
+    }
+
+    String getApiKey() {
+        return _apiKey;
     }
 }
