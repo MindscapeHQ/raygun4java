@@ -408,6 +408,7 @@ public class MyProgram {
 
 In the example above, the overridden `OnBeforeSend` method will log an info message every time an error is sent.
 
+### Mutate the error payload
 To mutate the error payload, for instance to change the message:
 
 ```java
@@ -421,6 +422,7 @@ public RaygunMessage OnBeforeSend(RaygunMessage message) {
 }
 ```
 
+### Cancel the send
 To cancel the send (prevent the error from reaching the Raygun dashboard) by returning null:
 
 ```java
@@ -431,7 +433,8 @@ public RaygunMessage OnBeforeSend(RaygunMessage message) {
 }
 ```
 
-There are several provided classes for filtering, and use can use the `RaygunOnBeforeSendChain` to execute multiple `RaygunOnBeforeSend`
+### Filtering
+There are several [provided classes for filtering](https://github.com/MindscapeHQ/raygun4java/tree/master/core/src/main/java/com/mindscapehq/raygun4java/core/filters), and you can use the `RaygunOnBeforeSendChain` to execute multiple `RaygunOnBeforeSend`
 ```java
 raygunClient.SetOnBeforeSend(new RaygunOnBeforeSendChain()
         .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
@@ -471,11 +474,23 @@ factory.withBeforeSend(new RaygunStripWrappedExceptionFilter(ServletException.cl
 
 ### Web specific features
 
-### Sending asynchronously
+#### Web specific factory
+The `webprovider` dependency adds a `DefaultRaygunServletClientFactory` which exposes convenience methods to add the provided filters.
+
+```java
+IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory("YOUR_APP_API_KEY", servletContext)
+    .withLocalRequestsFilter()
+    .withRequestFormFilters("password", "ssn", "creditcard")
+    .withRequestHeaderFilters("auth")
+    .withRequestQueryStringFilters("secret")
+    .withRequestCookieFilters("sessionId")
+    .withWrappedExceptionStripping(ServletException.class)
+    .withHttpStatusFiltering(200, 401, 403)
+    .addFilter(myOnBeforeSendHandler)
+```
+#### Sending asynchronously
 
 Web projects that use `RaygunServletClient` can call `SendAsync()`, to transmit messages asynchronously. When `SendAsync` is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
-
-####SendAsync()
 
 Overloads:
 

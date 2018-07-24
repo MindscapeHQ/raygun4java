@@ -5,6 +5,7 @@ import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestCookieFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestFormFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestHeaderFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunRequestHttpStatusFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestQueryStringFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunExcludeLocalRequestFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunStripWrappedExceptionFilter;
@@ -63,7 +64,12 @@ public class DefaultRaygunServletClientFactory extends RaygunServletClientFactor
         return this;
     }
 
-    private void addFilter(RaygunOnBeforeSend raygunOnBeforeSend) {
+    public DefaultRaygunServletClientFactory withHttpStatusFiltering(Integer... excludeStatusCodes) {
+        addFilter(new RaygunRequestHttpStatusFilter(excludeStatusCodes));
+        return this;
+    }
+
+    public void addFilter(RaygunOnBeforeSend raygunOnBeforeSend) {
         chain.getHandlers().add(raygunOnBeforeSend);
     }
 }
