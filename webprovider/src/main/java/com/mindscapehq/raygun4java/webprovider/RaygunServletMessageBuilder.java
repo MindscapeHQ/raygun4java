@@ -1,11 +1,11 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
+import com.mindscapehq.raygun4java.core.messages.RaygunResponseMessage;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
-import java.net.MalformedURLException;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URL;
 
 public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements IRaygunHttpMessageBuilder {
@@ -34,8 +34,12 @@ public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements
         return _raygunServletMessage;
     }
 
-    public IRaygunHttpMessageBuilder SetRequestDetails(HttpServletRequest request) {
+    public IRaygunHttpMessageBuilder SetRequestDetails(HttpServletRequest request, HttpServletResponse response) {
         _raygunServletMessage.getDetails().setRequest(new RaygunRequestMessage(request));
+
+        if(response != null) {
+            _raygunServletMessage.getDetails().setResponse(new RaygunResponseMessage(response.getStatus()));
+        }
 
         return this;
     }

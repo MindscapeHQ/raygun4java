@@ -493,6 +493,14 @@ factory.withBeforeSend(new RaygunStripWrappedExceptionFilter(ServletException.cl
 
 ### Web specific features
 
+#### Ignoring errors which specific http status code
+Sometimes unhandled exceptions are thrown that do not indicate an error. For example, an exception that represents a "Not Authorised" error might set a http status code of 401 onto the response.
+If you want to filter out errors by status code you can use the `RaygunRequestHttpStatusFilter` 
+
+```java
+factory.withBeforeSend(new RaygunRequestHttpStatusFilter(403, 401));
+```
+
 #### Ignoring errors from `localhost`
 Often developers will send errors from there local machine with the hostname `localhost`, if this is undesireable add the `RaygunExcludeLocalRequestFilter`
 ```java

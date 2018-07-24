@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -28,10 +29,14 @@ public class RaygunServletFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
             if (servletRequest instanceof HttpServletRequest) {
-                raygunServletFilterFacade.initializeRequest(servletRequest);
+                raygunServletFilterFacade.initializeRequest((HttpServletRequest)servletRequest);
             }
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Throwable ex) {
+            if (servletResponse instanceof HttpServletResponse) {
+                raygunServletFilterFacade.setCommittedResponse((HttpServletResponse) servletResponse);
+            }
+
             raygunServletFilterFacade.send(ex);
 
             if (ex instanceof ServletException) throw (ServletException)ex;

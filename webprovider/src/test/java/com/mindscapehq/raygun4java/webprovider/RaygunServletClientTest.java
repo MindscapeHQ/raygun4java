@@ -4,7 +4,9 @@ import com.mindscapehq.raygun4java.core.RaygunConnection;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.ServletContext;
@@ -26,13 +28,16 @@ public class RaygunServletClientTest {
     private RaygunServletClient raygunClient;
 
     private RaygunConnection raygunConnectionMock;
-    private HttpServletRequest requestMock;
+    @Mock
+    private HttpServletRequest request;
+
     private ByteArrayOutputStream requestBody;
 
     @Before
     public void setUp() throws IOException {
-        requestMock = mock(HttpServletRequest.class);
-        raygunClient = new RaygunServletClient("1234", requestMock);
+        MockitoAnnotations.initMocks(this);
+
+        raygunClient = new RaygunServletClient("1234", request);
         raygunConnectionMock = mock(RaygunConnection.class);
         raygunClient.setRaygunConnection(raygunConnectionMock);
         raygunClient.SetOnBeforeSend(null);
@@ -46,13 +51,13 @@ public class RaygunServletClientTest {
 
     @Test
     public void post_InvalidApiKeyExceptionCaught_MinusOneReturned() {
-        raygunClient = new RaygunServletClient("", requestMock);
+        raygunClient = new RaygunServletClient("", request);
         assertEquals(-1, raygunClient.Send(new Exception()));
     }
 
     @Test
     public void post_AsyncWithInvalidKey_MinusOneReturned() {
-        raygunClient = new RaygunServletClient("", requestMock);
+        raygunClient = new RaygunServletClient("", request);
 
         try {
             throw new Exception("Test");
@@ -96,7 +101,7 @@ public class RaygunServletClientTest {
 
     @Test
     public void send_WithQueryString_Returns202() throws MalformedURLException, IOException {
-        when(requestMock.getQueryString()).thenReturn("paramA=valueA&paramB=&");
+        when(request.getQueryString()).thenReturn("paramA=valueA&paramB=&");
 
         int send = raygunClient.Send(new Exception());
         assertEquals(202, send);
@@ -106,23 +111,23 @@ public class RaygunServletClientTest {
     }
 
     private void setupFilterMocks() {
-        when(requestMock.getQueryString()).thenReturn("queryParam1=queryValue1&queryParam2=queryValue2&queryParam3=queryValue3");
+        when(request.getQueryString()).thenReturn("queryParam1=queryValue1&queryParam2=queryValue2&queryParam3=queryValue3");
 
-        when(requestMock.getHeaderNames()).thenReturn(new Vector<String>(Arrays.asList("header1", "header2", "header3")).elements());
-        when(requestMock.getHeader("header1")).thenReturn("headerValue1");
-        when(requestMock.getHeader("header2")).thenReturn("headerValue2");
-        when(requestMock.getHeader("header3")).thenReturn("headerValue3");
-        when(requestMock.getHeader("Cookies")).thenReturn("someCookies");
+        when(request.getHeaderNames()).thenReturn(new Vector<String>(Arrays.asList("header1", "header2", "header3")).elements());
+        when(request.getHeader("header1")).thenReturn("headerValue1");
+        when(request.getHeader("header2")).thenReturn("headerValue2");
+        when(request.getHeader("header3")).thenReturn("headerValue3");
+        when(request.getHeader("Cookies")).thenReturn("someCookies");
 
         Cookie[] cookies = new Cookie[2];
         cookies[0] = new Cookie("cookie1", "cookieValue1");
         cookies[1] = new Cookie("cookie2", "cookieValue2");
-        when(requestMock.getCookies()).thenReturn(cookies);
+        when(request.getCookies()).thenReturn(cookies);
 
-        when(requestMock.getParameterNames()).thenReturn(new Vector<String>(Arrays.asList("form1", "form2", "form3")).elements());
-        when(requestMock.getParameterValues("form1")).thenReturn(new String[]{"formValue1"});
-        when(requestMock.getParameterValues("form2")).thenReturn(new String[]{"formValue2"});
-        when(requestMock.getParameterValues("form3")).thenReturn(new String[]{"formValue3"});
+        when(request.getParameterNames()).thenReturn(new Vector<String>(Arrays.asList("form1", "form2", "form3")).elements());
+        when(request.getParameterValues("form1")).thenReturn(new String[]{"formValue1"});
+        when(request.getParameterValues("form2")).thenReturn(new String[]{"formValue2"});
+        when(request.getParameterValues("form3")).thenReturn(new String[]{"formValue3"});
     }
 
     @Test
@@ -168,7 +173,7 @@ public class RaygunServletClientTest {
                 .withRequestHeaderFilters("header1", "header2")
                 .withRequestQueryStringFilters("queryParam1", "queryParam2")
                 .withRequestCookieFilters("cookie2")
-                .getClient(requestMock);
+                .getClient(request);
         raygunClient.setRaygunConnection(raygunConnectionMock);
 
         int send = raygunClient.Send(new Exception());
