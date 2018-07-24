@@ -1,15 +1,14 @@
 package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
-import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 import com.mindscapehq.raygun4java.core.messages.RaygunResponseMessage;
-import org.hamcrest.core.Is;
 import org.junit.Test;
 
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class RaygunRequestHttpStatusFilterTest {
     @Test
@@ -22,7 +21,7 @@ public class RaygunRequestHttpStatusFilterTest {
         requestDetails.setRequest(new RaygunRequestMessage());
         requestDetails.setResponse(response);
         message.setDetails(requestDetails);
-        assertNull(filter.OnBeforeSend(message));
+        assertNull(filter.onBeforeSend(message));
     }
 
     @Test

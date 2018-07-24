@@ -12,7 +12,7 @@ public class RaygunStripWrappedExceptionFilter implements RaygunOnBeforeSend {
         this.stripClasses = stripClasses;
     }
 
-    public RaygunMessage OnBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunMessage message) {
 
         if(message.getDetails() != null
                 && message.getDetails().getError() != null
@@ -25,7 +25,7 @@ public class RaygunStripWrappedExceptionFilter implements RaygunOnBeforeSend {
                     message.getDetails().setError(innerError);
 
                     // rerun check on the reassigned error
-                    OnBeforeSend(message);
+                    onBeforeSend(message);
                 }
             }
         }

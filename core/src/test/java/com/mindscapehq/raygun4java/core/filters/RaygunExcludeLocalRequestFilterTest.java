@@ -5,7 +5,9 @@ import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class RaygunExcludeLocalRequestFilterTest {
 
@@ -25,7 +27,7 @@ public class RaygunExcludeLocalRequestFilterTest {
         details.setRequest(request);
         localMessage.setDetails(details);
 
-        assertNull(new RaygunExcludeLocalRequestFilter().OnBeforeSend(localMessage));
+        assertNull(new RaygunExcludeLocalRequestFilter().onBeforeSend(localMessage));
     }
 
     @Test
@@ -35,6 +37,6 @@ public class RaygunExcludeLocalRequestFilterTest {
         details.setRequest(request);
         localMessage.setDetails(details);
 
-        assertNotNull(new RaygunExcludeLocalRequestFilter().OnBeforeSend(localMessage));
+        assertNotNull(new RaygunExcludeLocalRequestFilter().onBeforeSend(localMessage));
     }
 }

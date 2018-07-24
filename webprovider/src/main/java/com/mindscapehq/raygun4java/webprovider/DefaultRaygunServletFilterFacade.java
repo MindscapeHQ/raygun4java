@@ -1,7 +1,5 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +19,7 @@ public class DefaultRaygunServletFilterFacade implements IRaygunServletFilterFac
 
     public void send(Throwable throwable) {
         try {
-            RaygunClient.get().Send(throwable);
+            RaygunClient.get().send(throwable);
         } catch (Exception raygunException){}
     }
 

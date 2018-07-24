@@ -1,7 +1,6 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -9,8 +8,8 @@ import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +40,7 @@ public class DefaultRaygunServletFilterFacadeTest {
 
         Throwable e = new Exception();
         facade.send(e);
-        verify(client).Send(e);
+        verify(client).send(e);
 
         facade.done();
         try {

@@ -10,10 +10,10 @@ import java.net.URL;
 
 public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements IRaygunHttpMessageBuilder {
 
-    private RaygunServletMessage _raygunServletMessage;
+    private RaygunServletMessage raygunServletMessage;
 
     public RaygunServletMessageBuilder() {
-        _raygunServletMessage = new RaygunServletMessage();
+        raygunServletMessage = new RaygunServletMessage();
     }
 
     public static RaygunServletMessageBuilder New() {
@@ -21,24 +21,24 @@ public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements
     }
 
     @Override
-    public RaygunServletMessage Build() {
-        _raygunServletMessage.getDetails().setEnvironment(_raygunMessage.getDetails().getEnvironment());
-        _raygunServletMessage.getDetails().setMachineName(_raygunMessage.getDetails().getMachineName());
-        _raygunServletMessage.getDetails().setError(_raygunMessage.getDetails().getError());
-        _raygunServletMessage.getDetails().setClient(_raygunMessage.getDetails().getClient());
-        _raygunServletMessage.getDetails().setVersion(_raygunMessage.getDetails().getVersion());
-        _raygunServletMessage.getDetails().setTags(_raygunMessage.getDetails().getTags());
-        _raygunServletMessage.getDetails().setUserCustomData(_raygunMessage.getDetails().getUserCustomData());
-        _raygunServletMessage.getDetails().setUser(_raygunMessage.getDetails().getUser());
-        _raygunServletMessage.getDetails().setGroupingKey(_raygunMessage.getDetails().getGroupingKey());
-        return _raygunServletMessage;
+    public RaygunServletMessage build() {
+        raygunServletMessage.getDetails().setEnvironment(raygunMessage.getDetails().getEnvironment());
+        raygunServletMessage.getDetails().setMachineName(raygunMessage.getDetails().getMachineName());
+        raygunServletMessage.getDetails().setError(raygunMessage.getDetails().getError());
+        raygunServletMessage.getDetails().setClient(raygunMessage.getDetails().getClient());
+        raygunServletMessage.getDetails().setVersion(raygunMessage.getDetails().getVersion());
+        raygunServletMessage.getDetails().setTags(raygunMessage.getDetails().getTags());
+        raygunServletMessage.getDetails().setUserCustomData(raygunMessage.getDetails().getUserCustomData());
+        raygunServletMessage.getDetails().setUser(raygunMessage.getDetails().getUser());
+        raygunServletMessage.getDetails().setGroupingKey(raygunMessage.getDetails().getGroupingKey());
+        return raygunServletMessage;
     }
 
-    public IRaygunHttpMessageBuilder SetRequestDetails(HttpServletRequest request, HttpServletResponse response) {
-        _raygunServletMessage.getDetails().setRequest(new RaygunRequestMessage(request));
+    public IRaygunHttpMessageBuilder setRequestDetails(HttpServletRequest request, HttpServletResponse response) {
+        raygunServletMessage.getDetails().setRequest(new RaygunRequestMessage(request));
 
         if(response != null) {
-            _raygunServletMessage.getDetails().setResponse(new RaygunResponseMessage(response.getStatus()));
+            raygunServletMessage.getDetails().setResponse(new RaygunResponseMessage(response.getStatus()));
         }
 
         return this;

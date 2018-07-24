@@ -7,7 +7,6 @@ import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * An out-of-the-box RaygunClient factory that can extract the application version from the .WAR file /META-INF/MANIFEST.MF
@@ -51,7 +50,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     }
 
     public IRaygunServletClientFactory withVersionFrom(Class versionFromClass) {
-        version = raygunMessageBuilderFactory.newMessageBuilder().SetVersionFrom(versionFromClass).Build().getDetails().getVersion();
+        version = raygunMessageBuilderFactory.newMessageBuilder().setVersionFrom(versionFromClass).build().getDetails().getVersion();
         return this;
     }
 
@@ -82,8 +81,8 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      */
     public RaygunServletClient getClient(HttpServletRequest request) {
         RaygunServletClient client = new RaygunServletClient(apiKey, request);
-        client.SetOnBeforeSend(onBeforeSend);
-        client.SetVersion(version);
+        client.setOnBeforeSend(onBeforeSend);
+        client.setVersion(version);
         return client;
     }
 

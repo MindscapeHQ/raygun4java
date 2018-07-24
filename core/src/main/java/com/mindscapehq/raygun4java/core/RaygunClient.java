@@ -24,26 +24,26 @@ public class RaygunClient {
         this.raygunConnection = raygunConnection;
     }
 
-    protected String _apiKey;
-    protected RaygunIdentifier _user;
-    protected String _context;
-    protected String _version = null;
-    protected RaygunOnBeforeSend _onBeforeSend;
+    protected String apiKey;
+    protected RaygunIdentifier user;
+    protected String context;
+    protected String string = null;
+    protected RaygunOnBeforeSend onBeforeSend;
 
     public RaygunClient(String apiKey) {
-        _apiKey = apiKey;
-        this.raygunConnection = new RaygunConnection(RaygunSettings.GetSettings());
+        this.apiKey = apiKey;
+        this.raygunConnection = new RaygunConnection(RaygunSettings.getSettings());
     }
 
-    protected Boolean ValidateApiKey() throws Exception {
-        if (_apiKey.isEmpty()) {
+    protected Boolean validateApiKey() throws Exception {
+        if (apiKey.isEmpty()) {
             throw new Exception("API key has not been provided, exception will not be logged");
         } else {
             return true;
         }
     }
 
-    protected String GetMachineName() {
+    protected String getMachineName() {
         String machineName = "Unknown machine";
 
         try {
@@ -55,78 +55,53 @@ public class RaygunClient {
         return machineName;
     }
 
-    public void SetUser(RaygunIdentifier userIdentity) {
-        _user = userIdentity;
+    public void setUser(RaygunIdentifier userIdentity) {
+        user = userIdentity;
     }
 
-    @Deprecated
-    public void SetUser(String user) {
-        RaygunIdentifier ident = new RaygunIdentifier(user);
-
-        _user = ident;
+    public void setVersion(String version) {
+        string = version;
     }
 
-    public void SetVersion(String version) {
-        _version = version;
+    public void setVersionFrom(Class getVersionFrom) {
+        string = new RaygunMessageBuilder().setVersionFrom(getVersionFrom).build().getDetails().getVersion();
     }
 
-    public void SetVersionFrom(Class getVersionFrom) {
-        _version = new RaygunMessageBuilder().SetVersionFrom(getVersionFrom).Build().getDetails().getVersion();
+    public int send(Throwable throwable) {
+        return post(buildMessage(throwable, null, null));
     }
 
-    public int Send(Throwable throwable) {
-        return Post(BuildMessage(throwable));
+    public int send(Throwable throwable, List<?> tags) {
+        return post(buildMessage(throwable, tags, null));
     }
 
-    public int Send(Throwable throwable, List<?> tags) {
-        return Post(BuildMessage(throwable, tags));
+    public int send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+        return post(buildMessage(throwable, tags, userCustomData));
     }
 
-    public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
-        return Post(BuildMessage(throwable, tags, userCustomData));
-    }
-
-    private RaygunMessage BuildMessage(Throwable throwable) {
+    private RaygunMessage buildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         try {
-            return BuildMessage(throwable, null, null);
+            return RaygunMessageBuilder.newMessageBuilder()
+                    .setEnvironmentDetails()
+                    .setMachineName(getMachineName())
+                    .setExceptionDetails(throwable)
+                    .setClientDetails()
+                    .setVersion(string)
+                    .setTags(tags)
+                    .setUserCustomData(userCustomData)
+                    .setUser(user)
+                    .build();
         } catch (Throwable t) {
-            Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage", t);
+            Logger.getLogger("Raygun4Java").throwing("RaygunClient", "buildMessage-t-m", t);
         }
         return null;
     }
 
-    private RaygunMessage BuildMessage(Throwable throwable, List<?> tags) {
+    public int post(RaygunMessage raygunMessage) {
         try {
-            return BuildMessage(throwable, tags, null);
-        } catch (Throwable t) {
-            Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage-t", t);
-        }
-        return null;
-    }
-
-    private RaygunMessage BuildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
-        try {
-            return RaygunMessageBuilder.New()
-                    .SetEnvironmentDetails()
-                    .SetMachineName(GetMachineName())
-                    .SetExceptionDetails(throwable)
-                    .SetClientDetails()
-                    .SetVersion(_version)
-                    .SetTags(tags)
-                    .SetUserCustomData(userCustomData)
-                    .SetUser(_user)
-                    .Build();
-        } catch (Throwable t) {
-            Logger.getLogger("Raygun4Java").throwing("RaygunClient", "BuildMessage-t-m", t);
-        }
-        return null;
-    }
-
-    public int Post(RaygunMessage raygunMessage) {
-        try {
-            if (ValidateApiKey()) {
-                if (_onBeforeSend != null) {
-                    raygunMessage = _onBeforeSend.OnBeforeSend(raygunMessage);
+            if (validateApiKey()) {
+                if (onBeforeSend != null) {
+                    raygunMessage = onBeforeSend.onBeforeSend(raygunMessage);
 
                     if (raygunMessage == null) {
                         return -1;
@@ -135,7 +110,7 @@ public class RaygunClient {
 
                 String jsonPayload = new Gson().toJson(raygunMessage);
 
-                HttpURLConnection connection = this.raygunConnection.getConnection(_apiKey);
+                HttpURLConnection connection = this.raygunConnection.getConnection(apiKey);
 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF8");
                 writer.write(jsonPayload);
@@ -151,16 +126,16 @@ public class RaygunClient {
         return -1;
     }
 
-    public void SetOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
-        _onBeforeSend = onBeforeSend;
+    public void setOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
+        this.onBeforeSend = onBeforeSend;
     }
 
 
     String getVersion() {
-        return _version;
+        return string;
     }
 
     String getApiKey() {
-        return _apiKey;
+        return apiKey;
     }
 }

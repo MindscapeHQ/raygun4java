@@ -17,72 +17,72 @@ import java.util.logging.Logger;
 
 public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 
-    protected RaygunMessage _raygunMessage;
+    protected RaygunMessage raygunMessage;
 
     public RaygunMessageBuilder() {
-        _raygunMessage = new RaygunMessage();
+        raygunMessage = new RaygunMessage();
     }
 
-    public RaygunMessage Build() {
-        return _raygunMessage;
+    public RaygunMessage build() {
+        return raygunMessage;
     }
 
-    public static RaygunMessageBuilder New() {
+    public static RaygunMessageBuilder newMessageBuilder() {
         return new RaygunMessageBuilder();
     }
 
-    public IRaygunMessageBuilder SetMachineName(String machineName) {
-        _raygunMessage.getDetails().setMachineName(machineName);
+    public IRaygunMessageBuilder setMachineName(String machineName) {
+        raygunMessage.getDetails().setMachineName(machineName);
         return this;
     }
 
-    public IRaygunMessageBuilder SetExceptionDetails(Throwable throwable) {
-        _raygunMessage.getDetails().setError(new RaygunErrorMessage(throwable));
+    public IRaygunMessageBuilder setExceptionDetails(Throwable throwable) {
+        raygunMessage.getDetails().setError(new RaygunErrorMessage(throwable));
         return this;
     }
 
-    public IRaygunMessageBuilder SetClientDetails() {
-        _raygunMessage.getDetails().setClient(new RaygunClientMessage());
+    public IRaygunMessageBuilder setClientDetails() {
+        raygunMessage.getDetails().setClient(new RaygunClientMessage());
         return this;
     }
 
-    public IRaygunMessageBuilder SetEnvironmentDetails() {
-        _raygunMessage.getDetails().setEnvironment(new RaygunEnvironmentMessage());
+    public IRaygunMessageBuilder setEnvironmentDetails() {
+        raygunMessage.getDetails().setEnvironment(new RaygunEnvironmentMessage());
         return this;
     }
 
-    public IRaygunMessageBuilder SetVersion(String version) {
+    public IRaygunMessageBuilder setVersion(String version) {
         if (version != null) {
-            _raygunMessage.getDetails().setVersion(version);
+            raygunMessage.getDetails().setVersion(version);
         } else {
-            _raygunMessage.getDetails().setVersion(ReadVersion(null));
+            raygunMessage.getDetails().setVersion(ReadVersion(null));
         }
         return this;
     }
 
-    public IRaygunMessageBuilder SetVersionFrom(Class versionFrom) {
-        _raygunMessage.getDetails().setVersion(ReadVersion(versionFrom));
+    public IRaygunMessageBuilder setVersionFrom(Class versionFrom) {
+        raygunMessage.getDetails().setVersion(ReadVersion(versionFrom));
 
         return this;
     }
 
-    public IRaygunMessageBuilder SetTags(List<?> tags) {
-        _raygunMessage.getDetails().setTags(tags);
+    public IRaygunMessageBuilder setTags(List<?> tags) {
+        raygunMessage.getDetails().setTags(tags);
         return this;
     }
 
-    public IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData) {
-        _raygunMessage.getDetails().setUserCustomData(userCustomData);
+    public IRaygunMessageBuilder setUserCustomData(Map<?, ?> userCustomData) {
+        raygunMessage.getDetails().setUserCustomData(userCustomData);
         return this;
     }
 
-    public IRaygunMessageBuilder SetUser(RaygunIdentifier user) {
-        _raygunMessage.getDetails().setUser(user);
+    public IRaygunMessageBuilder setUser(RaygunIdentifier user) {
+        raygunMessage.getDetails().setUser(user);
         return this;
     }
 
-    public IRaygunMessageBuilder SetGroupingKey(String groupingKey) {
-        _raygunMessage.getDetails().setGroupingKey(groupingKey);
+    public IRaygunMessageBuilder setGroupingKey(String groupingKey) {
+        raygunMessage.getDetails().setGroupingKey(groupingKey);
         return this;
     }
 

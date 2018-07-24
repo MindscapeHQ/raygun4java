@@ -23,74 +23,58 @@ public class RaygunServletClient extends RaygunClient {
         this.request = request;
     }
 
-    public int Send(Throwable throwable) {
+    public int send(Throwable throwable) {
+        return send(throwable, null, null);
+    }
+
+    public int send(Throwable throwable, List<?> tags) {
+        return send(throwable, tags);
+    }
+
+    public int send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         if (throwable != null) {
-            return Post(BuildServletMessage(throwable));
+            return post(buildServletMessage(throwable, tags, userCustomData));
         }
         return -1;
     }
 
-    public int Send(Throwable throwable, List<?> tags) {
-        if (throwable != null) {
-            return Post(BuildServletMessage(throwable, tags));
-        }
-        return -1;
+    public void sendAsync(Throwable throwable) {
+        sendAsync(throwable, null, null);
     }
 
-    public int Send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
-        if (throwable != null) {
-            return Post(BuildServletMessage(throwable, tags, userCustomData));
-        }
-        return -1;
+    public void sendAsync(Throwable throwable, List<?> tags) {
+        sendAsync(throwable, tags, null);
     }
 
-    public void SendAsync(Throwable throwable) {
-        PostAsync(BuildServletMessage(throwable));
-    }
-
-    public void SendAsync(Throwable throwable, List<?> tags) {
+    public void sendAsync(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         if (throwable != null) {
-            PostAsync(BuildServletMessage(throwable, tags));
+            postAsync(buildServletMessage(throwable, tags, userCustomData));
         }
     }
 
-    public void SendAsync(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
-        if (throwable != null) {
-            PostAsync(BuildServletMessage(throwable, tags, userCustomData));
-        }
-    }
-
-    private void PostAsync(final RaygunMessage message) {
+    private void postAsync(final RaygunMessage message) {
         Runnable r = new Runnable() {
             public void run() {
-                Post(message);
+                post(message);
             }
         };
 
         Executors.newSingleThreadExecutor().submit(r);
     }
 
-    private RaygunMessage BuildServletMessage(Throwable throwable) {
-        return BuildServletMessage(throwable);
-    }
-
-    private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags) {
-        return BuildServletMessage(throwable, tags, null);
-    }
-
-    private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+    private RaygunMessage buildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         try {
             return RaygunServletMessageBuilder.New()
-                    .SetRequestDetails(request, response)
-                    .SetEnvironmentDetails()
-                    .SetMachineName(GetMachineName())
-                    .SetExceptionDetails(throwable)
-                    .SetClientDetails()
-                    .SetVersion(_version)
-                    .SetUser(_user)
-                    .SetTags(tags)
-                    .SetUserCustomData(userCustomData)
-                    .Build();
+                    .setRequestDetails(request, response)
+                    .setEnvironmentDetails()
+                    .setMachineName(getMachineName())
+                    .setExceptionDetails(throwable)
+                    .setClientDetails()
+                    .setVersion(string)
+                    .setUser(user)
+                    .setTags(tags)
+                    .setUserCustomData(userCustomData)
+                    .build();
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
         }
@@ -98,15 +82,15 @@ public class RaygunServletClient extends RaygunClient {
     }
 
     String getVersion() {
-        return _version;
+        return string;
     }
 
     String getApiKey() {
-        return _apiKey;
+        return apiKey;
     }
 
     public RaygunOnBeforeSend getOnBeforeSend() {
-        return _onBeforeSend;
+        return onBeforeSend;
     }
 
     /**

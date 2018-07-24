@@ -10,7 +10,7 @@ public class RaygunSettings {
 
     private static RaygunSettings raygunSettings;
 
-    public static synchronized RaygunSettings GetSettings() {
+    public static synchronized RaygunSettings getSettings() {
 
         if (RaygunSettings.raygunSettings == null) {
             RaygunSettings.raygunSettings = new RaygunSettings();

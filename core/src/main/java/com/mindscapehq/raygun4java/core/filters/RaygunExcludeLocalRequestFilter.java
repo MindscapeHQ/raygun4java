@@ -1,6 +1,5 @@
 package com.mindscapehq.raygun4java.core.filters;
 
-import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 
 /**

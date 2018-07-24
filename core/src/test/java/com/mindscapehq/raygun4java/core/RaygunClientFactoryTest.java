@@ -1,10 +1,9 @@
 package com.mindscapehq.raygun4java.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 public class RaygunClientFactoryTest {
 
@@ -14,8 +13,8 @@ public class RaygunClientFactoryTest {
 
         RaygunClient client = factory.newClient();
 
-        assertEquals(client._version, "Not supplied");
-        assertEquals(client._apiKey, "apiKey");
+        assertEquals(client.string, "Not supplied");
+        assertEquals(client.apiKey, "apiKey");
     }
 
     @Test
@@ -24,8 +23,8 @@ public class RaygunClientFactoryTest {
 
         RaygunClient client = factory.newClient();
 
-        assertEquals(client._version, "2.5");
-        assertEquals(client._apiKey, "apiKey");
+        assertEquals(client.string, "2.5");
+        assertEquals(client.apiKey, "apiKey");
     }
 
     @Test
@@ -34,8 +33,8 @@ public class RaygunClientFactoryTest {
 
         RaygunClient client = factory.newClient();
 
-        assertEquals(client._version, "1.2.3");
-        assertEquals(client._apiKey, "apiKey");
+        assertEquals(client.string, "1.2.3");
+        assertEquals(client.apiKey, "apiKey");
     }
 
     @Test
@@ -45,6 +44,6 @@ public class RaygunClientFactoryTest {
 
         RaygunClient client = factory.newClient();
 
-        assertEquals(client._onBeforeSend, handler);
+        assertEquals(client.onBeforeSend, handler);
     }
 }

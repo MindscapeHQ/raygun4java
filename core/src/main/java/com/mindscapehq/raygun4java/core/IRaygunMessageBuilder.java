@@ -8,25 +8,25 @@ import java.util.Map;
 
 public interface IRaygunMessageBuilder {
 
-    RaygunMessage Build();
+    RaygunMessage build();
 
-    IRaygunMessageBuilder SetMachineName(String machineName);
+    IRaygunMessageBuilder setMachineName(String machineName);
 
-    IRaygunMessageBuilder SetExceptionDetails(Throwable throwable);
+    IRaygunMessageBuilder setExceptionDetails(Throwable throwable);
 
-    IRaygunMessageBuilder SetClientDetails();
+    IRaygunMessageBuilder setClientDetails();
 
-    IRaygunMessageBuilder SetEnvironmentDetails();
+    IRaygunMessageBuilder setEnvironmentDetails();
 
-    IRaygunMessageBuilder SetVersion(String version);
+    IRaygunMessageBuilder setVersion(String version);
 
-    IRaygunMessageBuilder SetVersionFrom(Class versionFrom);
+    IRaygunMessageBuilder setVersionFrom(Class versionFrom);
 
-    IRaygunMessageBuilder SetTags(List<?> tags);
+    IRaygunMessageBuilder setTags(List<?> tags);
 
-    IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData);
+    IRaygunMessageBuilder setUserCustomData(Map<?, ?> userCustomData);
 
-    IRaygunMessageBuilder SetUser(RaygunIdentifier user);
+    IRaygunMessageBuilder setUser(RaygunIdentifier user);
 
-    IRaygunMessageBuilder SetGroupingKey(String groupingKey);
+    IRaygunMessageBuilder setGroupingKey(String groupingKey);
 }

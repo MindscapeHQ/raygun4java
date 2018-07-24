@@ -23,9 +23,9 @@ public class SampleApp {
 
 class BeforeSendImplementation implements RaygunOnBeforeSend {
     @Override
-    public RaygunMessage OnBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunMessage message) {
         //String errorMessage = message.getDetails().getError().getMessage();
-        //message.getDetails().getError().setMessage(errorMessage + " - I have been mutated by OnBeforeSend");
+        //message.getDetails().getError().setMessage(errorMessage + " - I have been mutated by onBeforeSend");
 
         message.getDetails().setGroupingKey("baz2");
         return message;
@@ -45,9 +45,9 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
         userIdentity.setIsAnonymous(false);
         userIdentity.setUuid(UUID.randomUUID().toString());
 
-        client.SetUser(userIdentity);
+        client.setUser(userIdentity);
 
-        client.SetOnBeforeSend(new BeforeSendImplementation());
+        client.setOnBeforeSend(new BeforeSendImplementation());
 
         ArrayList<Object> tags = new ArrayList<Object>();
         tags.add("Place tags about this version/release in this object");
@@ -56,6 +56,6 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
         customData.put(1, "Place custom data here");
         customData.put(2, "Like sprints, branches, data from the program...");
 
-        client.Send(e, tags, customData);
+        client.send(e, tags, customData);
     }
 }

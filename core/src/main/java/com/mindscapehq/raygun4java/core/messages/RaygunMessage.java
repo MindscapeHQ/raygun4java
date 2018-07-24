@@ -21,15 +21,15 @@ public class RaygunMessage {
         return occurredOn;
     }
 
-    public void setOccurredOn(String _occurredOn) {
-        this.occurredOn = _occurredOn;
+    public void setOccurredOn(String occurredOn) {
+        this.occurredOn = occurredOn;
     }
 
     public RaygunMessageDetails getDetails() {
         return details;
     }
 
-    public void setDetails(RaygunMessageDetails _details) {
-        this.details = _details;
+    public void setDetails(RaygunMessageDetails details) {
+        this.details = details;
     }
 }

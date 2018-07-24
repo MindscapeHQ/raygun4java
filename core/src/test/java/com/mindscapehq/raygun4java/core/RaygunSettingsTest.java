@@ -11,7 +11,7 @@ public class RaygunSettingsTest {
     @Test
     public void setProxyHost_ProxyHostDetailsSetCorrectly_DetailsAreSetCorrectly() {
 
-        RaygunSettings raygunSettings = RaygunSettings.GetSettings();
+        RaygunSettings raygunSettings = RaygunSettings.getSettings();
         raygunSettings.setHttpProxy("proxy.example.org", 1234);
 
         InetSocketAddress socketAddress = (InetSocketAddress) raygunSettings.getProxy().address();
@@ -23,8 +23,8 @@ public class RaygunSettingsTest {
 
     @Test
     public void getSettings_OnlySingletonReturned_FirstAndSecondReturnObjectsAreSame() {
-        RaygunSettings raygunSettings1 = RaygunSettings.GetSettings();
-        RaygunSettings raygunSettings2 = RaygunSettings.GetSettings();
+        RaygunSettings raygunSettings1 = RaygunSettings.getSettings();
+        RaygunSettings raygunSettings2 = RaygunSettings.getSettings();
         assertEquals(raygunSettings1, raygunSettings2);
     }
 

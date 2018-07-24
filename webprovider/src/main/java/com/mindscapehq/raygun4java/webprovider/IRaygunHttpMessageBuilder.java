@@ -6,5 +6,5 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface IRaygunHttpMessageBuilder extends IRaygunMessageBuilder {
-    IRaygunHttpMessageBuilder SetRequestDetails(HttpServletRequest request, HttpServletResponse response);
+    IRaygunHttpMessageBuilder setRequestDetails(HttpServletRequest request, HttpServletResponse response);
 }

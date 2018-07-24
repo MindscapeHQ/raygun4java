@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Chains multiple before-send handlers
  * usage:
- * raygunClient.SetOnBeforeSend(
+ * raygunClient.setOnBeforeSend(
  *      new RaygunOnBeforeSendChain()
  *          .filterWith(new RaygunRequestHeaderFilter("AUTH", "COOKIE"),
  *          .filterWith(new RaygunRequestFormFilter("password", "secret")
@@ -27,9 +27,9 @@ public class RaygunOnBeforeSendChain implements RaygunOnBeforeSend {
         this.handlers = handlers;
     }
 
-    public RaygunMessage OnBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunMessage message) {
         for (RaygunOnBeforeSend raygunOnBeforeSend : getHandlers()) {
-            message = raygunOnBeforeSend.OnBeforeSend(message);
+            message = raygunOnBeforeSend.onBeforeSend(message);
         }
 
         return message;

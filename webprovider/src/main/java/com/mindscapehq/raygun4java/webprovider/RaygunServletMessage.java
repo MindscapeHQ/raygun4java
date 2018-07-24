@@ -13,7 +13,7 @@ public class RaygunServletMessage extends RaygunMessage {
         return (RaygunRequestMessageDetails) details;
     }
 
-    public void setDetails(RaygunRequestMessageDetails _details) {
-        this.details = _details;
+    public void setDetails(RaygunRequestMessageDetails details) {
+        this.details = details;
     }
 }

@@ -1,21 +1,26 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunConnection;
-
+import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -40,7 +45,7 @@ public class RaygunServletClientTest {
         raygunClient = new RaygunServletClient("1234", request);
         raygunConnectionMock = mock(RaygunConnection.class);
         raygunClient.setRaygunConnection(raygunConnectionMock);
-        raygunClient.SetOnBeforeSend(null);
+        raygunClient.setOnBeforeSend(null);
 
         HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
         when(httpURLConnection.getResponseCode()).thenReturn(202);
@@ -52,7 +57,7 @@ public class RaygunServletClientTest {
     @Test
     public void post_InvalidApiKeyExceptionCaught_MinusOneReturned() {
         raygunClient = new RaygunServletClient("", request);
-        assertEquals(-1, raygunClient.Send(new Exception()));
+        assertEquals(-1, raygunClient.send(new Exception()));
     }
 
     @Test
@@ -62,20 +67,20 @@ public class RaygunServletClientTest {
         try {
             throw new Exception("Test");
         } catch (Exception e) {
-            raygunClient.SendAsync(e);
+            raygunClient.sendAsync(e);
         }
     }
 
     @Test
     public void post_ValidResponse_Returns202() throws MalformedURLException, IOException {
-        assertEquals(202, raygunClient.Send(new Exception()));
+        assertEquals(202, raygunClient.send(new Exception()));
     }
 
     @Test
     public void send_WithTags_Returns202() throws MalformedURLException, IOException {
         List<String> tags = new ArrayList<String>();
         tags.add("test");
-        assertEquals(202, raygunClient.Send(new Exception(), tags));
+        assertEquals(202, raygunClient.send(new Exception(), tags));
     }
 
     @Test
@@ -84,26 +89,26 @@ public class RaygunServletClientTest {
         tags.add("a_tag");
         Map<Integer, String> customData = new HashMap<Integer, String>();
         customData.put(0, "zero");
-        assertEquals(202, raygunClient.Send(new Exception(), tags, customData));
+        assertEquals(202, raygunClient.send(new Exception(), tags, customData));
     }
 
     @Test
     public void send_WithoutUser_Returns202() throws MalformedURLException, IOException {
-        assertEquals(202, raygunClient.Send(new Exception()));
+        assertEquals(202, raygunClient.send(new Exception()));
     }
 
     @Test
     public void send_WithUser_Returns202() throws MalformedURLException, IOException {
-        raygunClient.SetUser("abc");
+        raygunClient.setUser(new RaygunIdentifier("abc"));
 
-        assertEquals(202, raygunClient.Send(new Exception()));
+        assertEquals(202, raygunClient.send(new Exception()));
     }
 
     @Test
     public void send_WithQueryString_Returns202() throws MalformedURLException, IOException {
         when(request.getQueryString()).thenReturn("paramA=valueA&paramB=&");
 
-        int send = raygunClient.Send(new Exception());
+        int send = raygunClient.send(new Exception());
         assertEquals(202, send);
         String requestBodyAsString = requestBody.toString();
         assertEquals(true, requestBodyAsString.contains("paramA"));
@@ -134,7 +139,7 @@ public class RaygunServletClientTest {
     public void send_WithOutFilters_FiltersRequest() {
         setupFilterMocks();
 
-        int send = raygunClient.Send(new Exception());
+        int send = raygunClient.send(new Exception());
 
         String requestBodyAsString = requestBody.toString();
         assertTrue(requestBodyAsString.contains("queryParam1"));
@@ -176,7 +181,7 @@ public class RaygunServletClientTest {
                 .getClient(request);
         raygunClient.setRaygunConnection(raygunConnectionMock);
 
-        int send = raygunClient.Send(new Exception());
+        int send = raygunClient.send(new Exception());
 
         String requestBodyAsString = requestBody.toString();
         assertTrue(requestBodyAsString.contains("queryParam1"));

@@ -54,8 +54,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      */
     public RaygunClient newClient() {
         RaygunClient client = new RaygunClient(apiKey);
-        client.SetOnBeforeSend(onBeforeSend);
-        client._version = version;
+        client.setOnBeforeSend(onBeforeSend);
+        client.string = version;
         return client;
     }
 
@@ -70,7 +70,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     }
 
     public IRaygunClientFactory withVersionFrom(Class versionFromClass) {
-        version = raygunMessageBuilderFactory.newMessageBuilder().SetVersionFrom(versionFromClass).Build().getDetails().getVersion();
+        version = raygunMessageBuilderFactory.newMessageBuilder().setVersionFrom(versionFromClass).build().getDetails().getVersion();
         return this;
     }
 

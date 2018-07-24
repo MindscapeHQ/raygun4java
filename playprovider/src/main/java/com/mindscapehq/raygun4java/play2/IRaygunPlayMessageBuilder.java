@@ -5,5 +5,5 @@ import play.api.mvc.RequestHeader;
 import play.mvc.Http.Request;
 
 public interface IRaygunPlayMessageBuilder extends IRaygunMessageBuilder {
-    IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader, play.mvc.Http.RequestHeader javaRequestHeader);
+    IRaygunPlayMessageBuilder setRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader, play.mvc.Http.RequestHeader javaRequestHeader);
 }

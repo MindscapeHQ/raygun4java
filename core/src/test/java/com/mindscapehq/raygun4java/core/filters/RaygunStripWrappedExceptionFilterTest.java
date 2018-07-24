@@ -14,7 +14,7 @@ public class RaygunStripWrappedExceptionFilterTest {
 
         RaygunMessage message = new RaygunMessage();
         message.getDetails().setError(new RaygunErrorMessage(new ClassNotFoundException("wrapper", new Exception("keep me!"))));
-        f.OnBeforeSend(message);
+        f.onBeforeSend(message);
 
         Assert.assertThat(message.getDetails().getError().getMessage(), Is.is("Exception: keep me!"));
     }
@@ -25,7 +25,7 @@ public class RaygunStripWrappedExceptionFilterTest {
 
         RaygunMessage message = new RaygunMessage();
         message.getDetails().setError(new RaygunErrorMessage(new ClassNotFoundException("wrapper", new Exception("keep me!"))));
-        f.OnBeforeSend(message);
+        f.onBeforeSend(message);
 
         Assert.assertThat(message.getDetails().getError().getMessage(), Is.is("ClassNotFoundException: wrapper"));
     }
@@ -36,7 +36,7 @@ public class RaygunStripWrappedExceptionFilterTest {
 
         RaygunMessage message = new RaygunMessage();
         message.getDetails().setError(new RaygunErrorMessage(new Exception("keep me!", new ClassNotFoundException("keep me too!"))));
-        f.OnBeforeSend(message);
+        f.onBeforeSend(message);
 
         Assert.assertThat(message.getDetails().getError().getMessage(), Is.is("Exception: keep me!"));
     }
@@ -47,7 +47,7 @@ public class RaygunStripWrappedExceptionFilterTest {
 
         RaygunMessage message = new RaygunMessage();
         message.getDetails().setError(new RaygunErrorMessage(new ClassNotFoundException("wrapper1", new ClassNotFoundException("wrapper2", new Exception("keep me!")))));
-        f.OnBeforeSend(message);
+        f.onBeforeSend(message);
 
         Assert.assertThat(message.getDetails().getError().getMessage(), Is.is("Exception: keep me!"));
     }
@@ -58,7 +58,7 @@ public class RaygunStripWrappedExceptionFilterTest {
 
         RaygunMessage message = new RaygunMessage();
         message.getDetails().setError(new RaygunErrorMessage(new ClassNotFoundException("wrapper1", new ClassNotFoundException("wrapper2", new ClassNotFoundException("wrapper3")))));
-        f.OnBeforeSend(message);
+        f.onBeforeSend(message);
 
         Assert.assertThat(message.getDetails().getError().getMessage(), Is.is("ClassNotFoundException: wrapper3"));
     }
@@ -69,7 +69,7 @@ public class RaygunStripWrappedExceptionFilterTest {
 
         RaygunMessage message = new RaygunMessage();
         message.getDetails().setError(new RaygunErrorMessage(new ClassNotFoundException("wrapper1", new IllegalStateException("wrapper2", new Exception("keep me!")))));
-        f.OnBeforeSend(message);
+        f.onBeforeSend(message);
 
         Assert.assertThat(message.getDetails().getError().getMessage(), Is.is("Exception: keep me!"));
     }
