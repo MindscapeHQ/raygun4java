@@ -19,7 +19,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     private RaygunOnBeforeSend onBeforeSend;
     private RaygunClient client;
     private String version;
-    private IRaygunMessageBuilderFactory raygunMessageBuilderFactory;
+    private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new RaygunServletMessageBuilderFactory();
 
     public RaygunServletClientFactory(String apiKey) {
         this.apiKey = apiKey;

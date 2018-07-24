@@ -81,7 +81,7 @@ public class RaygunClientTest {
     }
 
     @Test
-    public void RaygunMessageDetailsGetVersion_FromClass_ReturnsClassManifestVersion() {
+    public void raygunMessageDetailsGetVersion_FromClass_ReturnsClassManifestVersion() {
         this.raygunClient.setVersionFrom(org.apache.commons.io.IOUtils.class);
 
         assertEquals("2.5", this.raygunClient.string);

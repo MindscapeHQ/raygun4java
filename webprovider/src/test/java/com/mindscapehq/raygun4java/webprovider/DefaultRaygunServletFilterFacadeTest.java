@@ -32,7 +32,7 @@ public class DefaultRaygunServletFilterFacadeTest {
     }
 
     @Test
-    public void ShouldTestLifecycle() {
+    public void shouldTestLifecycle() {
         DefaultRaygunServletFilterFacade facade = new DefaultRaygunServletFilterFacade();
 
         facade.initializeRequest(request);

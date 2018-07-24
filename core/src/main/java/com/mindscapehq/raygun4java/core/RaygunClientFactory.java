@@ -28,12 +28,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @param apiKey
      */
     public RaygunClientFactory(String apiKey) {
-        this(apiKey, null);
-    }
-
-    public RaygunClientFactory(String apiKey, String version) {
         this.apiKey = apiKey;
-        this.version = version;
+        version = new RaygunMessageBuilder().setVersion(null).build().getDetails().getVersion();
     }
 
     /**

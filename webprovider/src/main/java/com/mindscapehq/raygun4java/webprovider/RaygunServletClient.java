@@ -28,7 +28,7 @@ public class RaygunServletClient extends RaygunClient {
     }
 
     public int send(Throwable throwable, List<?> tags) {
-        return send(throwable, tags);
+        return send(throwable, tags, null);
     }
 
     public int send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {

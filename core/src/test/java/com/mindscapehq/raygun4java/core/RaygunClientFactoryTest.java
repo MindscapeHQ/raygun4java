@@ -8,37 +8,37 @@ import static org.mockito.Mockito.mock;
 public class RaygunClientFactoryTest {
 
     @Test
-    public void ShouldConstructFactoryWithDefaultVersionDetection() {
+    public void shouldConstructFactoryWithDefaultVersionDetection() {
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
 
         RaygunClient client = factory.newClient();
 
-        assertEquals(client.string, "Not supplied");
-        assertEquals(client.apiKey, "apiKey");
+        assertEquals("Not supplied", client.string);
+        assertEquals("apiKey", client.apiKey);
     }
 
     @Test
-    public void ShouldConstructFactoryWithVersionDetectionFromClass() {
+    public void shouldConstructFactoryWithVersionDetectionFromClass() {
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withVersionFrom(org.apache.commons.io.IOUtils.class);
 
         RaygunClient client = factory.newClient();
 
-        assertEquals(client.string, "2.5");
-        assertEquals(client.apiKey, "apiKey");
+        assertEquals("2.5", client.string);
+        assertEquals("apiKey", client.apiKey);
     }
 
     @Test
-    public void ShouldConstructFactoryWithSuppliedVersion() {
+    public void shouldConstructFactoryWithSuppliedVersion() {
         RaygunClientFactory factory = new RaygunClientFactory("apiKey", "1.2.3");
 
         RaygunClient client = factory.newClient();
 
-        assertEquals(client.string, "1.2.3");
-        assertEquals(client.apiKey, "apiKey");
+        assertEquals("1.2.3", client.string);
+        assertEquals("apiKey", client.apiKey);
     }
 
     @Test
-    public void ShouldConstructFactoryWithOnBeforeSendHandler() {
+    public void shouldConstructFactoryWithOnBeforeSendHandler() {
         RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handler);
 
