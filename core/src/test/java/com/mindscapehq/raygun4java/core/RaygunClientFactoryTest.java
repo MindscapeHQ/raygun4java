@@ -10,7 +10,7 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void ShouldConstructFactoryWithDefaultVersionDetection() {
-        RaygunClientFactory factory = new RaygunClientFactory("apiKey");
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
 
         RaygunClient client = factory.newClient();
 
@@ -20,7 +20,7 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void ShouldConstructFactoryWithVersionDetectionFromClass() {
-        RaygunClientFactory factory = new RaygunClientFactory("apiKey", org.apache.commons.io.IOUtils.class);
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withVersionFrom(org.apache.commons.io.IOUtils.class);
 
         RaygunClient client = factory.newClient();
 
@@ -41,7 +41,7 @@ public class RaygunClientFactoryTest {
     @Test
     public void ShouldConstructFactoryWithOnBeforeSendHandler() {
         RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
-        RaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handler);
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handler);
 
         RaygunClient client = factory.newClient();
 

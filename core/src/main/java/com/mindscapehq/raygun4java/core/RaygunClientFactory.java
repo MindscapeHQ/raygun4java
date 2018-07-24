@@ -12,27 +12,23 @@ package com.mindscapehq.raygun4java.core;
  * ...
  * RaygunClient client = factory.getClient();
  */
-public class RaygunClientFactory {
-    private final String version;
+public class RaygunClientFactory implements IRaygunClientFactory {
+    private String version;
     private String apiKey;
     private RaygunOnBeforeSend onBeforeSend;
     private RaygunClient client;
+    private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new IRaygunMessageBuilderFactory() {
+        public IRaygunMessageBuilder newMessageBuilder() {
+            return new RaygunMessageBuilder();
+        }
+    };
 
     /**
      * This constructor will attempt to extract the app version from /META-INF/MANIFEST.MF of the executing jar
      * @param apiKey
      */
     public RaygunClientFactory(String apiKey) {
-        this(apiKey, new RaygunMessageBuilder().SetVersion(null).Build().getDetails().getVersion());
-    }
-
-    /**
-     * This constructor will attempt to extract the app version from /META-INF/MANIFEST.MF of the jar containing the given class
-     * @param apiKey
-     * @param versionFromClass
-     */
-    public RaygunClientFactory(String apiKey, Class versionFromClass) {
-        this(apiKey, new RaygunMessageBuilder().SetVersionFrom(versionFromClass).Build().getDetails().getVersion());
+        this(apiKey, null);
     }
 
     public RaygunClientFactory(String apiKey, String version) {
@@ -63,4 +59,23 @@ public class RaygunClientFactory {
         return client;
     }
 
+    public IRaygunClientFactory withApiKey(String apiKey) {
+        this.apiKey = apiKey;
+        return this;
+    }
+
+    public IRaygunClientFactory withVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
+    public IRaygunClientFactory withVersionFrom(Class versionFromClass) {
+        version = raygunMessageBuilderFactory.newMessageBuilder().SetVersionFrom(versionFromClass).Build().getDetails().getVersion();
+        return this;
+    }
+
+    public IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory) {
+        this.raygunMessageBuilderFactory = messageBuilderFactory;
+        return this;
+    }
 }
