@@ -20,6 +20,8 @@ public interface IRaygunMessageBuilder {
 
     IRaygunMessageBuilder SetVersion(String version);
 
+    IRaygunMessageBuilder SetVersionFrom(Class versionFrom);
+
     IRaygunMessageBuilder SetTags(List<?> tags);
 
     IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData);

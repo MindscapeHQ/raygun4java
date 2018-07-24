@@ -2,7 +2,6 @@ package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
-import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 
 /**
@@ -21,7 +20,7 @@ public class RaygunExcludeRequestFilter implements RaygunOnBeforeSend {
         if (message.getDetails() != null && message.getDetails() instanceof RaygunRequestMessageDetails) {
             RaygunRequestMessageDetails requestMessageDetails = (RaygunRequestMessageDetails) message.getDetails();
 
-            if (requestMessageDetails.getRequest() != null && filter.shouldFilterOut(requestMessageDetails.getRequest())) {
+            if (requestMessageDetails.getRequest() != null && filter.shouldFilterOut(requestMessageDetails)) {
                 return null;
             }
         }
@@ -30,6 +29,6 @@ public class RaygunExcludeRequestFilter implements RaygunOnBeforeSend {
     }
 
     public interface Filter {
-        boolean shouldFilterOut(RaygunRequestMessage requestMessage);
+        boolean shouldFilterOut(RaygunRequestMessageDetails requestMessage);
     }
 }

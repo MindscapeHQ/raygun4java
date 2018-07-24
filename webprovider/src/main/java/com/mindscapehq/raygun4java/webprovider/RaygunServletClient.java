@@ -5,6 +5,7 @@ import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -14,11 +15,12 @@ import java.util.logging.Logger;
  * This client is the main sending object for servlet/JSP environments
  */
 public class RaygunServletClient extends RaygunClient {
-    private HttpServletRequest servletRequest;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
     public RaygunServletClient(String apiKey, HttpServletRequest request) {
         super(apiKey);
-        this.servletRequest = request;
+        this.request = request;
     }
 
     public int Send(Throwable throwable) {
@@ -69,44 +71,17 @@ public class RaygunServletClient extends RaygunClient {
     }
 
     private RaygunMessage BuildServletMessage(Throwable throwable) {
-        try {
-            return RaygunServletMessageBuilder.New()
-                    .SetRequestDetails(servletRequest)
-                    .SetEnvironmentDetails()
-                    .SetMachineName(GetMachineName())
-                    .SetExceptionDetails(throwable)
-                    .SetClientDetails()
-                    .SetVersion(_version)
-                    .SetUser(_user)
-                    .Build();
-        } catch (Exception e) {
-            Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-        }
-        return null;
+        return BuildServletMessage(throwable);
     }
 
     private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags) {
-        try {
-            return RaygunServletMessageBuilder.New()
-                    .SetRequestDetails(servletRequest)
-                    .SetEnvironmentDetails()
-                    .SetMachineName(GetMachineName())
-                    .SetExceptionDetails(throwable)
-                    .SetClientDetails()
-                    .SetVersion(_version)
-                    .SetUser(_user)
-                    .SetTags(tags)
-                    .Build();
-        } catch (Exception e) {
-            Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
-        }
-        return null;
+        return BuildServletMessage(throwable, tags, null);
     }
 
     private RaygunMessage BuildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         try {
             return RaygunServletMessageBuilder.New()
-                    .SetRequestDetails(servletRequest)
+                    .SetRequestDetails(request, response)
                     .SetEnvironmentDetails()
                     .SetMachineName(GetMachineName())
                     .SetExceptionDetails(throwable)
@@ -132,5 +107,16 @@ public class RaygunServletClient extends RaygunClient {
 
     public RaygunOnBeforeSend getOnBeforeSend() {
         return _onBeforeSend;
+    }
+
+    /**
+     * Adds the response information to the error.
+     * Only set the response once the response has been committed.
+     * @param response
+     */
+    public void setResponse(HttpServletResponse response) {
+        if (response.isCommitted()) {
+            this.response = response;
+        }
     }
 }

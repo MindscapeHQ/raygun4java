@@ -22,13 +22,12 @@ import static org.mockito.Mockito.when;
 public class RaygunServletClientFactoryTest {
 
     private final String apiKey = "aPiKeY";
-    private HttpServletRequest request;
 
     @Test
     public void shouldInitializeWithVersion() {
-        RaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey, "thisVersion");
+        IRaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey).withVersion("thisVersion");
 
-        RaygunServletClient client = factory.getClient(request);
+        RaygunServletClient client = factory.getClient(null);
 
         assertThat(client.getVersion(), is("thisVersion"));
         assertThat(client.getApiKey(), is(apiKey));
@@ -36,9 +35,9 @@ public class RaygunServletClientFactoryTest {
 
     @Test
     public void shouldInitializeWithVersionFromClass() {
-        RaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey, org.apache.commons.io.IOUtils.class);
+        IRaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey).withVersionFrom(org.apache.commons.io.IOUtils.class);
 
-        RaygunServletClient client = factory.getClient(request);
+        RaygunServletClient client = factory.getClient(null);
 
         assertThat(client.getVersion(), is("2.5"));
         assertThat(client.getApiKey(), is(apiKey));
@@ -48,9 +47,9 @@ public class RaygunServletClientFactoryTest {
     public void shouldInitializeWithOnBeforeSend() {
 
         RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
-        RaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey, "thisVersion").withBeforeSend(handler);
+        IRaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey).withBeforeSend(handler);
 
-        RaygunServletClient client = factory.getClient(request);
+        RaygunServletClient client = factory.getClient(null);
 
         assertThat(client.getOnBeforeSend(), is(handler));
     }

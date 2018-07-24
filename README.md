@@ -75,7 +75,7 @@ new RaygunClient("YOUR_API_KEY").Send(new Exception("my first error"));
 ```
 While this is extremely simple, **that is not the recommended usage**: as your application complexity increases, scattering that code snippet throughout your code base will become unwieldy. A good practice is to encapsulate the setup and access to the `RaygunClient` instance in a factory. 
 
-Using a factory and dependency injection to manage your `RaygunClient` use will greatly reduce the complexity of your code. You can make your own factories you use the ones provided with allow the configuring of the main features on the factories, which will produce `RaygunClient`s with that configuration.
+Using a factory and dependency injection to manage your `RaygunClient` use will greatly reduce the complexity of your code. You can make your own factories or use the ones provided which allow the configuring of the main features on the factories, which will produce `RaygunClient`s with that configuration.
 
 For example:
 - Setup 
@@ -326,28 +326,6 @@ def index = Action { implicit request =>
 
 ## Documentation
 
-### Sending asynchronously
-
-Web projects that use `RaygunServletClient` can call `SendAsync()`, to transmit messages asynchronously. When `SendAsync` is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
-
-####SendAsync()
-
-Overloads:
-
-```java
-void SendAsync(*Throwable* throwable)
-void SendAsync(*Throwable* throwable, *List* tags)
-void SendAsync(*Throwable* throwable, *List* tags, Map userCustomData)
-```
-
-This provides a huge speedup versus the blocking `Send()` method, and appears to be near instantaneous from the user's perspective.
-
-No HTTP status code is returned from this method as the calling thread will have terminated by the time the response is returned from the Raygun API. A logging option will be available in future.
-
-This feature is considered to be in Beta, and it is advised to test it in a staging environment before deploying to production. When in production it should be monitored to ensure no spurious behaviour (especially in high traffic scenarios) while the feature is in beta. Feedback is appreciated.
-
-**Google app engine:** This method will not work from code running on GAE - see the troubleshooting section below.
-
 ### Affected user tracking
 
 You can call `client.SetUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the `uniqueUserIdentifier`. This could be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
@@ -430,6 +408,7 @@ public class MyProgram {
 
 In the example above, the overridden `OnBeforeSend` method will log an info message every time an error is sent.
 
+### Mutate the error payload
 To mutate the error payload, for instance to change the message:
 
 ```java
@@ -443,6 +422,7 @@ public RaygunMessage OnBeforeSend(RaygunMessage message) {
 }
 ```
 
+### Cancel the send
 To cancel the send (prevent the error from reaching the Raygun dashboard) by returning null:
 
 ```java
@@ -453,7 +433,8 @@ public RaygunMessage OnBeforeSend(RaygunMessage message) {
 }
 ```
 
-There are several provided classes for filtering, and use can use the `RaygunOnBeforeSendChain` to execute multiple `RaygunOnBeforeSend`
+### Filtering
+There are several [provided classes for filtering](https://github.com/MindscapeHQ/raygun4java/tree/master/core/src/main/java/com/mindscapehq/raygun4java/core/filters), and you can use the `RaygunOnBeforeSendChain` to execute multiple `RaygunOnBeforeSend`
 ```java
 raygunClient.SetOnBeforeSend(new RaygunOnBeforeSendChain()
         .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
@@ -492,6 +473,48 @@ factory.withBeforeSend(new RaygunStripWrappedExceptionFilter(ServletException.cl
 
 
 ### Web specific features
+
+#### Web specific factory
+The `webprovider` dependency adds a `DefaultRaygunServletClientFactory` which exposes convenience methods to add the provided filters.
+
+```java
+IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory("YOUR_APP_API_KEY", servletContext)
+    .withLocalRequestsFilter()
+    .withRequestFormFilters("password", "ssn", "creditcard")
+    .withRequestHeaderFilters("auth")
+    .withRequestQueryStringFilters("secret")
+    .withRequestCookieFilters("sessionId")
+    .withWrappedExceptionStripping(ServletException.class)
+    .withHttpStatusFiltering(200, 401, 403)
+    .addFilter(myOnBeforeSendHandler)
+```
+#### Sending asynchronously
+
+Web projects that use `RaygunServletClient` can call `SendAsync()`, to transmit messages asynchronously. When `SendAsync` is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
+
+Overloads:
+
+```java
+void SendAsync(*Throwable* throwable)
+void SendAsync(*Throwable* throwable, *List* tags)
+void SendAsync(*Throwable* throwable, *List* tags, Map userCustomData)
+```
+
+This provides a huge speedup versus the blocking `Send()` method, and appears to be near instantaneous from the user's perspective.
+
+No HTTP status code is returned from this method as the calling thread will have terminated by the time the response is returned from the Raygun API. A logging option will be available in future.
+
+This feature is considered to be in Beta, and it is advised to test it in a staging environment before deploying to production. When in production it should be monitored to ensure no spurious behaviour (especially in high traffic scenarios) while the feature is in beta. Feedback is appreciated.
+
+**Google app engine:** This method will not work from code running on GAE - see the troubleshooting section below.
+
+#### Ignoring errors which specific http status code
+Sometimes unhandled exceptions are thrown that do not indicate an error. For example, an exception that represents a "Not Authorised" error might set a http status code of 401 onto the response.
+If you want to filter out errors by status code you can use the `RaygunRequestHttpStatusFilter` 
+
+```java
+factory.withBeforeSend(new RaygunRequestHttpStatusFilter(403, 401));
+```
 
 #### Ignoring errors from `localhost`
 Often developers will send errors from there local machine with the hostname `localhost`, if this is undesireable add the `RaygunExcludeLocalRequestFilter`
