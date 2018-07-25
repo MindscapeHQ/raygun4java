@@ -6,5 +6,9 @@ public interface IRaygunClientFactory {
     IRaygunClientFactory withVersionFrom(Class versionFromClass);
     IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory);
     IRaygunClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend);
+    IRaygunClientFactory withAfterSend(IRaygunOnAfterSend onAfterSend);
+
     RaygunClient newClient();
+    RaygunOnBeforeSendChain getRaygunOnBeforeSendChain();
+    RaygunOnAfterSendChain getRaygunOnAfterSendChain();
 }

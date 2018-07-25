@@ -81,6 +81,17 @@ public class RaygunClientTest {
     }
 
     @Test
+    public void post_SendWithOnAfterSend_Returns202() throws IOException {
+        IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
+        RaygunMessage message = new RaygunMessage();
+        this.raygunClient.setOnAfterSend(handler);
+
+        assertEquals(202, this.raygunClient.send(new Exception()));
+
+        verify(handler).onAfterSend((RaygunMessage) anyObject());
+    }
+
+    @Test
     public void raygunMessageDetailsGetVersion_FromClass_ReturnsClassManifestVersion() {
         this.raygunClient.setVersionFrom(org.apache.commons.io.IOUtils.class);
 

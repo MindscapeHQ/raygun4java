@@ -15,7 +15,8 @@ package com.mindscapehq.raygun4java.core;
 public class RaygunClientFactory implements IRaygunClientFactory {
     private String version;
     private String apiKey;
-    private RaygunOnBeforeSend onBeforeSend;
+    private RaygunOnBeforeSendChain onBeforeSendChain;
+    private RaygunOnAfterSendChain onAfterSendChain;
     private RaygunClient client;
     private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new IRaygunMessageBuilderFactory() {
         public IRaygunMessageBuilder newMessageBuilder() {
@@ -30,6 +31,9 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     public RaygunClientFactory(String apiKey) {
         this.apiKey = apiKey;
         version = new RaygunMessageBuilder().setVersion(null).build().getDetails().getVersion();
+
+        onBeforeSendChain = new RaygunOnBeforeSendChain();
+        onAfterSendChain = new RaygunOnAfterSendChain();
     }
 
     /**
@@ -40,8 +44,21 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @param onBeforeSend
      * @return factory
      */
-        this.onBeforeSend = onBeforeSend;
     public RaygunClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
+        this.onBeforeSendChain.getHandlers().add(onBeforeSend);
+        return this;
+    }
+
+    /**
+     * Add a RaygunOnAfterSend handler
+     *
+     * factory.withAfterSend(myRaygunOnAfterSend)
+     *
+     * @param onAfterSend
+     * @return factory
+     */
+    public IRaygunClientFactory withAfterSend(IRaygunOnAfterSend onAfterSend) {
+        this.onAfterSendChain.getHandlers().add(onAfterSend);
         return this;
     }
 
@@ -50,9 +67,17 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      */
     public RaygunClient newClient() {
         RaygunClient client = new RaygunClient(apiKey);
-        client.setOnBeforeSend(onBeforeSend);
+        client.setOnBeforeSend(onBeforeSendChain);
         client.string = version;
         return client;
+    }
+
+    public RaygunOnBeforeSendChain getRaygunOnBeforeSendChain() {
+        return onBeforeSendChain;
+    }
+
+    public RaygunOnAfterSendChain getRaygunOnAfterSendChain() {
+        return onAfterSendChain;
     }
 
     public IRaygunClientFactory withApiKey(String apiKey) {
