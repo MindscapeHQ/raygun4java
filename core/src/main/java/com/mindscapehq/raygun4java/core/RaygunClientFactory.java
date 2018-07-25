@@ -20,11 +20,13 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     private RaygunOnBeforeSendChain onBeforeSendChain;
     private RaygunOnAfterSendChain onAfterSendChain;
     private RaygunClient client;
+    private boolean shouldProcessBreadcrumbLocations = false;
     private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new IRaygunMessageBuilderFactory() {
         public IRaygunMessageBuilder newMessageBuilder() {
             return new RaygunMessageBuilder();
         }
     };
+
 
     /**
      * This constructor will attempt to extract the app version from /META-INF/MANIFEST.MF of the executing jar
@@ -75,6 +77,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         client.setOnBeforeSend(onBeforeSendChain);
         client.setOnAfterSend(onAfterSendChain);
         client.string = version;
+        client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
         return client;
     }
 
@@ -103,6 +106,14 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     public IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory) {
         this.raygunMessageBuilderFactory = messageBuilderFactory;
+        return this;
+    }
+
+    /**
+     * BEWARE: enabling could seriously degrade performance of your application
+     */
+    public IRaygunClientFactory withBreadcrumbLocations() {
+        this.shouldProcessBreadcrumbLocations = true;
         return this;
     }
 }

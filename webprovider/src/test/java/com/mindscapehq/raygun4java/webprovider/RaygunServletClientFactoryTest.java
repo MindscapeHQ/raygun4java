@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
+
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.RaygunClientFactory;
@@ -9,6 +10,8 @@ import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -65,5 +68,14 @@ public class RaygunServletClientFactoryTest {
         assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(1), handler);
 
         assertEquals(factory.newClient(null).getOnAfterSend(), factory.getRaygunOnAfterSendChain());
+    }
+
+    @Test
+    public void shouldSetBreadcrumbLocations() {
+        IRaygunServletClientFactory factory = new RaygunServletClientFactory("apiKey");
+        assertFalse(factory.newClient(null).shouldProcessBreadcrumbLocation());
+
+        factory.withBreadcrumbLocations();
+        assertTrue(factory.newClient(null).shouldProcessBreadcrumbLocation());
     }
 }

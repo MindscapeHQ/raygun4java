@@ -7,7 +7,7 @@ public interface IRaygunClientFactory {
     IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory);
     IRaygunClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend);
     IRaygunClientFactory withAfterSend(IRaygunOnAfterSend onAfterSend);
-
+    IRaygunClientFactory withBreadcrumbLocations();
     RaygunClient newClient();
     RaygunOnBeforeSendChain getRaygunOnBeforeSendChain();
     RaygunOnAfterSendChain getRaygunOnAfterSendChain();

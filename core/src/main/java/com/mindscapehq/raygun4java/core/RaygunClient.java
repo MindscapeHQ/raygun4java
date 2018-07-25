@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.core;
 
 import com.google.gson.Gson;
+import com.mindscapehq.raygun4java.core.messages.RaygunBreadcrumbMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
@@ -8,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -30,10 +32,13 @@ public class RaygunClient {
     protected String string = null;
     protected IRaygunOnBeforeSend onBeforeSend;
     protected IRaygunOnAfterSend onAfterSend;
+    protected List<RaygunBreadcrumbMessage> breadcrumbs;
+    protected boolean shouldProcessBreadcrumbLocation = false;
 
     public RaygunClient(String apiKey) {
         this.apiKey = apiKey;
         this.raygunConnection = new RaygunConnection(RaygunSettings.getSettings());
+        breadcrumbs = new ArrayList<RaygunBreadcrumbMessage>();
     }
 
     protected Boolean validateApiKey() throws Exception {
@@ -158,5 +163,44 @@ public class RaygunClient {
 
     String getApiKey() {
         return apiKey;
+    }
+
+    public boolean shouldProcessBreadcrumbLocation() {
+        return shouldProcessBreadcrumbLocation;
+    }
+
+    /**
+     * BEWARE: setting this to true could seriously degrade performance of your application
+     */
+    public void shouldProcessBreadcrumbLocation(boolean shouldProcessBreadcrumbLocation) {
+        this.shouldProcessBreadcrumbLocation = shouldProcessBreadcrumbLocation;
+    }
+
+    public void recordBreadcrumb(String message)
+    {
+        breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, new RaygunBreadcrumbMessage().setMessage(message), 3));
+    }
+
+    public void recordBreadcrumb(RaygunBreadcrumbMessage breadcrumb)
+    {
+        breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, breadcrumb, 3));
+    }
+
+    public void ClearBreadcrumbs()
+    {
+        breadcrumbs.clear();
+    }
+
+    public static RaygunBreadcrumbMessage processBreadCrumbCodeLocation(boolean process, RaygunBreadcrumbMessage breadcrumbMessage, int stackFrame) {
+
+        if(process && breadcrumbMessage.getClassName() == null) {
+            StackTraceElement frame = Thread.currentThread().getStackTrace()[stackFrame];
+            breadcrumbMessage
+                    .setClassName(frame.getClassName())
+                    .setMethodName(frame.getMethodName())
+                    .setLineNumber(frame.getLineNumber());
+        }
+
+        return breadcrumbMessage;
     }
 }
