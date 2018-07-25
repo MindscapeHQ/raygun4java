@@ -11,6 +11,10 @@ public class RaygunErrorMessage {
     private RaygunErrorStackTraceLineMessage[] stackTrace;
 
     public RaygunErrorMessage(Throwable throwable) {
+        if (throwable == null) {
+            return;
+        }
+
         this.throwable = new WeakReference<Throwable>(throwable);
         message = throwable.getClass().getSimpleName();
         String throwableMessage = throwable.getMessage();

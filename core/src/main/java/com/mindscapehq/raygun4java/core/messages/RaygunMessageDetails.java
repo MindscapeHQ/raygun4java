@@ -14,6 +14,7 @@ public class RaygunMessageDetails {
     private List<?> tags;
     private Map<?, ?> userCustomData;
     private RaygunIdentifier user;
+    private List<RaygunBreadcrumbMessage> breadcrumbs;
 
     public String getMachineName() {
         return machineName;
@@ -97,5 +98,13 @@ public class RaygunMessageDetails {
 
     public String getGroupingKey() {
         return this.groupingKey;
+    }
+
+    public void setBreadcrumbs(List<RaygunBreadcrumbMessage> breadcrumbs) {
+        this.breadcrumbs = breadcrumbs;
+    }
+
+    public List<RaygunBreadcrumbMessage> getBreadcrumbs() {
+        return breadcrumbs;
     }
 }
