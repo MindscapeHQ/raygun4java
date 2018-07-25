@@ -1,13 +1,13 @@
 package com.mindscapehq.raygun4java.core.filters;
 
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 
 /**
  * Discards the request if it matches the provided filter
  */
-public class RaygunExcludeRequestFilter implements RaygunOnBeforeSend {
+public class RaygunExcludeRequestFilter implements IRaygunOnBeforeSend {
 
     private Filter filter;
 

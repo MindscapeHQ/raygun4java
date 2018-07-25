@@ -28,7 +28,8 @@ public class RaygunClient {
     protected RaygunIdentifier user;
     protected String context;
     protected String string = null;
-    protected RaygunOnBeforeSend onBeforeSend;
+    protected IRaygunOnBeforeSend onBeforeSend;
+    protected IRaygunOnAfterSend onAfterSend;
 
     public RaygunClient(String apiKey) {
         this.apiKey = apiKey;
@@ -117,6 +118,15 @@ public class RaygunClient {
                 writer.flush();
                 writer.close();
                 connection.disconnect();
+
+                try {
+                    if(onAfterSend != null) {
+                        onAfterSend.onAfterSend(raygunMessage);
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger("Raygun4Java").warning("exception processing onAfterSend: " + e.getMessage());
+                }
+
                 return connection.getResponseCode();
 
             }
@@ -126,10 +136,21 @@ public class RaygunClient {
         return -1;
     }
 
-    public void setOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
+    public void setOnBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
         this.onBeforeSend = onBeforeSend;
     }
 
+    public void setOnAfterSend(IRaygunOnAfterSend onAfterSend) {
+        this.onAfterSend = onAfterSend;
+    }
+
+    public IRaygunOnBeforeSend getOnBeforeSend() {
+        return onBeforeSend;
+    }
+
+    public IRaygunOnAfterSend getOnAfterSend() {
+        return onAfterSend;
+    }
 
     String getVersion() {
         return string;

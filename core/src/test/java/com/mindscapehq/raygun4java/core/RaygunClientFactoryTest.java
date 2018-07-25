@@ -1,8 +1,10 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class RaygunClientFactoryTest {
@@ -29,7 +31,7 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithSuppliedVersion() {
-        RaygunClientFactory factory = new RaygunClientFactory("apiKey", "1.2.3");
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withVersion("1.2.3");
 
         RaygunClient client = factory.newClient();
 
@@ -38,12 +40,32 @@ public class RaygunClientFactoryTest {
     }
 
     @Test
+    public void shouldConstructFactoryWithDuplicateErrorHandler() {
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
+
+        assertTrue(factory.getRaygunOnBeforeSendChain().getLastFilter() instanceof RaygunDuplicateErrorFilter);
+        assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(0), factory.getRaygunOnBeforeSendChain().getLastFilter());
+    }
+
+    @Test
     public void shouldConstructFactoryWithOnBeforeSendHandler() {
-        RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
+        IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
+
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handler);
 
-        RaygunClient client = factory.newClient();
+        assertEquals(factory.getRaygunOnBeforeSendChain().getHandlers().get(0), handler);
 
-        assertEquals(client.onBeforeSend, handler);
+        assertEquals(factory.newClient().onBeforeSend, factory.getRaygunOnBeforeSendChain());
+    }
+
+    @Test
+    public void shouldConstructFactoryWithOnAfterSendHandler() {
+        IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
+
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withAfterSend(handler);
+
+        assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(1), handler);
+
+        assertEquals(factory.newClient().onAfterSend, factory.getRaygunOnAfterSendChain());
     }
 }

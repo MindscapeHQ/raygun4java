@@ -47,7 +47,7 @@ public class RaygunClient {
         if (factory == null) {
             throw new RuntimeException("RaygunClient is not initialized. Call RaygunClient.Initialize()");
         }
-        client.set(factory.getClient(request));
+        client.set(factory.newClient(request));
     }
 
     /**

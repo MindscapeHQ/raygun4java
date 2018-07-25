@@ -1,15 +1,17 @@
 package com.mindscapehq.raygun4java.core.messages;
 
+import java.lang.ref.WeakReference;
+
 public class RaygunErrorMessage {
 
-    private transient Class throwableClass;
+    private transient WeakReference<Throwable> throwable;
     private RaygunErrorMessage innerError;
     private String message;
     private String className;
     private RaygunErrorStackTraceLineMessage[] stackTrace;
 
     public RaygunErrorMessage(Throwable throwable) {
-        throwableClass = throwable.getClass();
+        this.throwable = new WeakReference<Throwable>(throwable);
         message = throwable.getClass().getSimpleName();
         String throwableMessage = throwable.getMessage();
         if (throwableMessage != null) {
@@ -18,7 +20,7 @@ public class RaygunErrorMessage {
         className = throwable.getClass().getCanonicalName();
 
         if (throwable.getCause() != null) {
-            innerError = new RaygunErrorMessage((Exception) throwable.getCause());
+            innerError = new RaygunErrorMessage(throwable.getCause());
         }
 
         StackTraceElement[] ste = throwable.getStackTrace();
@@ -61,7 +63,10 @@ public class RaygunErrorMessage {
         this.stackTrace = stackTrace;
     }
 
-    public Class getThrowableClass() {
-        return throwableClass;
+    public Throwable getThrowable() {
+        if(throwable != null && throwable.get() != null) {
+            return throwable.get();
+        }
+        return null;
     }
 }

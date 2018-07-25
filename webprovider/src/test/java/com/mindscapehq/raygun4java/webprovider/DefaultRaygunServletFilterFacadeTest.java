@@ -23,7 +23,7 @@ public class DefaultRaygunServletFilterFacadeTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         RaygunClient.initialize(factory);
-        when(factory.getClient(request)).thenReturn(client);
+        when(factory.newClient(request)).thenReturn(client);
     }
 
     @After

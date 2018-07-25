@@ -1,10 +1,10 @@
 package com.mindscapehq.raygun4java.core.filters;
 
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
-public class RaygunStripWrappedExceptionFilter implements RaygunOnBeforeSend {
+public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend {
 
     private Class[] stripClasses;
 
@@ -17,10 +17,10 @@ public class RaygunStripWrappedExceptionFilter implements RaygunOnBeforeSend {
         if(message.getDetails() != null
                 && message.getDetails().getError() != null
                 && message.getDetails().getError().getInnerError() != null
-                && message.getDetails().getError().getThrowableClass() != null) {
+                && message.getDetails().getError().getThrowable() != null) {
 
             for (Class stripClass : stripClasses) {
-                if (stripClass.isAssignableFrom(message.getDetails().getError().getThrowableClass())) {
+                if (stripClass.isAssignableFrom(message.getDetails().getError().getThrowable().getClass())) {
                     RaygunErrorMessage innerError = message.getDetails().getError().getInnerError();
                     message.getDetails().setError(innerError);
 

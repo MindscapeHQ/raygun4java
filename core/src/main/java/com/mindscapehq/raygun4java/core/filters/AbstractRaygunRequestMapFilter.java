@@ -1,6 +1,6 @@
 package com.mindscapehq.raygun4java.core.filters;
 
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Base class to filter/redact data from Raygun request maps
  */
-public abstract class AbstractRaygunRequestMapFilter<T> implements RaygunOnBeforeSend {
+public abstract class AbstractRaygunRequestMapFilter<T> implements IRaygunOnBeforeSend {
     private final String[] keysToFilter;
     private String replacement = "[FILTERED]";
 

@@ -178,7 +178,7 @@ public class RaygunServletClientTest {
                 .withRequestHeaderFilters("header1", "header2")
                 .withRequestQueryStringFilters("queryParam1", "queryParam2")
                 .withRequestCookieFilters("cookie2")
-                .getClient(request);
+                .newClient(request);
         raygunClient.setRaygunConnection(raygunConnectionMock);
 
         int send = raygunClient.send(new Exception());

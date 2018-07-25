@@ -12,35 +12,87 @@ import java.util.List;
  *      new RaygunOnBeforeSendChain()
  *          .filterWith(new RaygunRequestHeaderFilter("AUTH", "COOKIE"),
  *          .filterWith(new RaygunRequestFormFilter("password", "secret")
- *          ....
+ *      )
+ *      .beforeAll(doThisFirst)
+ *      .afterAll(doThisLast)
  * );
  */
-public class RaygunOnBeforeSendChain implements RaygunOnBeforeSend {
+public class RaygunOnBeforeSendChain implements IRaygunOnBeforeSend {
 
-    private List<RaygunOnBeforeSend> handlers;
+    private List<IRaygunOnBeforeSend> handlers;
+    private IRaygunOnBeforeSend lastFilter;
+    private IRaygunOnBeforeSend firstFilter;
 
     public RaygunOnBeforeSendChain() {
-        this(new ArrayList<RaygunOnBeforeSend>());
+        this(new ArrayList<IRaygunOnBeforeSend>());
     }
 
-    public RaygunOnBeforeSendChain(List<RaygunOnBeforeSend> handlers) {
+    public RaygunOnBeforeSendChain(List<IRaygunOnBeforeSend> handlers) {
         this.handlers = handlers;
     }
 
     public RaygunMessage onBeforeSend(RaygunMessage message) {
-        for (RaygunOnBeforeSend raygunOnBeforeSend : getHandlers()) {
+        if (firstFilter != null) {
+            firstFilter.onBeforeSend(message);
+        }
+
+        for (IRaygunOnBeforeSend raygunOnBeforeSend : getHandlers()) {
             message = raygunOnBeforeSend.onBeforeSend(message);
+        }
+
+        if (lastFilter != null) {
+            lastFilter.onBeforeSend(message);
         }
 
         return message;
     }
 
-    public List<RaygunOnBeforeSend> getHandlers() {
+    public RaygunOnBeforeSendChain filterWith(IRaygunOnBeforeSend handler) {
+        handlers.add(handler);
+        return this;
+    }
+
+    /**
+     * Perform a specific filter before the other filters
+     * @param firstFilter
+     * @return
+     */
+    public RaygunOnBeforeSendChain beforeAll(IRaygunOnBeforeSend firstFilter) {
+        this.firstFilter = firstFilter;
+        return this;
+    }
+
+    /**
+     * Perform a specific filter after the other filters
+     * @param lastFilter
+     * @return
+     */
+    public RaygunOnBeforeSendChain afterAll(IRaygunOnBeforeSend lastFilter) {
+        this.lastFilter = lastFilter;
+        return this;
+    }
+
+    public List<IRaygunOnBeforeSend> getHandlers() {
         return handlers;
     }
 
-    public RaygunOnBeforeSendChain filterWith(RaygunOnBeforeSend handler) {
-        handlers.add(handler);
-        return this;
+    public void setHandlers(List<IRaygunOnBeforeSend> handlers) {
+        this.handlers = handlers;
+    }
+
+    public IRaygunOnBeforeSend getLastFilter() {
+        return lastFilter;
+    }
+
+    public void setLastFilter(IRaygunOnBeforeSend lastFilter) {
+        this.lastFilter = lastFilter;
+    }
+
+    public IRaygunOnBeforeSend getFirstFilter() {
+        return firstFilter;
+    }
+
+    public void setFirstFilter(IRaygunOnBeforeSend firstFilter) {
+        this.firstFilter = firstFilter;
     }
 }

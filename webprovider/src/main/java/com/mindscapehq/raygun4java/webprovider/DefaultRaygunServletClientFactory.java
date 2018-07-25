@@ -1,7 +1,6 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.filters.RaygunExcludeLocalRequestFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestCookieFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestFormFilter;
@@ -18,18 +17,14 @@ import javax.servlet.ServletContext;
  *                 .withRequestFormFilters("form1", "form2")
  *                 .withRequestHeaderFilters("header1", "header2")
  *                 .withRequestQueryStringFilters("queryParam1", "queryParam2")
- *                 .getClient(request);
+ *                 .newClient(request);
  */
 public class DefaultRaygunServletClientFactory extends RaygunServletClientFactory {
-    private final RaygunOnBeforeSendChain chain;
-
     public DefaultRaygunServletClientFactory(String apiKey, ServletContext context) {
         super(apiKey, context);
-        chain = new RaygunOnBeforeSendChain();
-        withBeforeSend(chain);
     }
 
-    public DefaultRaygunServletClientFactory withBeforeSend(RaygunOnBeforeSend onBeforeSend) {
+    public DefaultRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
         super.withBeforeSend(onBeforeSend);
         return this;
     }
@@ -69,7 +64,7 @@ public class DefaultRaygunServletClientFactory extends RaygunServletClientFactor
         return this;
     }
 
-    public void addFilter(RaygunOnBeforeSend raygunOnBeforeSend) {
-        chain.getHandlers().add(raygunOnBeforeSend);
+    public void addFilter(IRaygunOnBeforeSend raygunOnBeforeSend) {
+        getRaygunOnBeforeSendChain().filterWith(raygunOnBeforeSend);
     }
 }

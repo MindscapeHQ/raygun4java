@@ -70,7 +70,7 @@ public class RaygunClientTest {
 
     @Test
     public void post_SendWithOnBeforeSend_Returns202() throws IOException {
-        RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
+        IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
         RaygunMessage message = new RaygunMessage();
         when(handler.onBeforeSend((RaygunMessage) anyObject())).thenReturn(message);
         this.raygunClient.setOnBeforeSend(handler);
@@ -78,6 +78,17 @@ public class RaygunClientTest {
         assertEquals(202, this.raygunClient.send(new Exception()));
 
         verify(handler).onBeforeSend((RaygunMessage) anyObject());
+    }
+
+    @Test
+    public void post_SendWithOnAfterSend_Returns202() throws IOException {
+        IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
+        RaygunMessage message = new RaygunMessage();
+        this.raygunClient.setOnAfterSend(handler);
+
+        assertEquals(202, this.raygunClient.send(new Exception()));
+
+        verify(handler).onAfterSend((RaygunMessage) anyObject());
     }
 
     @Test
