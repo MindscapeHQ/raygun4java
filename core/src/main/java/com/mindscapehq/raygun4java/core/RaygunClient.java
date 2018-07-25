@@ -85,7 +85,7 @@ public class RaygunClient {
         return post(buildMessage(throwable, tags, userCustomData));
     }
 
-    private RaygunMessage buildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+    public RaygunMessage buildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         try {
             return RaygunMessageBuilder.newMessageBuilder()
                     .setEnvironmentDetails()
@@ -96,6 +96,7 @@ public class RaygunClient {
                     .setTags(tags)
                     .setUserCustomData(userCustomData)
                     .setUser(user)
+                    .setBreadrumbs(breadcrumbs)
                     .build();
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").throwing("RaygunClient", "buildMessage-t-m", t);
@@ -114,7 +115,7 @@ public class RaygunClient {
                     }
                 }
 
-                String jsonPayload = new Gson().toJson(raygunMessage);
+                String jsonPayload = toJson(raygunMessage);
 
                 HttpURLConnection connection = this.raygunConnection.getConnection(apiKey);
 
@@ -139,6 +140,10 @@ public class RaygunClient {
             Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + t.getMessage());
         }
         return -1;
+    }
+
+    public String toJson(Object o) {
+        return new Gson().toJson(o);
     }
 
     public void setOnBeforeSend(IRaygunOnBeforeSend onBeforeSend) {

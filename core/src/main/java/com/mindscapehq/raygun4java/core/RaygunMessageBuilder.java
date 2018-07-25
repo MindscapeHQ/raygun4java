@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.mindscapehq.raygun4java.core.messages.RaygunBreadcrumbMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunClientMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunEnvironmentMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
@@ -83,6 +84,11 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
 
     public IRaygunMessageBuilder setGroupingKey(String groupingKey) {
         raygunMessage.getDetails().setGroupingKey(groupingKey);
+        return this;
+    }
+
+    public IRaygunMessageBuilder setBreadrumbs(List<RaygunBreadcrumbMessage> breadcrumbs) {
+        raygunMessage.getDetails().setBreadcrumbs(breadcrumbs);
         return this;
     }
 

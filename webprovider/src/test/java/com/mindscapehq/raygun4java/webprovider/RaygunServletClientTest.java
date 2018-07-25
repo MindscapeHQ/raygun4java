@@ -1,7 +1,16 @@
 package com.mindscapehq.raygun4java.webprovider;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.mindscapehq.raygun4java.core.RaygunConnection;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
+import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -13,6 +22,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -22,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -29,6 +41,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class RaygunServletClientTest {
+
+    private Gson gson;
 
     private RaygunServletClient raygunClient;
 
@@ -40,6 +54,8 @@ public class RaygunServletClientTest {
 
     @Before
     public void setUp() throws IOException {
+        gson = new GsonBuilder().registerTypeAdapter(RaygunMessageDetails.class, new RaygunRequestMessageDetailsDeserializer()).create();
+
         MockitoAnnotations.initMocks(this);
 
         raygunClient = new RaygunServletClient("1234", request);
@@ -141,32 +157,26 @@ public class RaygunServletClientTest {
 
         int send = raygunClient.send(new Exception());
 
-        String requestBodyAsString = requestBody.toString();
-        assertTrue(requestBodyAsString.contains("queryParam1"));
-        assertTrue(requestBodyAsString.contains("queryValue1"));
-        assertTrue(requestBodyAsString.contains("queryParam2"));
-        assertTrue(requestBodyAsString.contains("queryValue2"));
-        assertTrue(requestBodyAsString.contains("queryParam3"));
-        assertTrue(requestBodyAsString.contains("queryValue3"));
+        RaygunServletMessage raygunMessage = fromJsonStream();
 
-        assertTrue(requestBodyAsString.contains("header1"));
-        assertTrue(requestBodyAsString.contains("headerValue1"));
-        assertTrue(requestBodyAsString.contains("header2"));
-        assertTrue(requestBodyAsString.contains("headerValue2"));
-        assertTrue(requestBodyAsString.contains("header3"));
-        assertTrue(requestBodyAsString.contains("headerValue3"));
+        Map<String, String> queryString = raygunMessage.getDetails().getRequest().getQueryString();
+        assertThat(queryString.get("queryParam1"), is("queryValue1"));
+        assertThat(queryString.get("queryParam2"), is("queryValue2"));
+        assertThat(queryString.get("queryParam3"), is("queryValue3"));
 
-        assertTrue(requestBodyAsString.contains("cookie1"));
-        assertTrue(requestBodyAsString.contains("cookieValue1"));
-        assertTrue(requestBodyAsString.contains("cookie2"));
-        assertTrue(requestBodyAsString.contains("cookieValue2"));
+        Map<String, String> headers = raygunMessage.getDetails().getRequest().getHeaders();
+        assertThat(headers.get("header1"), is("headerValue1"));
+        assertThat(headers.get("header2"), is("headerValue2"));
+        assertThat(headers.get("header3"), is("headerValue3"));
 
-        assertTrue(requestBodyAsString.contains("form1"));
-        assertTrue(requestBodyAsString.contains("formValue1"));
-        assertTrue(requestBodyAsString.contains("form2"));
-        assertTrue(requestBodyAsString.contains("formValue2"));
-        assertTrue(requestBodyAsString.contains("form3"));
-        assertTrue(requestBodyAsString.contains("formValue3"));
+        Map<String, String> cookies = raygunMessage.getDetails().getRequest().getCookies();
+        assertThat(cookies.get("cookie1"), is("cookieValue1"));
+        assertThat(cookies.get("cookie2"), is("cookieValue2"));
+
+        Map<String, String> form = raygunMessage.getDetails().getRequest().getForm();
+        assertThat(form.get("form1"), is("formValue1;"));
+        assertThat(form.get("form2"), is("formValue2;"));
+        assertThat(form.get("form3"), is("formValue3;"));
     }
 
     @Test
@@ -183,31 +193,42 @@ public class RaygunServletClientTest {
 
         int send = raygunClient.send(new Exception());
 
-        String requestBodyAsString = requestBody.toString();
-        assertTrue(requestBodyAsString.contains("queryParam1"));
-        assertFalse(requestBodyAsString.contains("queryValue1"));
-        assertTrue(requestBodyAsString.contains("queryParam2"));
-        assertFalse(requestBodyAsString.contains("queryValue2"));
-        assertTrue(requestBodyAsString.contains("queryParam3"));
-        assertTrue(requestBodyAsString.contains("queryValue3"));
+        RaygunServletMessage raygunMessage = fromJsonStream();
 
-        assertTrue(requestBodyAsString.contains("header1"));
-        assertFalse(requestBodyAsString.contains("headerValue1"));
-        assertTrue(requestBodyAsString.contains("header2"));
-        assertFalse(requestBodyAsString.contains("headerValue2"));
-        assertTrue(requestBodyAsString.contains("header3"));
-        assertTrue(requestBodyAsString.contains("headerValue3"));
+        Map<String, String> queryString = raygunMessage.getDetails().getRequest().getQueryString();
+        assertThat(queryString.get("queryParam1"), is("[FILTERED]"));
+        assertThat(queryString.get("queryParam2"), is("[FILTERED]"));
+        assertThat(queryString.get("queryParam3"), is("queryValue3"));
 
-        assertTrue(requestBodyAsString.contains("cookie1"));
-        assertTrue(requestBodyAsString.contains("cookieValue1"));
-        assertTrue(requestBodyAsString.contains("cookie2"));
-        assertFalse(requestBodyAsString.contains("cookieValue2"));
+        Map<String, String> headers = raygunMessage.getDetails().getRequest().getHeaders();
+        assertThat(headers.get("header1"), is("[FILTERED]"));
+        assertThat(headers.get("header2"), is("[FILTERED]"));
+        assertThat(headers.get("header3"), is("headerValue3"));
 
-        assertTrue(requestBodyAsString.contains("form1"));
-        assertFalse(requestBodyAsString.contains("formValue1"));
-        assertTrue(requestBodyAsString.contains("form2"));
-        assertFalse(requestBodyAsString.contains("formValue2"));
-        assertTrue(requestBodyAsString.contains("form3"));
-        assertTrue(requestBodyAsString.contains("formValue3"));
+        Map<String, String> cookies = raygunMessage.getDetails().getRequest().getCookies();
+        assertThat(cookies.get("cookie1"), is("cookieValue1"));
+        assertThat(cookies.get("cookie2"), is("[FILTERED]"));
+
+        Map<String, String> form = raygunMessage.getDetails().getRequest().getForm();
+        assertThat(form.get("form1"), is("[FILTERED]"));
+        assertThat(form.get("form2"), is("[FILTERED]"));
+        assertThat(form.get("form3"), is("formValue3;"));
+    }
+
+    private RaygunServletMessage fromJson() {
+        String body = raygunClient.toJson(raygunClient.buildMessage(null, null, null));
+        return gson.fromJson(body, RaygunServletMessage.class);
+    }
+
+    private RaygunServletMessage fromJsonStream() {
+        String body = new String(requestBody.toByteArray());
+        return gson.fromJson(body, RaygunServletMessage.class);
+    }
+
+    private class RaygunRequestMessageDetailsDeserializer implements JsonDeserializer<RaygunRequestMessageDetails> {
+        public RaygunRequestMessageDetails deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            return new Gson().fromJson(json, RaygunRequestMessageDetails.class);
+        }
     }
 }

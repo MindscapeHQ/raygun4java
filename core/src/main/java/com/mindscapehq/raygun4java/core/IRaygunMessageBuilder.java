@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.mindscapehq.raygun4java.core.messages.RaygunBreadcrumbMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
@@ -29,4 +30,6 @@ public interface IRaygunMessageBuilder {
     IRaygunMessageBuilder setUser(RaygunIdentifier user);
 
     IRaygunMessageBuilder setGroupingKey(String groupingKey);
+
+    IRaygunMessageBuilder setBreadrumbs(List<RaygunBreadcrumbMessage> breadcrumbs);
 }
