@@ -17,7 +17,7 @@ import javax.servlet.ServletContext;
  *                 .withRequestFormFilters("form1", "form2")
  *                 .withRequestHeaderFilters("header1", "header2")
  *                 .withRequestQueryStringFilters("queryParam1", "queryParam2")
- *                 .getClient(request);
+ *                 .newClient(request);
  */
 public class DefaultRaygunServletClientFactory extends RaygunServletClientFactory {
     public DefaultRaygunServletClientFactory(String apiKey, ServletContext context) {

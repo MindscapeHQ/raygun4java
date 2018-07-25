@@ -29,7 +29,7 @@ public class RaygunClient {
     protected String context;
     protected String string = null;
     protected IRaygunOnBeforeSend onBeforeSend;
-    private IRaygunOnAfterSend onAfterSend;
+    protected IRaygunOnAfterSend onAfterSend;
 
     public RaygunClient(String apiKey) {
         this.apiKey = apiKey;
@@ -144,6 +144,13 @@ public class RaygunClient {
         this.onAfterSend = onAfterSend;
     }
 
+    public IRaygunOnBeforeSend getOnBeforeSend() {
+        return onBeforeSend;
+    }
+
+    public IRaygunOnAfterSend getOnAfterSend() {
+        return onAfterSend;
+    }
 
     String getVersion() {
         return string;

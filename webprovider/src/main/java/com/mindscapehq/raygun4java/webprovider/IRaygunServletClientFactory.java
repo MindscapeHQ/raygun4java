@@ -10,7 +10,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 public interface IRaygunServletClientFactory extends IRaygunClientFactory {
-    RaygunServletClient getClient(HttpServletRequest request);
+    RaygunServletClient newClient(HttpServletRequest request);
     IRaygunServletClientFactory withVersionFrom(ServletContext context);
 
     IRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend);

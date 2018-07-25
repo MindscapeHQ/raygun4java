@@ -46,9 +46,11 @@ public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements
 
     public String getVersion(ServletContext context) {
         try {
-            URL resource = context.getResource("/META-INF/MANIFEST.MF");
-            if (resource != null) {
-                return readVersionFromManifest(resource.openStream());
+            if (context != null) {
+                URL resource = context.getResource("/META-INF/MANIFEST.MF");
+                if (resource != null) {
+                    return readVersionFromManifest(resource.openStream());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -39,13 +40,22 @@ public class RaygunClientFactoryTest {
     }
 
     @Test
+    public void shouldConstructFactoryWithDuplicateErrorHandler() {
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
+
+        assertTrue(factory.getRaygunOnBeforeSendChain().getLastFilter() instanceof RaygunDuplicateErrorFilter);
+        assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(0), factory.getRaygunOnBeforeSendChain().getLastFilter());
+    }
+
     @Test
     public void shouldConstructFactoryWithOnBeforeSendHandler() {
         IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
 
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handler);
 
-        assertEquals(factory.getRaygunOnBeforeSendChain().getHandlers().get(1), handler);
+        assertEquals(factory.getRaygunOnBeforeSendChain().getHandlers().get(0), handler);
+
+        assertEquals(factory.newClient().onBeforeSend, factory.getRaygunOnBeforeSendChain());
     }
 
     @Test
@@ -54,6 +64,8 @@ public class RaygunClientFactoryTest {
 
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withAfterSend(handler);
 
-        assertEquals(factory.getRaygunOnBeforeSendChain().getHandlers().get(1), handler);
+        assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(1), handler);
+
+        assertEquals(factory.newClient().onAfterSend, factory.getRaygunOnAfterSendChain());
     }
 }
