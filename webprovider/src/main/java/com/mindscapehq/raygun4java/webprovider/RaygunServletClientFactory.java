@@ -24,6 +24,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     private RaygunOnAfterSendChain onAfterSendChain;
     private RaygunClient client;
     private String version;
+    private boolean shouldProcessBreadcrumbLocations = false;
     private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new RaygunServletMessageBuilderFactory();
 
     public RaygunServletClientFactory(String apiKey) {
@@ -91,6 +92,14 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         return this;
     }
 
+    /**
+     * BEWARE: enabling could seriously degrade performance of your application
+     */
+    public IRaygunClientFactory withBreadcrumbLocations() {
+        this.shouldProcessBreadcrumbLocations = true;
+        return this;
+    }
+
     public RaygunClient newClient() {
         throw new IllegalStateException("newClient() is not valid for RaygunServletFactory; use newClient(request)");
     }
@@ -103,6 +112,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         client.setOnBeforeSend(onBeforeSendChain);
         client.setOnAfterSend(onAfterSendChain);
         client.setVersion(version);
+        client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
         return client;
     }
 
