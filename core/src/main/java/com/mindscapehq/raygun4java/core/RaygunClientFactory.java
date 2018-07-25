@@ -40,8 +40,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @param onBeforeSend
      * @return factory
      */
-    public RaygunClientFactory withBeforeSend(RaygunOnBeforeSend onBeforeSend) {
         this.onBeforeSend = onBeforeSend;
+    public RaygunClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
         return this;
     }
 

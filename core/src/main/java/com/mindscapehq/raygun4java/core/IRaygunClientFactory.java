@@ -5,6 +5,6 @@ public interface IRaygunClientFactory {
     IRaygunClientFactory withVersion(String version);
     IRaygunClientFactory withVersionFrom(Class versionFromClass);
     IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory);
-    IRaygunClientFactory withBeforeSend(RaygunOnBeforeSend onBeforeSend);
+    IRaygunClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend);
     RaygunClient newClient();
 }

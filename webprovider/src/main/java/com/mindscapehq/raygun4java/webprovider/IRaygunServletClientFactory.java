@@ -8,6 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface IRaygunServletClientFactory extends IRaygunClientFactory {
     RaygunServletClient getClient(HttpServletRequest request);
-    IRaygunServletClientFactory withBeforeSend(RaygunOnBeforeSend onBeforeSend);
     IRaygunServletClientFactory withVersionFrom(ServletContext context);
+    IRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend);
 }

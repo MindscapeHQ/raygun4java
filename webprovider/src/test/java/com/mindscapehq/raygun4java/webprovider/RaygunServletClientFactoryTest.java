@@ -1,6 +1,6 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -34,7 +34,7 @@ public class RaygunServletClientFactoryTest {
     @Test
     public void shouldInitializeWithOnBeforeSend() {
 
-        RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
+        IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
         IRaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey).withBeforeSend(handler);
 
         RaygunServletClient client = factory.getClient(null);

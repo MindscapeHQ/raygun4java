@@ -28,7 +28,7 @@ public class RaygunClient {
     protected RaygunIdentifier user;
     protected String context;
     protected String string = null;
-    protected RaygunOnBeforeSend onBeforeSend;
+    protected IRaygunOnBeforeSend onBeforeSend;
 
     public RaygunClient(String apiKey) {
         this.apiKey = apiKey;
@@ -126,7 +126,7 @@ public class RaygunClient {
         return -1;
     }
 
-    public void setOnBeforeSend(RaygunOnBeforeSend onBeforeSend) {
+    public void setOnBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
         this.onBeforeSend = onBeforeSend;
     }
 

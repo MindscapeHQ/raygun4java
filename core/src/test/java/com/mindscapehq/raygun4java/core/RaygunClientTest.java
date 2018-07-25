@@ -70,7 +70,7 @@ public class RaygunClientTest {
 
     @Test
     public void post_SendWithOnBeforeSend_Returns202() throws IOException {
-        RaygunOnBeforeSend handler = mock(RaygunOnBeforeSend.class);
+        IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
         RaygunMessage message = new RaygunMessage();
         when(handler.onBeforeSend((RaygunMessage) anyObject())).thenReturn(message);
         this.raygunClient.setOnBeforeSend(handler);

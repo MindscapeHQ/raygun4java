@@ -1,7 +1,7 @@
 package com.mindscapehq.raygun4java.sampleapp;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
@@ -21,7 +21,7 @@ public class SampleApp {
     }
 }
 
-class BeforeSendImplementation implements RaygunOnBeforeSend {
+class BeforeSendImplementation implements IRaygunOnBeforeSend {
     @Override
     public RaygunMessage onBeforeSend(RaygunMessage message) {
         //String errorMessage = message.getDetails().getError().getMessage();

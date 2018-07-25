@@ -2,8 +2,8 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunMessageBuilderFactory;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.RaygunClient;
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -67,8 +67,8 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * @param onBeforeSend
      * @return factory
      */
-    public IRaygunServletClientFactory withBeforeSend(RaygunOnBeforeSend onBeforeSend) {
         this.onBeforeSend = onBeforeSend;
+    public IRaygunServletClientFactory withAfterSend(IRaygunOnAfterSend onAfterSend) {
         return this;
     }
 

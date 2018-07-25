@@ -69,7 +69,7 @@ public class DefaultRaygunServletClientFactory extends RaygunServletClientFactor
         return this;
     }
 
-    public void addFilter(RaygunOnBeforeSend raygunOnBeforeSend) {
         chain.getHandlers().add(raygunOnBeforeSend);
+    public void addFilter(IRaygunOnBeforeSend raygunOnBeforeSend) {
     }
 }

@@ -1,7 +1,7 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +89,7 @@ public class RaygunServletClient extends RaygunClient {
         return apiKey;
     }
 
-    public RaygunOnBeforeSend getOnBeforeSend() {
+    public IRaygunOnBeforeSend getOnBeforeSend() {
         return onBeforeSend;
     }
 

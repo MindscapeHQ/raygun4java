@@ -15,31 +15,31 @@ import java.util.List;
  *          ....
  * );
  */
-public class RaygunOnBeforeSendChain implements RaygunOnBeforeSend {
+public class RaygunOnBeforeSendChain implements IRaygunOnBeforeSend {
 
-    private List<RaygunOnBeforeSend> handlers;
+    private List<IRaygunOnBeforeSend> handlers;
 
     public RaygunOnBeforeSendChain() {
-        this(new ArrayList<RaygunOnBeforeSend>());
+        this(new ArrayList<IRaygunOnBeforeSend>());
     }
 
-    public RaygunOnBeforeSendChain(List<RaygunOnBeforeSend> handlers) {
+    public RaygunOnBeforeSendChain(List<IRaygunOnBeforeSend> handlers) {
         this.handlers = handlers;
     }
 
     public RaygunMessage onBeforeSend(RaygunMessage message) {
-        for (RaygunOnBeforeSend raygunOnBeforeSend : getHandlers()) {
+        for (IRaygunOnBeforeSend raygunOnBeforeSend : getHandlers()) {
             message = raygunOnBeforeSend.onBeforeSend(message);
         }
 
         return message;
     }
 
-    public List<RaygunOnBeforeSend> getHandlers() {
+    public List<IRaygunOnBeforeSend> getHandlers() {
         return handlers;
     }
 
-    public RaygunOnBeforeSendChain filterWith(RaygunOnBeforeSend handler) {
+    public RaygunOnBeforeSendChain filterWith(IRaygunOnBeforeSend handler) {
         handlers.add(handler);
         return this;
     }
