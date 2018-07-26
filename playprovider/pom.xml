@@ -7,9 +7,9 @@
         <relativePath>../</relativePath>
     </parent>
     <scm>
-      <url>https://github.com/mindscapehq/raygun4java</url>
-      <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
-      <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
+        <url>https://github.com/mindscapehq/raygun4java</url>
+        <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
     </scm>
     <artifactId>raygun4java-play2</artifactId>
     <version>2.2.1-SNAPSHOT</version>
@@ -26,6 +26,7 @@
     </licenses>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <playframework.version>2.4.11</playframework.version>
     </properties>
     <description>The official provider for the Raygun error tracking  service. This is the Play Framework provider module that sends errors caught from your Play Scala/Java application. Used in conjunction with raygun4java.core</description>
     <repositories>
@@ -38,35 +39,31 @@
         <dependency>
             <groupId>com.mindscapehq</groupId>
             <artifactId>core</artifactId>
-            <version>2.2.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play_2.10</artifactId>
-            <version>2.2.0</version>
+            <version>${playframework.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-java_2.10</artifactId>
-            <version>2.2.0</version>
+            <version>${playframework.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-test_2.10</artifactId>
-            <version>2.2.0</version>
+            <version>${playframework.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.nanoko.playframework</groupId>
-            <artifactId>play2-maven-plugin</artifactId>
-            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>2.10.4</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -75,7 +72,7 @@
             <plugin>
                 <groupId>org.nanoko.playframework</groupId>
                 <artifactId>play2-maven-plugin</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.5</version>
                 <extensions>true</extensions>
                 <configuration>
                     <lib>target/lib</lib>
