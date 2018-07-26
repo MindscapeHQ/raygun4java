@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class SampleApp {
 
-    public static final String API_KEY = "paste_your_api_key_here";
+    public static final String API_KEY = "kxiM7MSMbrTVvuYNSGklbw==";
 
     /**
      * An example of how to use Raygun4Java
@@ -68,6 +68,7 @@ public class SampleApp {
             }
         }).start();
 
+        MyExceptionHandler.getClient().recordBreadcrumb("Throwing exception on main thread");
         throw exceptionToThrowLater;
     }
 }

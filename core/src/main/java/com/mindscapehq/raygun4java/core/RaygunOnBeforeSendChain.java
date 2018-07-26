@@ -33,15 +33,21 @@ public class RaygunOnBeforeSendChain implements IRaygunOnBeforeSend {
 
     public RaygunMessage onBeforeSend(RaygunMessage message) {
         if (firstFilter != null) {
-            firstFilter.onBeforeSend(message);
+            message = firstFilter.onBeforeSend(message);
+            if (message == null) {
+                return null;
+            }
         }
 
         for (IRaygunOnBeforeSend raygunOnBeforeSend : getHandlers()) {
             message = raygunOnBeforeSend.onBeforeSend(message);
+            if (message == null) {
+                return null;
+            }
         }
 
         if (lastFilter != null) {
-            lastFilter.onBeforeSend(message);
+            message = lastFilter.onBeforeSend(message);
         }
 
         return message;

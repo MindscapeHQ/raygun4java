@@ -2,11 +2,22 @@ package com.mindscapehq.raygun4java.core;
 
 import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class RaygunClientFactoryTest {
 
@@ -60,7 +71,7 @@ public class RaygunClientFactoryTest {
     }
 
     @Test
-    public void shouldConstructFactoryWithOnAfterSendHandler() {
+    public void shouldConstructFactoryDuplicateDetection() throws IOException {
         IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
 
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withAfterSend(handler);
@@ -68,6 +79,31 @@ public class RaygunClientFactoryTest {
         assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(1), handler);
 
         assertEquals(factory.newClient().onAfterSend, factory.getRaygunOnAfterSendChain());
+
+        RaygunClient client = factory.newClient();
+
+        RaygunConnection raygunConnection = mock(RaygunConnection.class);
+        client.setRaygunConnection(raygunConnection);
+
+        HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
+        when(httpURLConnection.getResponseCode()).thenReturn(202);
+        when(httpURLConnection.getOutputStream()).thenReturn(mock(OutputStream.class));
+        when(raygunConnection.getConnection(anyString())).thenReturn(httpURLConnection);
+
+        Exception exception = new Exception("boom");
+        client.send(exception);
+        client.send(exception);
+
+        verify(raygunConnection, times(1)).getConnection(anyString());
+
+        // and a new client
+        Mockito.reset(raygunConnection);
+        client = factory.newClient();
+        client.setRaygunConnection(raygunConnection);
+
+        client.send(exception);
+
+        verify(raygunConnection, times(1)).getConnection(anyString());
     }
 
     @Test
