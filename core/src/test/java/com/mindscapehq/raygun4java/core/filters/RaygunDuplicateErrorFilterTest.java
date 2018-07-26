@@ -12,7 +12,7 @@ public class RaygunDuplicateErrorFilterTest {
     @Test
     public void shouldFilterSameException() {
 
-        RaygunDuplicateErrorFilter filter = new RaygunDuplicateErrorFilter();
+        RaygunDuplicateErrorRecordFilter filter = new RaygunDuplicateErrorRecordFilter();
         Exception exception = new Exception();
 
         RaygunMessage message = new RaygunMessage();

@@ -2,8 +2,7 @@ package com.mindscapehq.raygun4java.sampleapp;
 
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
-import com.mindscapehq.raygun4java.core.IRaygunOnAfterSendFactory;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
+import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.RaygunClientFactory;
@@ -75,7 +74,7 @@ public class SampleApp {
     }
 }
 
-class BeforeSendImplementation implements IRaygunOnBeforeSend, IRaygunOnBeforeSendFactory {
+class BeforeSendImplementation implements IRaygunOnBeforeSend, IRaygunSendEventFactory {
     @Override
     public RaygunMessage onBeforeSend(RaygunMessage message) {
         String errorMessage = message.getDetails().getError().getMessage();

@@ -1,11 +1,11 @@
 package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
+import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
-public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, IRaygunOnBeforeSendFactory {
+public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, IRaygunSendEventFactory {
 
     private Class[] stripClasses;
 
@@ -13,7 +13,7 @@ public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, I
         this.stripClasses = stripClasses;
     }
 
-    public RaygunMessage onBeforeSend(RaygunMessage message) {
+    public RaygunMessage handle(RaygunMessage message) {
 
         if(message.getDetails() != null
                 && message.getDetails().getError() != null
@@ -26,7 +26,7 @@ public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, I
                     message.getDetails().setError(innerError);
 
                     // rerun check on the reassigned error
-                    onBeforeSend(message);
+                    handle(message);
                 }
             }
         }

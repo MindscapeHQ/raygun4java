@@ -2,12 +2,9 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 
-import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
-import com.mindscapehq.raygun4java.core.IRaygunOnAfterSendFactory;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
+import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClientFactory;
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -46,13 +43,13 @@ public class RaygunServletClientFactoryTest {
     public void shouldConstructFactoryWithDuplicateErrorHandler() {
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
 
-        assertTrue(factory.getRaygunOnBeforeSendChain().getLastFilter() instanceof RaygunDuplicateErrorFilter);
+        assertTrue(factory.getRaygunOnBeforeSendChain().getLastFilter() instanceof RaygunDuplicateErrorRecordFilter);
         assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(0), factory.getRaygunOnBeforeSendChain().getLastFilter());
     }
 
     @Test
     public void shouldConstructFactoryWithOnBeforeSendHandler() {
-        IRaygunOnBeforeSendFactory handler = mock(IRaygunOnBeforeSendFactory.class);
+        IRaygunSendEventFactory handler = mock(IRaygunSendEventFactory.class);
 
         IRaygunServletClientFactory factory = new RaygunServletClientFactory("apiKey").withBeforeSend(handler);
 

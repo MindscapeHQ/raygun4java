@@ -1,10 +1,9 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -14,7 +13,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,13 +53,13 @@ public class RaygunClientFactoryTest {
     public void shouldConstructFactoryWithDuplicateErrorHandler() {
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
 
-        assertTrue(factory.getRaygunOnBeforeSendChain().getLastFilter() instanceof RaygunDuplicateErrorFilter);
+        assertTrue(factory.getRaygunOnBeforeSendChain().getLastFilter() instanceof RaygunDuplicateErrorRecordFilter);
         assertEquals(factory.getRaygunOnAfterSendChain().getHandlers().get(0), factory.getRaygunOnBeforeSendChain().getLastFilter());
     }
 
     @Test
     public void shouldConstructFactoryWithOnBeforeSendHandler() {
-        IRaygunOnBeforeSendFactory handler = mock(IRaygunOnBeforeSendFactory.class);
+        IRaygunSendEventFactory handler = mock(IRaygunSendEventFactory.class);
 
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handler);
 

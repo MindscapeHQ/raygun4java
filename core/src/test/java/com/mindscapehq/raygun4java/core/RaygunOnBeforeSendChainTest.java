@@ -20,7 +20,7 @@ public class RaygunOnBeforeSendChainTest {
     @Mock
     RaygunMessage message;
 
-    RaygunOnBeforeSendChain chain;
+    RaygunOnSendEventChain chain;
 
     @Before
     public void setup() {
@@ -33,7 +33,7 @@ public class RaygunOnBeforeSendChainTest {
         when(last.create()).thenReturn(last);
         when(last.onBeforeSend(message)).thenReturn(message);
 
-        chain = new RaygunOnBeforeSendChain().filterWith(main).beforeAll(first).afterAll(last);
+        chain = new RaygunOnSendEventChain().filterWith(main).beforeAll(first).afterAll(last);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class RaygunOnBeforeSendChainTest {
         verify(last).onBeforeSend(message);
     }
 
-    private interface ForTest extends IRaygunOnBeforeSendFactory, IRaygunOnAfterSendFactory, IRaygunOnBeforeSend, IRaygunOnAfterSend {
+    private interface ForTest extends IRaygunSendEventFactory, IRaygunOnAfterSendFactory, IRaygunOnBeforeSend, IRaygunOnAfterSend {
         RaygunMessage onAfterSend(RaygunMessage message);
         RaygunMessage onBeforeSend(RaygunMessage message);
         ForTest create();

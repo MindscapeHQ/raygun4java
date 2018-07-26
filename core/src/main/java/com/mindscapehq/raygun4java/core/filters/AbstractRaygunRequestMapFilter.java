@@ -1,7 +1,7 @@
 package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
+import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Base class to filter/redact data from Raygun request maps
  */
-public abstract class AbstractRaygunRequestMapFilter<T> implements IRaygunOnBeforeSend, IRaygunOnBeforeSendFactory {
+public abstract class AbstractRaygunRequestMapFilter<T> implements IRaygunOnBeforeSend, IRaygunSendEventFactory {
     private final String[] keysToFilter;
     private String replacement = "[FILTERED]";
 
@@ -25,7 +25,7 @@ public abstract class AbstractRaygunRequestMapFilter<T> implements IRaygunOnBefo
         this.replacement = replacement;
     }
 
-    public RaygunMessage onBeforeSend(RaygunMessage message) {
+    public RaygunMessage handle(RaygunMessage message) {
 
         if (message.getDetails() != null && message.getDetails() instanceof RaygunRequestMessageDetails) {
             RaygunRequestMessageDetails requestMessageDetails = (RaygunRequestMessageDetails) message.getDetails();

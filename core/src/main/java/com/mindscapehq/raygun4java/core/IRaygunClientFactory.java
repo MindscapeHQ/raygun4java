@@ -5,10 +5,10 @@ public interface IRaygunClientFactory {
     IRaygunClientFactory withVersion(String version);
     IRaygunClientFactory withVersionFrom(Class versionFromClass);
     IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory);
-    IRaygunClientFactory withBeforeSend(IRaygunOnBeforeSendFactory onBeforeSend);
-    IRaygunClientFactory withAfterSend(IRaygunOnAfterSendFactory onAfterSend);
+    IRaygunClientFactory withBeforeSend(IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSend);
+    IRaygunClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend);
     IRaygunClientFactory withBreadcrumbLocations();
     RaygunClient newClient();
-    RaygunOnBeforeSendChainFactory getRaygunOnBeforeSendChain();
-    RaygunOnAfterSendChain getRaygunOnAfterSendChain();
+    RaygunSendEventChainFactory getRaygunOnBeforeSendChain();
+    RaygunSendEventChainFactory getRaygunOnAfterSendChain();
 }

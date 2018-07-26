@@ -2,14 +2,11 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunMessageBuilderFactory;
-import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
-import com.mindscapehq.raygun4java.core.IRaygunOnAfterSendFactory;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
+import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChain;
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
+import com.mindscapehq.raygun4java.core.RaygunOnSendEventChain;
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     private String apiKey;
-    private RaygunOnBeforeSendChain onBeforeSendChain;
+    private RaygunOnSendEventChain onBeforeSendChain;
     private RaygunOnAfterSendChain onAfterSendChain;
     private RaygunClient client;
     private String version;
@@ -37,8 +34,8 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         this.apiKey = apiKey;
         this.version = new RaygunServletMessageBuilder().getVersion(context);
 
-        RaygunDuplicateErrorFilter duplicateErrorFilter = new RaygunDuplicateErrorFilter();
-        onBeforeSendChain = new RaygunOnBeforeSendChain().afterAll(duplicateErrorFilter);
+        RaygunDuplicateErrorRecordFilter duplicateErrorFilter = new RaygunDuplicateErrorRecordFilter();
+        onBeforeSendChain = new RaygunOnSendEventChain().afterAll(duplicateErrorFilter);
         onAfterSendChain = new RaygunOnAfterSendChain();
         onAfterSendChain.handleWith(duplicateErrorFilter);
     }
@@ -76,7 +73,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * @param onBeforeSend
      * @return factory
      */
-    public IRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSendFactory onBeforeSend) {
+    public IRaygunServletClientFactory withBeforeSend(IRaygunSendEventFactory onBeforeSend) {
         this.onBeforeSendChain.filterWith(onBeforeSend);
         return this;
     }
@@ -118,7 +115,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         return client;
     }
 
-    public RaygunOnBeforeSendChain getRaygunOnBeforeSendChain() {
+    public RaygunOnSendEventChain getRaygunOnBeforeSendChain() {
         return onBeforeSendChain;
     }
 

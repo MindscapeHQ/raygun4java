@@ -108,7 +108,7 @@ public class RaygunClient {
         try {
             if (validateApiKey()) {
                 if (onBeforeSend != null) {
-                    raygunMessage = onBeforeSend.onBeforeSend(raygunMessage);
+                    raygunMessage = onBeforeSend.handle(raygunMessage);
 
                     if (raygunMessage == null) {
                         return -1;
@@ -127,7 +127,7 @@ public class RaygunClient {
 
                 try {
                     if(onAfterSend != null) {
-                        onAfterSend.onAfterSend(raygunMessage);
+                        onAfterSend.handle(raygunMessage);
                     }
                 } catch (Exception e) {
                     Logger.getLogger("Raygun4Java").warning("exception processing onAfterSend: " + e.getMessage());
