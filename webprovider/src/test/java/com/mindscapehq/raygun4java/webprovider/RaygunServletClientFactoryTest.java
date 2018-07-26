@@ -3,7 +3,9 @@ package com.mindscapehq.raygun4java.webprovider;
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnAfterSendFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
 import com.mindscapehq.raygun4java.core.RaygunClientFactory;
 import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
 import org.junit.Test;
@@ -50,7 +52,7 @@ public class RaygunServletClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithOnBeforeSendHandler() {
-        IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
+        IRaygunOnBeforeSendFactory handler = mock(IRaygunOnBeforeSendFactory.class);
 
         IRaygunServletClientFactory factory = new RaygunServletClientFactory("apiKey").withBeforeSend(handler);
 
@@ -61,7 +63,7 @@ public class RaygunServletClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithOnAfterSendHandler() {
-        IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
+        IRaygunOnAfterSendFactory handler = mock(IRaygunOnAfterSendFactory.class);
 
         IRaygunServletClientFactory factory = new RaygunServletClientFactory("apiKey").withAfterSend(handler);
 

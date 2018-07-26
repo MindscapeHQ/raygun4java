@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 public class RaygunOnBeforeSendChainTest {
 
     @Mock
-    IRaygunOnBeforeSend first, main, last;
+    ForTest first, main, last;
 
     @Mock
     RaygunMessage message;
@@ -26,8 +26,11 @@ public class RaygunOnBeforeSendChainTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
+        when(first.create()).thenReturn(first);
         when(first.onBeforeSend(message)).thenReturn(message);
+        when(main.create()).thenReturn(main);
         when(main.onBeforeSend(message)).thenReturn(message);
+        when(last.create()).thenReturn(last);
         when(last.onBeforeSend(message)).thenReturn(message);
 
         chain = new RaygunOnBeforeSendChain().filterWith(main).beforeAll(first).afterAll(last);
@@ -73,5 +76,11 @@ public class RaygunOnBeforeSendChainTest {
         verify(first).onBeforeSend(message);
         verify(main).onBeforeSend(message);
         verify(last).onBeforeSend(message);
+    }
+
+    private interface ForTest extends IRaygunOnBeforeSendFactory, IRaygunOnAfterSendFactory, IRaygunOnBeforeSend, IRaygunOnAfterSend {
+        RaygunMessage onAfterSend(RaygunMessage message);
+        RaygunMessage onBeforeSend(RaygunMessage message);
+        ForTest create();
     }
 }

@@ -2,6 +2,8 @@ package com.mindscapehq.raygun4java.sampleapp;
 
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnAfterSendFactory;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.RaygunClientFactory;
@@ -73,7 +75,7 @@ public class SampleApp {
     }
 }
 
-class BeforeSendImplementation implements IRaygunOnBeforeSend {
+class BeforeSendImplementation implements IRaygunOnBeforeSend, IRaygunOnBeforeSendFactory {
     @Override
     public RaygunMessage onBeforeSend(RaygunMessage message) {
         String errorMessage = message.getDetails().getError().getMessage();
@@ -82,6 +84,11 @@ class BeforeSendImplementation implements IRaygunOnBeforeSend {
         message.getDetails().setGroupingKey("baz2");
 
         return message;
+    }
+
+    @Override
+    public IRaygunOnBeforeSend create() {
+        return this; // if this implementation held state, this is where you'd create a new one for each RaygunClient instance
     }
 }
 
@@ -102,13 +109,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
          factory = new RaygunClientFactory(SampleApp.API_KEY)
                 .withBreadcrumbLocations() // don't do this in production
                 .withBeforeSend(new BeforeSendImplementation())
-                .withAfterSend(new IRaygunOnAfterSend() {
-                    @Override
-                    public RaygunMessage onAfterSend(RaygunMessage message) {
-                        System.out.println("We sent a error to ragun!");
-                        return message;
-                    }
-                });
+                .withAfterSend(new MyOnAfterHandler());
     }
 
     public static RaygunClient getClient() {
@@ -126,5 +127,19 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
         tags.add("thrown from unhandled exception handler");
 
         getClient().send(e, tags);
+    }
+}
+
+class MyOnAfterHandler implements IRaygunOnAfterSend, IRaygunOnAfterSendFactory {
+
+    @Override
+    public RaygunMessage onAfterSend(RaygunMessage message) {
+        System.out.println("We sent a error to ragun!");
+        return message;
+    }
+
+    @Override
+    public IRaygunOnAfterSend create() {
+        return this; // if this implementation held state, this is where you'd create a new one for each RaygunClient instance
     }
 }

@@ -17,7 +17,7 @@ import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilter;
 public class RaygunClientFactory implements IRaygunClientFactory {
     private String version;
     private String apiKey;
-    private RaygunOnBeforeSendChain onBeforeSendChain;
+    private RaygunOnBeforeSendChainFactory onBeforeSendChainFactory;
     private RaygunOnAfterSendChain onAfterSendChain;
     private RaygunClient client;
     private boolean shouldProcessBreadcrumbLocations = false;
@@ -26,7 +26,6 @@ public class RaygunClientFactory implements IRaygunClientFactory {
             return new RaygunMessageBuilder();
         }
     };
-
 
     /**
      * This constructor will attempt to extract the app version from /META-INF/MANIFEST.MF of the executing jar
@@ -38,9 +37,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
         RaygunDuplicateErrorFilter duplicateErrorFilter = new RaygunDuplicateErrorFilter();
 
-        onBeforeSendChain = new RaygunOnBeforeSendChain().afterAll(duplicateErrorFilter);
-        onAfterSendChain = new RaygunOnAfterSendChain();
-        onAfterSendChain.handleWith(duplicateErrorFilter);
+        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory().afterAll(duplicateErrorFilter);
+        onAfterSendChain = new RaygunOnAfterSendChain().handleWith(duplicateErrorFilter);
     }
 
     /**
@@ -51,8 +49,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @param onBeforeSend
      * @return factory
      */
-    public RaygunClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
-        this.onBeforeSendChain.getHandlers().add(onBeforeSend);
+    public RaygunClientFactory withBeforeSend(IRaygunOnBeforeSendFactory onBeforeSend) {
+        onBeforeSendChainFactory.filterWith(onBeforeSend);
         return this;
     }
 
@@ -64,7 +62,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @param onAfterSend
      * @return factory
      */
-    public IRaygunClientFactory withAfterSend(IRaygunOnAfterSend onAfterSend) {
+    public IRaygunClientFactory withAfterSend(IRaygunOnAfterSendFactory onAfterSend) {
         this.onAfterSendChain.getHandlers().add(onAfterSend);
         return this;
     }
@@ -74,15 +72,15 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      */
     public RaygunClient newClient() {
         RaygunClient client = new RaygunClient(apiKey);
-        client.setOnBeforeSend(onBeforeSendChain);
+        client.setOnBeforeSend(onBeforeSendChainFactory.create());
         client.setOnAfterSend(onAfterSendChain);
         client.string = version;
         client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
         return client;
     }
 
-    public RaygunOnBeforeSendChain getRaygunOnBeforeSendChain() {
-        return onBeforeSendChain;
+    public RaygunOnBeforeSendChainFactory getRaygunOnBeforeSendChain() {
+        return onBeforeSendChainFactory;
     }
 
     public RaygunOnAfterSendChain getRaygunOnAfterSendChain() {

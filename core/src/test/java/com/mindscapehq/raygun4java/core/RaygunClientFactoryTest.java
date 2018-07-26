@@ -61,7 +61,7 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithOnBeforeSendHandler() {
-        IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
+        IRaygunOnBeforeSendFactory handler = mock(IRaygunOnBeforeSendFactory.class);
 
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handler);
 
@@ -72,7 +72,7 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryDuplicateDetection() throws IOException {
-        IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
+        IRaygunOnAfterSendFactory handler = mock(IRaygunOnAfterSendFactory.class);
 
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withAfterSend(handler);
 

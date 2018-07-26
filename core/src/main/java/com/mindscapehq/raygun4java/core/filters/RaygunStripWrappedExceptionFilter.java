@@ -1,10 +1,11 @@
 package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
-public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend {
+public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, IRaygunOnBeforeSendFactory {
 
     private Class[] stripClasses;
 
@@ -31,5 +32,9 @@ public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend {
         }
 
         return message;
+    }
+
+    public IRaygunOnBeforeSend create() {
+        return this; // this is ok as this filter does not hold any state
     }
 }

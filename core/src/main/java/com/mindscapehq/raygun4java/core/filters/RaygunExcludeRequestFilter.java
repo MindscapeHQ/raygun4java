@@ -1,13 +1,14 @@
 package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 
 /**
  * Discards the request if it matches the provided filter
  */
-public class RaygunExcludeRequestFilter implements IRaygunOnBeforeSend {
+public class RaygunExcludeRequestFilter implements IRaygunOnBeforeSend, IRaygunOnBeforeSendFactory {
 
     private Filter filter;
 
@@ -26,6 +27,10 @@ public class RaygunExcludeRequestFilter implements IRaygunOnBeforeSend {
         }
 
         return message;
+    }
+
+    public IRaygunOnBeforeSend create() {
+        return this; // this is ok as this filter does not hold any state
     }
 
     public interface Filter {

@@ -19,34 +19,34 @@ import java.util.List;
  */
 public class RaygunOnAfterSendChain implements IRaygunOnAfterSend {
 
-    private List<IRaygunOnAfterSend> handlers;
-    private IRaygunOnAfterSend lastHandler;
-    private IRaygunOnAfterSend firstHandler;
+    private List<IRaygunOnAfterSendFactory> handlers;
+    private IRaygunOnAfterSendFactory lastHandler;
+    private IRaygunOnAfterSendFactory firstHandler;
 
     public RaygunOnAfterSendChain() {
-        this(new ArrayList<IRaygunOnAfterSend>());
+        this(new ArrayList<IRaygunOnAfterSendFactory>());
     }
 
-    public RaygunOnAfterSendChain(List<IRaygunOnAfterSend> handlers) {
+    public RaygunOnAfterSendChain(List<IRaygunOnAfterSendFactory> handlers) {
         this.handlers = handlers;
     }
 
-    public RaygunOnAfterSendChain handleWith(IRaygunOnAfterSend handler) {
+    public RaygunOnAfterSendChain handleWith(IRaygunOnAfterSendFactory handler) {
         handlers.add(handler);
         return this;
     }
 
     public RaygunMessage onAfterSend(RaygunMessage message) {
         if(firstHandler != null) {
-            firstHandler.onAfterSend(message);
+            firstHandler.create().onAfterSend(message);
         }
 
-        for (IRaygunOnAfterSend raygunOnAfterSend : getHandlers()) {
-            message = raygunOnAfterSend.onAfterSend(message);
+        for (IRaygunOnAfterSendFactory raygunOnAfterSend : getHandlers()) {
+            message = raygunOnAfterSend.create().onAfterSend(message);
         }
 
         if(lastHandler != null) {
-            lastHandler.onAfterSend(message);
+            lastHandler.create().onAfterSend(message);
         }
 
         return message;
@@ -57,7 +57,7 @@ public class RaygunOnAfterSendChain implements IRaygunOnAfterSend {
      * @param firstHandler
      * @return
      */
-    public RaygunOnAfterSendChain beforeAll(IRaygunOnAfterSend firstHandler) {
+    public RaygunOnAfterSendChain beforeAll(IRaygunOnAfterSendFactory firstHandler) {
         this.firstHandler = firstHandler;
         return this;
     }
@@ -67,32 +67,32 @@ public class RaygunOnAfterSendChain implements IRaygunOnAfterSend {
      * @param lastHandler
      * @return
      */
-    public RaygunOnAfterSendChain afterAll(IRaygunOnAfterSend lastHandler) {
+    public RaygunOnAfterSendChain afterAll(IRaygunOnAfterSendFactory lastHandler) {
         this.lastHandler = lastHandler;
         return this;
     }
 
-    public List<IRaygunOnAfterSend> getHandlers() {
+    public List<IRaygunOnAfterSendFactory> getHandlers() {
         return handlers;
     }
 
-    public void setHandlers(List<IRaygunOnAfterSend> handlers) {
+    public void setHandlers(List<IRaygunOnAfterSendFactory> handlers) {
         this.handlers = handlers;
     }
 
-    public IRaygunOnAfterSend getLastHandler() {
+    public IRaygunOnAfterSendFactory getLastHandler() {
         return lastHandler;
     }
 
-    public void setLastHandler(IRaygunOnAfterSend lastHandler) {
+    public void setLastHandler(IRaygunOnAfterSendFactory lastHandler) {
         this.lastHandler = lastHandler;
     }
 
-    public IRaygunOnAfterSend getFirstHandler() {
+    public IRaygunOnAfterSendFactory getFirstHandler() {
         return firstHandler;
     }
 
-    public void setFirstHandler(IRaygunOnAfterSend firstHandler) {
+    public void setFirstHandler(IRaygunOnAfterSendFactory firstHandler) {
         this.firstHandler = firstHandler;
     }
 }

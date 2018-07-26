@@ -3,7 +3,9 @@ package com.mindscapehq.raygun4java.webprovider;
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunMessageBuilderFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnAfterSendFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChain;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
@@ -74,7 +76,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * @param onBeforeSend
      * @return factory
      */
-    public IRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
+    public IRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSendFactory onBeforeSend) {
         this.onBeforeSendChain.filterWith(onBeforeSend);
         return this;
     }
@@ -87,7 +89,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * @param onAfterSend
      * @return factory
      */
-    public IRaygunServletClientFactory withAfterSend(IRaygunOnAfterSend onAfterSend) {
+    public IRaygunServletClientFactory withAfterSend(IRaygunOnAfterSendFactory onAfterSend) {
         this.onAfterSendChain.handleWith(onAfterSend);
         return this;
     }

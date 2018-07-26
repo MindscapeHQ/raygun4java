@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
 import com.mindscapehq.raygun4java.core.filters.RaygunExcludeLocalRequestFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestCookieFilter;
 import com.mindscapehq.raygun4java.core.filters.RaygunRequestFormFilter;
@@ -24,7 +25,7 @@ public class DefaultRaygunServletClientFactory extends RaygunServletClientFactor
         super(apiKey, context);
     }
 
-    public DefaultRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSend onBeforeSend) {
+    public DefaultRaygunServletClientFactory withBeforeSend(IRaygunOnBeforeSendFactory onBeforeSend) {
         super.withBeforeSend(onBeforeSend);
         return this;
     }
@@ -64,7 +65,7 @@ public class DefaultRaygunServletClientFactory extends RaygunServletClientFactor
         return this;
     }
 
-    public void addFilter(IRaygunOnBeforeSend raygunOnBeforeSend) {
+    public void addFilter(IRaygunOnBeforeSendFactory raygunOnBeforeSend) {
         getRaygunOnBeforeSendChain().filterWith(raygunOnBeforeSend);
     }
 }

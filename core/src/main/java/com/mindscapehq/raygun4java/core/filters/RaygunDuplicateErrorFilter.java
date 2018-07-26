@@ -1,13 +1,15 @@
 package com.mindscapehq.raygun4java.core.filters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnAfterSendFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSendFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class RaygunDuplicateErrorFilter implements IRaygunOnBeforeSend, IRaygunOnAfterSend {
+public class RaygunDuplicateErrorFilter implements IRaygunOnBeforeSend, IRaygunOnAfterSend, IRaygunOnBeforeSendFactory, IRaygunOnAfterSendFactory {
 
     private Map<Throwable, Throwable> sentErrors = new WeakHashMap<Throwable, Throwable>();
 
@@ -32,5 +34,9 @@ public class RaygunDuplicateErrorFilter implements IRaygunOnBeforeSend, IRaygunO
             }
         }
         return message;
+    }
+
+    public RaygunDuplicateErrorFilter create() {
+        return new RaygunDuplicateErrorFilter();
     }
 }
