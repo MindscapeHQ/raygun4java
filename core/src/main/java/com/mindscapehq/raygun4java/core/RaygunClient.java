@@ -181,14 +181,17 @@ public class RaygunClient {
         this.shouldProcessBreadcrumbLocation = shouldProcessBreadcrumbLocation;
     }
 
-    public void recordBreadcrumb(String message)
+    public RaygunBreadcrumbMessage recordBreadcrumb(String message)
     {
-        breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, new RaygunBreadcrumbMessage().setMessage(message), 3));
+        RaygunBreadcrumbMessage breadcrumbMessage = new RaygunBreadcrumbMessage().setMessage(message);
+        breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, breadcrumbMessage, 3));
+        return breadcrumbMessage;
     }
 
-    public void recordBreadcrumb(RaygunBreadcrumbMessage breadcrumb)
+    public RaygunBreadcrumbMessage recordBreadcrumb(RaygunBreadcrumbMessage breadcrumb)
     {
         breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, breadcrumb, 3));
+        return breadcrumb;
     }
 
     public void ClearBreadcrumbs()

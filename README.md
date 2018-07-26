@@ -90,6 +90,7 @@ IRaygunClientFactory factory = new RaygunClientFactory("YOUR_API_KEY")
 ```java
 RaygunClient client = factory.newClient();
 client.SetUser(user);
+client.recordBreadcrumb("i was here")
 ```
 
 - Send exceptions
@@ -354,6 +355,27 @@ client.Send(exception, tags, userCustomData);
 ```
 
 Tags can be null if you only wish to transmit custom data. Send calls can take these objects inside a catch block (if you want one instance to contain specific local variables), or in a global exception handler ()if you want every exception to contain a set of tags/custom data, initialized on construction).
+
+### Breadcrumbs
+You can set breadcrumbs to record the flow through your application. Breadcrumbs are set against the current `RaygunClient`.
+
+You can simply set a breadcrumb message:
+```java
+client.recordBreadcrumb("I was here");
+```
+or you can use set more detail fluently:
+```java
+client.recordBreadcrumb("hello world")
+    .withCategory("greeting")
+    .withLevel(RaygunBreadcrumbLevel.WARN)
+    .withCustomData(someData);
+```
+
+**Dont do this in a production environment:** You can set the factory to have the source location (class, method, line) added to the breadcrumb:
+```java
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBreadcrumbLocations()
+```
+While this can be incredibly useful for debugging it is **very resource intensive and will cause performance degredation**.
 
 ### Version tracking
 

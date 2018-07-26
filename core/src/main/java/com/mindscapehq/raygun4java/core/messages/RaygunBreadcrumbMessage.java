@@ -18,7 +18,7 @@ public class RaygunBreadcrumbMessage {
         return message;
     }
 
-    public RaygunBreadcrumbMessage setMessage(String message) {
+    public RaygunBreadcrumbMessage withMessage(String message) {
         this.message = message;
         return this;
     }
@@ -27,7 +27,7 @@ public class RaygunBreadcrumbMessage {
         return category;
     }
 
-    public RaygunBreadcrumbMessage setCategory(String category) {
+    public RaygunBreadcrumbMessage withCategory(String category) {
         this.category = category;
         return this;
     }
@@ -36,7 +36,7 @@ public class RaygunBreadcrumbMessage {
         return RaygunBreadcrumbLevel.values()[level];
     }
 
-    public RaygunBreadcrumbMessage setLevel(RaygunBreadcrumbLevel level) {
+    public RaygunBreadcrumbMessage withLevel(RaygunBreadcrumbLevel level) {
         this.level = level.ordinal();
         return this;
     }
@@ -45,7 +45,7 @@ public class RaygunBreadcrumbMessage {
         return customData;
     }
 
-    public RaygunBreadcrumbMessage setCustomData(Map<String, Object> customData) {
+    public RaygunBreadcrumbMessage withCustomData(Map<String, Object> customData) {
         this.customData = customData;
         return this;
     }
@@ -54,7 +54,7 @@ public class RaygunBreadcrumbMessage {
         return timestamp;
     }
 
-    public RaygunBreadcrumbMessage setTimestamp(Long timestamp) {
+    public RaygunBreadcrumbMessage withTimestamp(Long timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -63,7 +63,7 @@ public class RaygunBreadcrumbMessage {
         return className;
     }
 
-    public RaygunBreadcrumbMessage setClassName(String className) {
+    public RaygunBreadcrumbMessage withClassName(String className) {
         this.className = className;
         return this;
     }
@@ -72,7 +72,7 @@ public class RaygunBreadcrumbMessage {
         return methodName;
     }
 
-    public RaygunBreadcrumbMessage setMethodName(String methodName) {
+    public RaygunBreadcrumbMessage withMethodName(String methodName) {
         this.methodName = methodName;
         return this;
     }
@@ -81,7 +81,7 @@ public class RaygunBreadcrumbMessage {
         return lineNumber;
     }
 
-    public RaygunBreadcrumbMessage setLineNumber(Integer lineNumber) {
+    public RaygunBreadcrumbMessage withLineNumber(Integer lineNumber) {
         this.lineNumber = lineNumber;
         return this;
     }
