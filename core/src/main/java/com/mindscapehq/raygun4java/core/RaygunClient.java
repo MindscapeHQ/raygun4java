@@ -183,7 +183,7 @@ public class RaygunClient {
 
     public RaygunBreadcrumbMessage recordBreadcrumb(String message)
     {
-        RaygunBreadcrumbMessage breadcrumbMessage = new RaygunBreadcrumbMessage().setMessage(message);
+        RaygunBreadcrumbMessage breadcrumbMessage = new RaygunBreadcrumbMessage().withMessage(message);
         breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, breadcrumbMessage, 3));
         return breadcrumbMessage;
     }
@@ -204,9 +204,9 @@ public class RaygunClient {
         if(process && breadcrumbMessage.getClassName() == null) {
             StackTraceElement frame = Thread.currentThread().getStackTrace()[stackFrame];
             breadcrumbMessage
-                    .setClassName(frame.getClassName())
-                    .setMethodName(frame.getMethodName())
-                    .setLineNumber(frame.getLineNumber());
+                    .withClassName(frame.getClassName())
+                    .withMethodName(frame.getMethodName())
+                    .withLineNumber(frame.getLineNumber());
         }
 
         return breadcrumbMessage;

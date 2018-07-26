@@ -54,7 +54,7 @@ public class RaygunClientTest {
     @Test
     public void shouldAddBreadCrumbMessageWithLocation() {
         raygunClient.shouldProcessBreadcrumbLocation(true);
-        raygunClient.recordBreadcrumb(new RaygunBreadcrumbMessage().setMessage("hello there")); // use this line number
+        raygunClient.recordBreadcrumb(new RaygunBreadcrumbMessage().withMessage("hello there")); // use this line number
 
         RaygunMessage assertMessage = fromJson();
         RaygunBreadcrumbMessage assertBreadcrumb = assertMessage.getDetails().getBreadcrumbs().get(0);
@@ -187,9 +187,9 @@ public class RaygunClientTest {
     @Test
     public void shouldAddBreadCrumbMessage() {
         RaygunBreadcrumbMessage breadcrumb = new RaygunBreadcrumbMessage()
-                .setMessage("hello there")
-                .setCategory("greetings")
-                .setLevel(RaygunBreadcrumbLevel.ERROR);
+                .withMessage("hello there")
+                .withCategory("greetings")
+                .withLevel(RaygunBreadcrumbLevel.ERROR);
         raygunClient.recordBreadcrumb(breadcrumb);
 
         RaygunMessage raygunMessage = fromJson();
