@@ -16,7 +16,7 @@ public class RaygunExcludeRequestFilter implements IRaygunOnBeforeSend, IRaygunS
         this.filter = filter;
     }
 
-    public RaygunMessage handle(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunMessage message) {
 
         if (message.getDetails() != null && message.getDetails() instanceof RaygunRequestMessageDetails) {
             RaygunRequestMessageDetails requestMessageDetails = (RaygunRequestMessageDetails) message.getDetails();

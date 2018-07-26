@@ -1,7 +1,5 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
-
 import java.util.List;
 
 /**
@@ -18,7 +16,7 @@ import java.util.List;
  *      .create()
  * );
  */
-public class RaygunOnAfterSendChainFactory extends RaygunSendEventChainFactory<IRaygunOnAfterSend> {
+public class RaygunOnAfterSendChainFactory extends AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> {
     protected IRaygunOnAfterSend create(List<IRaygunOnAfterSend> handlers) {
         return new RaygunOnAfterSendChain(handlers);
     }

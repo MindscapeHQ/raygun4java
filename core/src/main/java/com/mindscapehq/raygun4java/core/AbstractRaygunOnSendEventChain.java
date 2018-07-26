@@ -11,21 +11,27 @@ import java.util.List;
  *
  * @param <T> either IRaygunOnBeforeSend or IRaygunOnAfterSend
  */
-public class RaygunOnSendEventChain<T extends IRaygunSentEvent> {
+public abstract class AbstractRaygunOnSendEventChain<T extends IRaygunSentEvent> {
     private List<T> handlers;
 
-    public RaygunOnSendEventChain(List<T> handlers) {
+    public AbstractRaygunOnSendEventChain(List<T> handlers) {
         this.handlers = handlers;
     }
 
+    public abstract RaygunMessage handle(T handler, RaygunMessage message);
+
     public RaygunMessage handle(RaygunMessage message) {
-        for (T raygunOnBeforeSend : handlers) {
-            message = raygunOnBeforeSend.handle(message);
+        for (T handler : handlers) {
+            message = handle(handler, message);
             if (message == null) {
                 return null;
             }
         }
 
         return message;
+    }
+
+    public List<T> getHandlers() {
+        return handlers;
     }
 }

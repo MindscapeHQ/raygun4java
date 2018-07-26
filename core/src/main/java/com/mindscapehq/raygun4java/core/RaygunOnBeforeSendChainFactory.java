@@ -16,7 +16,7 @@ import java.util.List;
  *      .create()
  * );
  */
-public class RaygunOnBeforeSendChainFactory extends RaygunSendEventChainFactory<IRaygunOnBeforeSend> {
+public class RaygunOnBeforeSendChainFactory extends AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> {
     protected RaygunOnBeforeSendChain create(List<IRaygunOnBeforeSend> handlers) {
         return new RaygunOnBeforeSendChain(handlers);
     }

@@ -25,7 +25,7 @@ public abstract class AbstractRaygunRequestMapFilter<T> implements IRaygunOnBefo
         this.replacement = replacement;
     }
 
-    public RaygunMessage handle(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunMessage message) {
 
         if (message.getDetails() != null && message.getDetails() instanceof RaygunRequestMessageDetails) {
             RaygunRequestMessageDetails requestMessageDetails = (RaygunRequestMessageDetails) message.getDetails();

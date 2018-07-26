@@ -42,7 +42,7 @@ public class RaygunClient {
     }
 
     protected Boolean validateApiKey() throws Exception {
-        if (apiKey.isEmpty()) {
+        if (apiKey == null || apiKey.length() == 0) {
             throw new Exception("API key has not been provided, exception will not be logged");
         } else {
             return true;
@@ -108,7 +108,7 @@ public class RaygunClient {
         try {
             if (validateApiKey()) {
                 if (onBeforeSend != null) {
-                    raygunMessage = onBeforeSend.handle(raygunMessage);
+                    raygunMessage = onBeforeSend.onBeforeSend(raygunMessage);
 
                     if (raygunMessage == null) {
                         return -1;
@@ -127,7 +127,7 @@ public class RaygunClient {
 
                 try {
                     if(onAfterSend != null) {
-                        onAfterSend.handle(raygunMessage);
+                        onAfterSend.onAfterSend(raygunMessage);
                     }
                 } catch (Exception e) {
                     Logger.getLogger("Raygun4Java").warning("exception processing onAfterSend: " + e.getMessage());

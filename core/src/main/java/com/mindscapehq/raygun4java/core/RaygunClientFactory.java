@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.core;
 
 import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter;
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilterFactory;
 
 /**
  * An out-of-the-box RaygunClient factory.
@@ -17,8 +18,8 @@ import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter
 public class RaygunClientFactory implements IRaygunClientFactory {
     private String version;
     private String apiKey;
-    private RaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
-    private RaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
+    private AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
+    private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
     private RaygunClient client;
     private boolean shouldProcessBreadcrumbLocations = false;
     private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new IRaygunMessageBuilderFactory() {
@@ -35,10 +36,10 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         this.apiKey = apiKey;
         version = new RaygunMessageBuilder().setVersion(null).build().getDetails().getVersion();
 
-        RaygunDuplicateErrorRecordFilter duplicateErrorFilter = new RaygunDuplicateErrorRecordFilter();
+        RaygunDuplicateErrorRecordFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorRecordFilterFactory();
 
-        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory().afterAll(duplicateErrorFilter);
-        onAfterSendChainFactory = new RaygunOnAfterSendChainFactory().withFilterFactory(duplicateErrorFilter);
+        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory().afterAll(duplicateErrorRecordFilterFactory);
+        onAfterSendChainFactory = new RaygunOnAfterSendChainFactory().withFilterFactory(duplicateErrorRecordFilterFactory);
     }
 
     /**
@@ -79,11 +80,11 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         return client;
     }
 
-    public RaygunSendEventChainFactory getRaygunOnBeforeSendChain() {
+    public AbstractRaygunSendEventChainFactory getRaygunOnBeforeSendChainFactory() {
         return onBeforeSendChainFactory;
     }
 
-    public RaygunSendEventChainFactory getRaygunOnAfterSendChain() {
+    public AbstractRaygunSendEventChainFactory getRaygunOnAfterSendChainFactory() {
         return onAfterSendChainFactory;
     }
 

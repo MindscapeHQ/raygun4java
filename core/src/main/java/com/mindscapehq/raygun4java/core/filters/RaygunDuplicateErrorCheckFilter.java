@@ -8,11 +8,17 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class RaygunDuplicateErrorCheckFilter implements IRaygunOnBeforeSend, IRaygunSendEventFactory<IRaygunOnBeforeSend>{
+public class RaygunDuplicateErrorCheckFilter implements
+        IRaygunSendEventFactory, IRaygunOnBeforeSend, IRaygunOnAfterSend {
 
-    //private Map<Throwable, Throwable> sentErrors = new WeakHashMap<Throwable, Throwable>();
+    private Map<Throwable, Throwable> sentErrors = new WeakHashMap<Throwable, Throwable>();
 
-    public RaygunMessage handle(RaygunMessage message) {
+    public RaygunDuplicateErrorCheckFilter create() {
+        return new RaygunDuplicateErrorCheckFilter();
+    }
+
+
+    public RaygunMessage onBeforeSend(RaygunMessage message) {
         if (message.getDetails() != null
                 && message.getDetails().getError() != null
                 && message.getDetails().getError().getThrowable() != null) {
@@ -23,7 +29,15 @@ public class RaygunDuplicateErrorCheckFilter implements IRaygunOnBeforeSend, IRa
         return message;
     }
 
-    public RaygunDuplicateErrorCheckFilter create() {
-        return new RaygunDuplicateErrorCheckFilter();
+    public RaygunMessage onAfterSend(RaygunMessage message) {
+        if (message.getDetails() != null
+                && message.getDetails().getError() != null
+                && message.getDetails().getError().getThrowable() != null) {
+            Throwable throwable = message.getDetails().getError().getThrowable();
+            if (!sentErrors.containsKey(throwable)) {
+                sentErrors.put(throwable, throwable);
+            }
+        }
+        return message;
     }
 }

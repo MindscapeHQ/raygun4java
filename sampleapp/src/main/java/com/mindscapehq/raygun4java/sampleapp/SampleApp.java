@@ -129,7 +129,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 }
 
-class MyOnAfterHandler implements IRaygunOnAfterSend, IRaygunOnAfterSendFactory {
+class MyOnAfterHandler implements IRaygunOnAfterSend, IRaygunSendEventFactory<IRaygunOnAfterSend> {
 
     @Override
     public RaygunMessage onAfterSend(RaygunMessage message) {

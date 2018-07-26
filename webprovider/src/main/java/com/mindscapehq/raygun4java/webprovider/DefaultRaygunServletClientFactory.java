@@ -65,6 +65,6 @@ public class DefaultRaygunServletClientFactory extends RaygunServletClientFactor
     }
 
     public void addFilter(IRaygunSendEventFactory raygunOnBeforeSend) {
-        getRaygunOnBeforeSendChain().filterWith(raygunOnBeforeSend);
+        getRaygunOnBeforeSendChainFactory().withFilterFactory(raygunOnBeforeSend);
     }
 }

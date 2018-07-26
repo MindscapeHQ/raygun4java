@@ -1,3 +1,7 @@
 package com.mindscapehq.raygun4java.core;
 
-public interface IRaygunOnBeforeSend extends IRaygunSentEvent {}
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+
+public interface IRaygunOnBeforeSend extends IRaygunSentEvent {
+    RaygunMessage onBeforeSend(RaygunMessage message);
+}

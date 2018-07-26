@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @param <T> is either IRaygunOnBeforeSend or IRaygunOnAfterSend
  */
-public abstract class RaygunSendEventChainFactory<T extends IRaygunSentEvent> {
+public abstract class AbstractRaygunSendEventChainFactory<T extends IRaygunSentEvent> {
 
     private List<IRaygunSendEventFactory> mainHandlersFactories;
     private IRaygunSendEventFactory lastFilterFactory;
@@ -42,11 +42,11 @@ public abstract class RaygunSendEventChainFactory<T extends IRaygunSentEvent> {
         return create(handlers);
     }
 
-    public RaygunSendEventChainFactory() {
+    public AbstractRaygunSendEventChainFactory() {
         this(new ArrayList<IRaygunSendEventFactory>());
     }
 
-    public RaygunSendEventChainFactory(List<IRaygunSendEventFactory> handlers) {
+    public AbstractRaygunSendEventChainFactory(List<IRaygunSendEventFactory> handlers) {
         this.mainHandlersFactories = handlers;
     }
 
@@ -54,7 +54,7 @@ public abstract class RaygunSendEventChainFactory<T extends IRaygunSentEvent> {
      * @param handler adds handler to the main handler list
      * @return
      */
-    public RaygunSendEventChainFactory<T> withFilterFactory(IRaygunSendEventFactory<T> handler) {
+    public AbstractRaygunSendEventChainFactory<T> withFilterFactory(IRaygunSendEventFactory handler) {
         mainHandlersFactories.add(handler);
         return this;
     }
@@ -64,7 +64,7 @@ public abstract class RaygunSendEventChainFactory<T extends IRaygunSentEvent> {
      * @param firstFilter
      * @return
      */
-    public RaygunSendEventChainFactory<T> beforeAll(IRaygunSendEventFactory firstFilter) {
+    public AbstractRaygunSendEventChainFactory<T> beforeAll(IRaygunSendEventFactory firstFilter) {
         this.firstFilterFactory = firstFilter;
         return this;
     }
@@ -74,7 +74,7 @@ public abstract class RaygunSendEventChainFactory<T extends IRaygunSentEvent> {
      * @param lastFilter
      * @return
      */
-    public RaygunSendEventChainFactory<T> afterAll(IRaygunSendEventFactory lastFilter) {
+    public AbstractRaygunSendEventChainFactory<T> afterAll(IRaygunSendEventFactory lastFilter) {
         this.lastFilterFactory = lastFilter;
         return this;
     }
