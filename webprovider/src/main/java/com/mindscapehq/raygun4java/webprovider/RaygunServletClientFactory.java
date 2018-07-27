@@ -9,7 +9,7 @@ import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChainFactory;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChainFactory;
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilterFactory;
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         this.apiKey = apiKey;
         this.version = new RaygunServletMessageBuilder().getVersion(context);
 
-        RaygunDuplicateErrorRecordFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorRecordFilterFactory();
+        RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
 
         onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory().afterAll(duplicateErrorRecordFilterFactory);
         onAfterSendChainFactory = new RaygunOnAfterSendChainFactory().withFilterFactory(duplicateErrorRecordFilterFactory);

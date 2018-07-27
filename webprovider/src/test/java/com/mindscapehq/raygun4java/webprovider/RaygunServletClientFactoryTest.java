@@ -1,16 +1,12 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
-
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
-import com.mindscapehq.raygun4java.core.RaygunClientFactory;
 import com.mindscapehq.raygun4java.core.RaygunConnection;
 import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChain;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter;
 import org.junit.Test;
 import org.mockito.Mockito;
 

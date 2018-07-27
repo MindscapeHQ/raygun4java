@@ -11,9 +11,9 @@ import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
  * As the factory will be called twice to produce a single filter that will be used for both onBefore and onAfter
  * the factory must ensure the same instance is for the onBefore and onAfter calls
  */
-public class RaygunDuplicateErrorRecordFilterFactory implements IRaygunSendEventFactory {
+public class RaygunDuplicateErrorFilterFactory implements IRaygunSendEventFactory {
 
-    private ThreadLocal<RaygunDuplicateErrorRecordFilter> instance = new ThreadLocal<RaygunDuplicateErrorRecordFilter>();
+    private ThreadLocal<RaygunDuplicateErrorFilter> instance = new ThreadLocal<RaygunDuplicateErrorFilter>();
 
     /**
      * When called twice from the same thread, both calls will receive the same instance,
@@ -21,10 +21,10 @@ public class RaygunDuplicateErrorRecordFilterFactory implements IRaygunSendEvent
      * @return
      */
     // this will haunt me for eternity
-    public RaygunDuplicateErrorRecordFilter create() {
-        RaygunDuplicateErrorRecordFilter filter = instance.get();
+    public RaygunDuplicateErrorFilter create() {
+        RaygunDuplicateErrorFilter filter = instance.get();
         if (filter == null) {
-            filter = new RaygunDuplicateErrorRecordFilter();
+            filter = new RaygunDuplicateErrorFilter();
             instance.set(filter);
             return filter;
         } else {

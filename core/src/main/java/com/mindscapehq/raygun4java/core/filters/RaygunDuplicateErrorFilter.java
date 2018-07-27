@@ -7,7 +7,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class RaygunDuplicateErrorRecordFilter implements IRaygunOnBeforeSend, IRaygunOnAfterSend {
+public class RaygunDuplicateErrorFilter implements IRaygunOnBeforeSend, IRaygunOnAfterSend {
 
     private Map<Throwable, Throwable> sentErrors = new WeakHashMap<Throwable, Throwable>();
 

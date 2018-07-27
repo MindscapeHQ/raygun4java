@@ -1,7 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilterFactory;
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -54,7 +53,7 @@ public class RaygunClientFactoryTest {
     public void shouldConstructFactoryWithDuplicateErrorHandler() {
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
 
-        assertTrue(factory.getRaygunOnBeforeSendChainFactory().getLastFilterFactory() instanceof RaygunDuplicateErrorRecordFilterFactory);
+        assertTrue(factory.getRaygunOnBeforeSendChainFactory().getLastFilterFactory() instanceof RaygunDuplicateErrorFilterFactory);
         assertEquals(factory.getRaygunOnAfterSendChainFactory().getHandlersFactory().get(0), factory.getRaygunOnBeforeSendChainFactory().getLastFilterFactory());
     }
 

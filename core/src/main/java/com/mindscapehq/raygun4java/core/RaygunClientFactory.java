@@ -1,7 +1,6 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorRecordFilterFactory;
+import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
 
 /**
  * An out-of-the-box RaygunClient factory.
@@ -36,7 +35,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         this.apiKey = apiKey;
         version = new RaygunMessageBuilder().setVersion(null).build().getDetails().getVersion();
 
-        RaygunDuplicateErrorRecordFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorRecordFilterFactory();
+        RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
 
         onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory().afterAll(duplicateErrorRecordFilterFactory);
         onAfterSendChainFactory = new RaygunOnAfterSendChainFactory().withFilterFactory(duplicateErrorRecordFilterFactory);

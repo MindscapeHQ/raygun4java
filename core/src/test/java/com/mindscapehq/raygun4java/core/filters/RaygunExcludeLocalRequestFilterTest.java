@@ -6,8 +6,10 @@ import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class RaygunExcludeLocalRequestFilterTest {
 
@@ -38,5 +40,11 @@ public class RaygunExcludeLocalRequestFilterTest {
         localMessage.setDetails(details);
 
         assertNotNull(new RaygunExcludeLocalRequestFilter().onBeforeSend(localMessage));
+    }
+
+    @Test
+    public void shouldReturnSameInstanceFromCreateFactoryFunction() {
+        RaygunExcludeLocalRequestFilter factory = new RaygunExcludeLocalRequestFilter();
+        assertThat(factory.create(), is(factory.create()));
     }
 }
