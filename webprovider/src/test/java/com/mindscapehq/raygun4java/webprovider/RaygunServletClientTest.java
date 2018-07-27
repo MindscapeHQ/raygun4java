@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mindscapehq.raygun4java.core.RaygunConnection;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
-import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 import org.junit.Before;
@@ -96,7 +95,9 @@ public class RaygunServletClientTest {
     public void send_WithTags_Returns202() throws MalformedURLException, IOException {
         List<String> tags = new ArrayList<String>();
         tags.add("test");
-        assertEquals(202, raygunClient.send(new Exception(), tags));
+        raygunClient.setTags(tags);
+        raygunClient.withTag("withTag");
+        assertEquals(202, raygunClient.send(new Exception()));
     }
 
     @Test
@@ -105,7 +106,8 @@ public class RaygunServletClientTest {
         tags.add("a_tag");
         Map<Integer, String> customData = new HashMap<Integer, String>();
         customData.put(0, "zero");
-        assertEquals(202, raygunClient.send(new Exception(), tags, customData));
+        raygunClient.withTag("a_tag").withData(0, "zero");
+        assertEquals(202, raygunClient.send(new Exception()));
     }
 
     @Test
@@ -216,7 +218,7 @@ public class RaygunServletClientTest {
     }
 
     private RaygunServletMessage fromJson() {
-        String body = raygunClient.toJson(raygunClient.buildMessage(null, null, null));
+        String body = raygunClient.toJson(raygunClient.buildMessage(null));
         return gson.fromJson(body, RaygunServletMessage.class);
     }
 

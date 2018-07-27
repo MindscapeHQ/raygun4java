@@ -13,6 +13,10 @@ import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactor
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * An out-of-the-box RaygunClient factory that can extract the application version from the .WAR file /META-INF/MANIFEST.MF
@@ -24,6 +28,8 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     private String apiKey;
     private AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
+    protected List<String> tags;
+    protected Map data;
     private RaygunClient client;
     private String version;
     private boolean shouldProcessBreadcrumbLocations = false;
@@ -36,6 +42,9 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     public RaygunServletClientFactory(String apiKey, ServletContext context) {
         this.apiKey = apiKey;
         this.version = new RaygunServletMessageBuilder().getVersion(context);
+
+        tags = new ArrayList<String>();
+        data = new WeakHashMap();
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
 
@@ -104,6 +113,32 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
 
     public RaygunClient newClient() {
         throw new IllegalStateException("newClient() is not valid for RaygunServletFactory; use newClient(request)");
+    }
+
+    public IRaygunClientFactory withTag(String tag) {
+        tags.add(tag);
+        return this;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public Map<?, ?> getData() {
+        return data;
+    }
+
+    public void setData(Map<?, ?> data) {
+        this.data = data;
+    }
+
+    public IRaygunClientFactory withData(Object key, Object value) {
+        data.put(key, value);
+        return this;
     }
 
     /**

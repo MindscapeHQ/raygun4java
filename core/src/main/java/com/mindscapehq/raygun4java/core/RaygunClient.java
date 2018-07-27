@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 
@@ -35,12 +36,16 @@ public class RaygunClient {
     protected IRaygunOnBeforeSend onBeforeSend;
     protected IRaygunOnAfterSend onAfterSend;
     protected List<RaygunBreadcrumbMessage> breadcrumbs;
+    protected List<String> tags;
+    protected Map data;
     protected boolean shouldProcessBreadcrumbLocation = false;
 
     public RaygunClient(String apiKey) {
         this.apiKey = apiKey;
         this.raygunConnection = new RaygunConnection(RaygunSettings.getSettings());
         breadcrumbs = new ArrayList<RaygunBreadcrumbMessage>();
+        tags = new ArrayList<String>();
+        data = new WeakHashMap<Object, Object>();
     }
 
     protected Boolean validateApiKey() throws Exception {
@@ -76,18 +81,10 @@ public class RaygunClient {
     }
 
     public int send(Throwable throwable) {
-        return post(buildMessage(throwable, null, null));
+        return send(buildMessage(throwable));
     }
 
-    public int send(Throwable throwable, List<?> tags) {
-        return post(buildMessage(throwable, tags, null));
-    }
-
-    public int send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
-        return post(buildMessage(throwable, tags, userCustomData));
-    }
-
-    public RaygunMessage buildMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+    public RaygunMessage buildMessage(Throwable throwable) {
         try {
             return RaygunMessageBuilder.newMessageBuilder()
                     .setEnvironmentDetails()
@@ -96,7 +93,7 @@ public class RaygunClient {
                     .setClientDetails()
                     .setVersion(string)
                     .setTags(tags)
-                    .setUserCustomData(userCustomData)
+                    .setUserCustomData(data)
                     .setUser(user)
                     .setBreadrumbs(breadcrumbs)
                     .build();
@@ -106,7 +103,7 @@ public class RaygunClient {
         return null;
     }
 
-    public int post(RaygunMessage raygunMessage) {
+    public int send(RaygunMessage raygunMessage) {
         try {
             if (validateApiKey()) {
                 if (onBeforeSend != null) {
@@ -139,7 +136,7 @@ public class RaygunClient {
 
             }
         } catch (Throwable t) {
-            Logger.getLogger("Raygun4Java").warning("Couldn't post exception: " + t.getMessage());
+            Logger.getLogger("Raygun4Java").warning("Couldn't send exception: " + t.getMessage());
         }
         return -1;
     }
@@ -194,6 +191,32 @@ public class RaygunClient {
     {
         breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, breadcrumb, 3));
         return breadcrumb;
+    }
+
+    public RaygunClient withTag(String tag) {
+        tags.add(tag);
+        return this;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public Map<?, ?> getData() {
+        return data;
+    }
+
+    public void setData(Map<?, ?> data) {
+        this.data = data;
+    }
+
+    public RaygunClient withData(Object key, Object value) {
+        data.put(key, value);
+        return this;
     }
 
     public void ClearBreadcrumbs()

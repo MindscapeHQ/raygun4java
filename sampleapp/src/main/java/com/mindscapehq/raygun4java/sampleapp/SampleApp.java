@@ -9,9 +9,6 @@ import com.mindscapehq.raygun4java.core.RaygunClientFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -56,17 +53,10 @@ public class SampleApp {
                     // lets handle this exception - this should appear in the raygun console
                     Map<String, String> customData = new HashMap<String, String>();
                     customData.put("thread id", "" + Thread.currentThread().getId());
-                    MyExceptionHandler.getClient().send(
-                            exceptionToThrowLater,
-                            Arrays.asList("thrown from thread", "no user data"),
-                            customData
-                            );
+                    MyExceptionHandler.getClient().withTag("thrown from thread").withTag("no user withData").withData("thread id", "" + Thread.currentThread().getId()).send(exceptionToThrowLater);
 
                     MyExceptionHandler.getClient().recordBreadcrumb("This should not appear because we're sending the same exception on the same thread");
-                    MyExceptionHandler.getClient().send(
-                            exceptionToThrowLater,
-                            Collections.singletonList("should not appear in console")
-                    );
+                    MyExceptionHandler.getClient().withTag("should not appear in console").send(exceptionToThrowLater);
                 }
             }
         }).start();
@@ -123,11 +113,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     public void uncaughtException(Thread t, Throwable e) {
-
-        ArrayList<Object> tags = new ArrayList<Object>();
-        tags.add("thrown from unhandled exception handler");
-
-        getClient().send(e, tags);
+        getClient().withTag("thrown from unhandled exception handler").send(e);
     }
 }
 

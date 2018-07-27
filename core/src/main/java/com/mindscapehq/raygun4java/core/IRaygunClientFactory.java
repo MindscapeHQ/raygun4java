@@ -8,6 +8,8 @@ public interface IRaygunClientFactory {
     IRaygunClientFactory withBeforeSend(IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSend);
     IRaygunClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend);
     IRaygunClientFactory withBreadcrumbLocations();
+    IRaygunClientFactory withTag(String tag);
+    IRaygunClientFactory withData(Object key, Object value);
     RaygunClient newClient();
     AbstractRaygunSendEventChainFactory getRaygunOnBeforeSendChainFactory();
     AbstractRaygunSendEventChainFactory getRaygunOnAfterSendChainFactory();

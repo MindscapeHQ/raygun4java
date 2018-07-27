@@ -6,8 +6,6 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -24,45 +22,29 @@ public class RaygunServletClient extends RaygunClient {
     }
 
     public int send(Throwable throwable) {
-        return send(throwable, null, null);
-    }
-
-    public int send(Throwable throwable, List<?> tags) {
-        return send(throwable, tags, null);
-    }
-
-    public int send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         if (throwable != null) {
-            return post(buildServletMessage(throwable, tags, userCustomData));
+            return send(buildServletMessage(throwable));
         }
         return -1;
     }
 
     public void sendAsync(Throwable throwable) {
-        sendAsync(throwable, null, null);
-    }
-
-    public void sendAsync(Throwable throwable, List<?> tags) {
-        sendAsync(throwable, tags, null);
-    }
-
-    public void sendAsync(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         if (throwable != null) {
-            postAsync(buildServletMessage(throwable, tags, userCustomData));
+            sendAsync(buildServletMessage(throwable));
         }
     }
 
-    private void postAsync(final RaygunMessage message) {
+    private void sendAsync(final RaygunMessage message) {
         Runnable r = new Runnable() {
             public void run() {
-                post(message);
+                send(message);
             }
         };
 
         Executors.newSingleThreadExecutor().submit(r);
     }
 
-    private RaygunMessage buildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+    private RaygunMessage buildServletMessage(Throwable throwable) {
         try {
             return RaygunServletMessageBuilder.New()
                     .setRequestDetails(request, response)
@@ -73,7 +55,7 @@ public class RaygunServletClient extends RaygunClient {
                     .setVersion(string)
                     .setUser(user)
                     .setTags(tags)
-                    .setUserCustomData(userCustomData)
+                    .setUserCustomData(data)
                     .build();
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());
