@@ -581,6 +581,8 @@ RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBe
 
 [background thread]: https://developers.google.com/appengine/docs/python/backends/background_thread
 
+# Design Doc
+Please refer to the [design doc](design.md)
 
 Changelog
 ---------
