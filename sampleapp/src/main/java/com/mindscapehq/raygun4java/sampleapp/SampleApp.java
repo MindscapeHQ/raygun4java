@@ -2,13 +2,14 @@ package com.mindscapehq.raygun4java.sampleapp;
 
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
-import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.RaygunClientFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -86,9 +87,11 @@ class BeforeSendImplementation implements IRaygunOnBeforeSend, IRaygunSendEventF
 class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     private static MyExceptionHandler instance;
+
     static {
         instance = new MyExceptionHandler();
     }
+
     public static Thread.UncaughtExceptionHandler instance() {
         return instance;
     }
@@ -97,10 +100,13 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
     private ThreadLocal<RaygunClient> clients = new ThreadLocal<RaygunClient>();
 
     public MyExceptionHandler() {
-         factory = new RaygunClientFactory(SampleApp.API_KEY)
+        factory = new RaygunClientFactory(SampleApp.API_KEY)
                 .withBreadcrumbLocations() // don't do this in production
                 .withBeforeSend(new BeforeSendImplementation())
-                .withAfterSend(new MyOnAfterHandler());
+                .withAfterSend(new MyOnAfterHandler())
+                .withTag("from sample app")
+                .withData("how now", "brown cow")
+                .withData(1, Arrays.asList(123));
     }
 
     public static RaygunClient getClient() {
