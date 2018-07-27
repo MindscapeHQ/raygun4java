@@ -5,6 +5,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
 import org.junit.Test;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class RaygunDuplicateErrorFilterTest {
@@ -38,6 +39,20 @@ public class RaygunDuplicateErrorFilterTest {
         details.setError(error);
         message.setDetails(details);
         assertEquals(message, filter.onBeforeSend(message)); // not filtered
+    }
+
+    @Test
+    public void shouldReturnSameInstanceFromCreateFactoryFunction() {
+        RaygunDuplicateErrorFilterFactory factory = new RaygunDuplicateErrorFilterFactory();
+
+        RaygunDuplicateErrorFilter f1 = factory.create();
+        RaygunDuplicateErrorFilter f2 = factory.create();
+        RaygunDuplicateErrorFilter f3 = factory.create();
+        RaygunDuplicateErrorFilter f4 = factory.create();
+
+        assertEquals(f1, f2);
+        assertEquals(f3, f4);
+        assertNotEquals(f1, f3);
     }
 
 }

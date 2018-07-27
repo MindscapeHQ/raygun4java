@@ -1,5 +1,6 @@
 package com.mindscapehq.raygun4java.core.filters;
 
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertThat;
 public class RaygunRequestHttpStatusFilterTest {
     @Test
     public void shouldFilterOutOnHttpStatusCode() {
-        RaygunRequestHttpStatusFilter filter = new RaygunRequestHttpStatusFilter(200, 404, 400);
+        IRaygunOnBeforeSend filter = new RaygunRequestHttpStatusFilter(200, 404, 400);
 
         RaygunMessage message = new RaygunMessage();
         RaygunRequestMessageDetails requestDetails = new RaygunRequestMessageDetails();
@@ -26,7 +27,7 @@ public class RaygunRequestHttpStatusFilterTest {
 
     @Test
     public void shouldNotFilterOutOnHttpStatusCode() {
-        RaygunRequestHttpStatusFilter filter = new RaygunRequestHttpStatusFilter(200, 404, 400);
+        IRaygunOnBeforeSend filter = new RaygunRequestHttpStatusFilter(200, 404, 400);
 
         RaygunMessage message = new RaygunMessage();
         RaygunRequestMessageDetails requestDetails = new RaygunRequestMessageDetails();
@@ -35,6 +36,12 @@ public class RaygunRequestHttpStatusFilterTest {
         requestDetails.setRequest(new RaygunRequestMessage());
         message.setDetails(requestDetails);
         assertThat(message, is(message));
+    }
+
+    @Test
+    public void shouldReturnSameInstanceFromCreateFactoryFunction() {
+        RaygunRequestHttpStatusFilter factory = new RaygunRequestHttpStatusFilter(200, 404, 400);
+        assertThat(factory.create(), is(factory.create()));
     }
 
 }

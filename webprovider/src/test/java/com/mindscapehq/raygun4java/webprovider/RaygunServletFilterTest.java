@@ -60,4 +60,6 @@ public class RaygunServletFilterTest {
         verify(facade).send(exception);
         verify(facade).done();
     }
+
+
 }

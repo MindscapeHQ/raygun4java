@@ -16,7 +16,7 @@ public class RaygunRequestMessage {
     protected Map<String, String> cookies;
     protected String rawData;
 
-    public Map queryStringToMap(String query) {
+    public Map<String, String> queryStringToMap(String query) {
         String[] params = query.split("&");
         Map<String, String> map = new HashMap<String, String>();
         for (String param : params) {

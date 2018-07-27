@@ -71,7 +71,7 @@ The most basic usage of Raygun is as follows:
 
 This example shows the absolute minimum to send an exception to Raygun:
 ```java
-new RaygunClient("YOUR_API_KEY").Send(new Exception("my first error"));
+new RaygunClient("YOUR_API_KEY").send(new Exception("my first error"));
 ```
 While this is extremely simple, **that is not the recommended usage**: as your application complexity increases, scattering that code snippet throughout your code base will become unwieldy. A good practice is to encapsulate the setup and access to the `RaygunClient` instance in a factory. 
 
@@ -89,14 +89,14 @@ IRaygunClientFactory factory = new RaygunClientFactory("YOUR_API_KEY")
 - Add meta data
 ```java
 RaygunClient client = factory.newClient();
-client.SetUser(user);
+client.setUser(user);
 client.recordBreadcrumb("i was here")
 ```
 
 - Send exceptions
 ```java
-client.Send(anException);
-client.Send(anotherException);
+client.send(anException);
+client.send(anotherException);
 ```
 
 ### Going further
@@ -112,7 +112,7 @@ public class MyErrorTracker {
      * @param factory
      */
     public static void initialize(IRaygunClientFactory factory) {
-        RaygunClient.factory = factory;
+        MyErrorTracker.factory = factory;
     }
 
     /**
@@ -133,7 +133,11 @@ public class MyErrorTracker {
      * @param user
      */
     public void setUser(User user) {
-        client.get().SetUser(new RaygunIndentifier(new RaygunIdentifier(user.uniqueUserIdentifier, user.firstName, user.fullName, user.emailAddress, user.uuid, true))); 
+        client.get().setUser(new RaygunIndentifier(user.uniqueUserIdentifier)
+            .withFirstName(user.firstName)
+            .withFullName(user.fullName)
+            .withEmail(user.emailAddress)
+            .withUuid(user.uuid, true)); 
     }
     
     /**
@@ -141,7 +145,7 @@ public class MyErrorTracker {
      * @param exception
      */
     public void send(Exception exception) {
-        client.get().Send(exception); 
+        client.get().send(exception); 
     }
     
     /**
@@ -229,12 +233,12 @@ For the out-of-the-box implementation of capturing exceptions thrown out of your
 1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `DefaultRaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
     ```java
     IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory(apiKey, servletContext);
-    RaygunClient.Initialize(factory);
+    RaygunClient.initialize(factory);
     ```
 2. In the servlet configuration step in your container that allows you to add servlet filters, add a `new DefaultRaygunServletFilter()` - this filter will use the static accessor above.
-3. Through out your code, while in the context of a http request, you can use the `RaygunClient.Get()` method to return the current instance of the client for that request.
+3. Through out your code, while in the context of a http request, you can use the `RaygunClient.get()` method to return the current instance of the client for that request.
     ```java
-    RaygunClient.Get().Send(exception);
+    RaygunClient.get().send(exception);
     ```
 
 ### Web applications - templates/JSP/JSF etc
@@ -247,7 +251,7 @@ To capture exceptions that occur within the framework presentation layer (or any
 
 ## Play 2 Framework for Java and Scala
 
-This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. Feedback is appreciated if you use this provider in a Play 2 app. You can use the plain core-2.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
+This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. Feedback is appreciated if you use this provider in a Play 2 app. You can use the plain core-3.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
 
 ### Installation
 
@@ -257,13 +261,13 @@ Add the following line to your build.sbt's libraryDependencies:
 
 ```
 libraryDependencies ++= Seq(
-    "com.mindscapehq" % "raygun4java-play2" % "2.2.0"
+    "com.mindscapehq" % "raygun4java-play2" % "3.0.0"
 )
 ```
 
 #### With Maven
 
-Add the raygun4java-play2-2.x.x dependency to your pom.xml (following the instructions under 'With Maven and a command shell' at the top of this file).
+Add the raygun4java-play2-3.x.x dependency to your pom.xml (following the instructions under 'With Maven and a command shell' at the top of this file).
 
 ### Usage
 
@@ -317,7 +321,7 @@ import com.mindscapehq.raygun4java.play2.RaygunPlayClient;
 
 def index = Action { implicit request =>
     val rg = new RaygunPlayClient("paste_your_api_key_here", request)
-    val result = rg.Send(new Exception("From Scala"))
+    val result = rg.send(new Exception("From Scala"))
 
     Ok(views.html.index(result.toString))
   }
@@ -329,11 +333,11 @@ def index = Action { implicit request =>
 
 ### Affected user tracking
 
-You can call `client.SetUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the `uniqueUserIdentifier`. This could be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
+You can call `client.setUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the `uniqueUserIdentifier`. This could be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
 
 The other overload contains all the available properties, some or all of which can be null and can be also be set individually on the `RaygunIdentifier` object.
 
-The previous method, SetUser(string) has been deprecated as of 1.5.0.
+The previous method, SetUser(string) has been deprecated as of 1.5.0 and removed in 3.0.0
 
 ### Custom user data and tags
 
@@ -349,9 +353,9 @@ tags.add("tag1");
 Map<string, int> userCustomData = new HashMap<string, int>();
 userCustomData.put("data", 1);
 
-client.Send(exception, tags);
+client.send(exception, tags);
 // or
-client.Send(exception, tags, userCustomData);
+client.send(exception, tags, userCustomData);
 ```
 
 Tags can be null if you only wish to transmit custom data. Send calls can take these objects inside a catch block (if you want one instance to contain specific local variables), or in a global exception handler ()if you want every exception to contain a set of tags/custom data, initialized on construction).
@@ -386,12 +390,12 @@ When using Raygun4Java `webprovider` the `/META-INF/MANIFEST.MF` from the `.war`
 
 In the case where your code is neither of the stated situations, you can pass in a class from your jar so that the correct version can be extracted ie
 ```java
-RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").SetVersionFrom(AClassFromMyApplication.class);
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").setVersionFrom(AClassFromMyApplication.class);
 ```
 
-A SetVersion(string) method is also available to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
+A setVersion(string) method is also available to manually specify this version (for instance during testing). It is expected to be in the format X.X.X.X, where X is a positive integer.
 ```java
-RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").SetVersion("1.2.3.4");
+RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY")sSetVersion("1.2.3.4");
 ```
 
 
@@ -399,14 +403,14 @@ RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").SetVer
 
 This provider has an `OnBeforeSend` API to support accessing or mutating the candidate error payload immediately before it is sent, or cancelling the send outright.
 
-This is provided as the public method `RaygunClient.SetOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `RaygunOnBeforeSend` interface. Your class needs a public `OnBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
+This is provided as the public method `RaygunClient.setOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `RaygunOnBeforeSend` interface. Your class needs a public `onBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
 
 By example:
 
 ```java
 class BeforeSendImplementation implements RaygunOnBeforeSend {
     @Override
-    public RaygunMessage OnBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunMessage message) {
         // About to post to Raygun, returning the payload as is...
         return message;
     }
@@ -415,8 +419,8 @@ class BeforeSendImplementation implements RaygunOnBeforeSend {
 class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread t, Throwable e) {
         RaygunClient client = new RaygunClient("paste_your_api_key_here");
-        client.SetOnBeforeSend(new BeforeSendImplementation());
-        client.Send(e, tags, customData);
+        client.setOnBeforeSend(new BeforeSendImplementation());
+        client.send(e, tags, customData);
     }
 }
 
@@ -428,14 +432,14 @@ public class MyProgram {
 }
 ```
 
-In the example above, the overridden `OnBeforeSend` method will log an info message every time an error is sent.
+In the example above, the overridden `onBeforeSend` method will log an info message every time an error is sent.
 
 ### Mutate the error payload
 To mutate the error payload, for instance to change the message:
 
 ```java
 @Override
-public RaygunMessage OnBeforeSend(RaygunMessage message) {
+public RaygunMessage onBeforeSend(RaygunMessage message) {
     RaygunMessageDetails details = message.getDetails();
     RaygunErrorMessage error = details.getError();
     error.setMessage("Mutated message");
@@ -449,7 +453,7 @@ To cancel the send (prevent the error from reaching the Raygun dashboard) by ret
 
 ```java
 @Override
-public RaygunMessage OnBeforeSend(RaygunMessage message) {
+public RaygunMessage onBeforeSend(RaygunMessage message) {
     //Cancelling sending message to Raygun...
     return null;
 }
@@ -458,7 +462,7 @@ public RaygunMessage OnBeforeSend(RaygunMessage message) {
 ### Filtering
 There are several [provided classes for filtering](https://github.com/MindscapeHQ/raygun4java/tree/master/core/src/main/java/com/mindscapehq/raygun4java/core/filters), and you can use the `RaygunOnBeforeSendChain` to execute multiple `RaygunOnBeforeSend`
 ```java
-raygunClient.SetOnBeforeSend(new RaygunOnBeforeSendChain()
+raygunClient.setOnBeforeSend(new RaygunOnBeforeSendChain()
         .filterWith(new RaygunRequestQueryStringFilter("queryParam1", "queryParam2").replaceWith("*REDACTED*"))
         .filterWith(new RaygunRequestHeaderFilter("header1", "header2"))
 );
@@ -474,11 +478,11 @@ RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBe
 
 #### Custom error grouping
 
-You can override Raygun's default grouping logic for Java exceptions by setting the grouping key manually in OnBeforeSend (see above):
+You can override Raygun's default grouping logic for Java exceptions by setting the grouping key manually in onBeforeSend (see above):
 
 ```java
 @Override
-public RaygunMessage OnBeforeSend(RaygunMessage message) {
+public RaygunMessage onBeforeSend(RaygunMessage message) {
     RaygunMessageDetails details = message.getDetails();
     details.setGroupingKey("foo");
     return message;
@@ -512,17 +516,17 @@ IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory("YOU
 ```
 #### Sending asynchronously
 
-Web projects that use `RaygunServletClient` can call `SendAsync()`, to transmit messages asynchronously. When `SendAsync` is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
+Web projects that use `RaygunServletClient` can call `sendAsync()`, to transmit messages asynchronously. When `sendAsync` is called, the client will continue to perform the sending while control returns to the calling script or servlet. This allows the page to continue rendering and be returned to the end user while the exception message is trasmitted.
 
 Overloads:
 
 ```java
-void SendAsync(*Throwable* throwable)
-void SendAsync(*Throwable* throwable, *List* tags)
-void SendAsync(*Throwable* throwable, *List* tags, Map userCustomData)
+void sendAsync(*Throwable* throwable)
+void sendAsync(*Throwable* throwable, *List* tags)
+void sendAsync(*Throwable* throwable, *List* tags, Map userCustomData)
 ```
 
-This provides a huge speedup versus the blocking `Send()` method, and appears to be near instantaneous from the user's perspective.
+This provides a huge speedup versus the blocking `send()` method, and appears to be near instantaneous from the user's perspective.
 
 No HTTP status code is returned from this method as the calling thread will have terminated by the time the response is returned from the Raygun API. A logging option will be available in future.
 
@@ -577,6 +581,8 @@ RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBe
 
 [background thread]: https://developers.google.com/appengine/docs/python/backends/background_thread
 
+# Design Doc
+Please refer to the [design doc](design.md)
 
 Changelog
 ---------

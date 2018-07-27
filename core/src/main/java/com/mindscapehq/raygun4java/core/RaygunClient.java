@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 
 /**
  * This is the main sending object that you instantiate with your API key
+ *
+ * There should only be on RaygunClient per process/thread/request as it stores state about the said process/thread/request
  */
 public class RaygunClient {
 
@@ -42,7 +44,7 @@ public class RaygunClient {
     }
 
     protected Boolean validateApiKey() throws Exception {
-        if (apiKey.isEmpty()) {
+        if (apiKey == null || apiKey.length() == 0) {
             throw new Exception("API key has not been provided, exception will not be logged");
         } else {
             return true;
@@ -183,7 +185,7 @@ public class RaygunClient {
 
     public RaygunBreadcrumbMessage recordBreadcrumb(String message)
     {
-        RaygunBreadcrumbMessage breadcrumbMessage = new RaygunBreadcrumbMessage().setMessage(message);
+        RaygunBreadcrumbMessage breadcrumbMessage = new RaygunBreadcrumbMessage().withMessage(message);
         breadcrumbs.add(processBreadCrumbCodeLocation(shouldProcessBreadcrumbLocation, breadcrumbMessage, 3));
         return breadcrumbMessage;
     }
@@ -204,9 +206,9 @@ public class RaygunClient {
         if(process && breadcrumbMessage.getClassName() == null) {
             StackTraceElement frame = Thread.currentThread().getStackTrace()[stackFrame];
             breadcrumbMessage
-                    .setClassName(frame.getClassName())
-                    .setMethodName(frame.getMethodName())
-                    .setLineNumber(frame.getLineNumber());
+                    .withClassName(frame.getClassName())
+                    .withMethodName(frame.getMethodName())
+                    .withLineNumber(frame.getLineNumber());
         }
 
         return breadcrumbMessage;

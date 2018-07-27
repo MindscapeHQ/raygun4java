@@ -8,7 +8,7 @@
         <relativePath>../</relativePath>
     </parent>
     <artifactId>webprovider</artifactId>
-    <version>${parent.version}</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>raygun-webprovider</name>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.mindscapehq</groupId>
             <artifactId>core</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
