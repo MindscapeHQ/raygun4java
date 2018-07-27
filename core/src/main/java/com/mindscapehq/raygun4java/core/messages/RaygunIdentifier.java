@@ -29,7 +29,7 @@ public class RaygunIdentifier {
     }
 
     /**
-     * @param isAnonymous Whether this user data represents an anonymous user
+     * @param isAnonymous Whether this user withData represents an anonymous user
      * @return this
      */
     public RaygunIdentifier withAnonymous(Boolean isAnonymous) {

@@ -9,7 +9,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 import java.util.Map;
 
 /**
- * Base class to filter/redact data from Raygun request maps
+ * Base class to filter/redact withData from Raygun request maps
  */
 public abstract class AbstractRaygunRequestMapFilter<T> implements IRaygunOnBeforeSend, IRaygunSendEventFactory {
     private final String[] keysToFilter;

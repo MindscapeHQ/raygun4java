@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbFromMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(43));
+        assertThat(assertBreadcrumb.getLineNumber(), is(44));
     }
 
     @Test
@@ -62,7 +63,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(57));
+        assertThat(assertBreadcrumb.getLineNumber(), is(58));
     }
 
     //////////////////////////////
@@ -104,34 +105,42 @@ public class RaygunClientTest {
 
     @Test
     public void post_SendWithTags_Returns202() throws IOException {
-        List<?> tags = Arrays.asList("these", "are", "tags");
+        raygunClient.setTags(new ArrayList(Arrays.asList("these", "are", "tags")));
+        raygunClient.withTag("boom").withTag("bang");
 
-        assertEquals(202, raygunClient.send(new Exception(), tags));
+        assertEquals(202, raygunClient.send(new Exception()));
 
         List<?> tags1 = fromJsonStream().getDetails().getTags();
         assertThat(tags1.get(0), Is.<Object>is("these"));
         assertThat(tags1.get(1), Is.<Object>is("are"));
         assertThat(tags1.get(2), Is.<Object>is("tags"));
+        assertThat(tags1.get(3), Is.<Object>is("boom"));
+        assertThat(tags1.get(4), Is.<Object>is("bang"));
     }
 
     @Test
     public void post_SendWithCustomData_Returns202() throws IOException {
-                Map<String, String> data = new HashMap<String, String>();
+        Map<String, Object> data = new HashMap<String, Object>();
         data.put("hello", "world");
+        raygunClient.setData(data);
+        raygunClient.withData("foo", "bar");
 
-        assertEquals(202, raygunClient.send(new Exception(), null, data));
+        assertEquals(202, raygunClient.send(new Exception()));
 
         Map<?, ?> customData = fromJsonStream().getDetails().getUserCustomData();
         assertThat(customData.get("hello"), Is.<Object>is("world"));
+        assertThat(customData.get("foo"), Is.<Object>is("bar"));
     }
 
     @Test
     public void post_SendWithUserDataAndTagsCustomData_Returns202() throws IOException {
-        List<?> tags = Arrays.asList("these", "are", "tags");
-        Map<String, String> data = new HashMap<String, String>();
+        List<String> tags = Arrays.asList("these", "are", "tags");
+        Map<String, Object> data = new HashMap<String, Object>();
         data.put("hello", "world");
+        raygunClient.setTags(tags);
+        raygunClient.setData(data);
 
-        assertEquals(202, raygunClient.send(new Exception(), tags, data));
+        assertEquals(202, raygunClient.send(new Exception()));
 
         List<?> tags1 = fromJsonStream().getDetails().getTags();
         assertThat(tags1.get(0), Is.<Object>is("these"));
@@ -202,7 +211,7 @@ public class RaygunClientTest {
     }
 
     private RaygunMessage fromJson() {
-        String body = raygunClient.toJson(raygunClient.buildMessage(null, null, null));
+        String body = raygunClient.toJson(raygunClient.buildMessage(null));
         return gson.fromJson(body, RaygunMessage.class);
     }
 

@@ -47,7 +47,7 @@ public class RaygunPlayClient extends RaygunClient {
 
     public int send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
         if (throwable != null) {
-            return post(buildServletMessage(throwable, tags, userCustomData));
+            return send(buildServletMessage(throwable, tags, userCustomData));
         }
         return -1;
     }
@@ -69,7 +69,7 @@ public class RaygunPlayClient extends RaygunClient {
     private void postAsync(final RaygunMessage message) {
         Runnable r = new Runnable() {
             public void run() {
-                post(message);
+                send(message);
             }
         };
 

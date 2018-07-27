@@ -27,14 +27,8 @@ The pom.xml will need to contain something like:
 	...
     <dependency>
     	<groupId>com.mindscapehq</groupId>
-    	<artifactId>raygun4java</artifactId>
-    	<type>pom</type>
-    	<version>2.2.1</version>
-    </dependency>
-    <dependency>
-    	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>2.2.1</version>
+    	<version>3.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -47,7 +41,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>2.2.1</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
@@ -84,12 +78,15 @@ IRaygunClientFactory factory = new RaygunClientFactory("YOUR_API_KEY")
     .withVersion("1.2.3")
     .withMessageBuilder(myCustomizedMessageBuilder)
     .withBeforeSend(myCustomOnBeforeSendHandler);
+    .withTag("beta")
+    .withData("prod", false)
 ```
 
 - Add meta data
 ```java
 RaygunClient client = factory.newClient();
 client.setUser(user);
+client.tag("blue").withData("usersegment", "developer")
 client.recordBreadcrumb("i was here")
 ```
 
@@ -341,24 +338,24 @@ The previous method, SetUser(string) has been deprecated as of 1.5.0 and removed
 
 ### Custom user data and tags
 
-To attach custom data or tags, use these overloads on Send:
-
+You can attatch custom data or tags on the factory so that all error will be tagged ie:
 ```java
-RaygunClient client;
-Exception exception;
-
-ArrayList tags = new ArrayList<String>();
-tags.add("tag1");
-
-Map<string, int> userCustomData = new HashMap<string, int>();
-userCustomData.put("data", 1);
-
-client.send(exception, tags);
-// or
-client.send(exception, tags, userCustomData);
+factory
+    .withTag("tag1")
+    .withTag("tag2")
+    .withData("data1", 1)
+    .withData("data2", 2);
 ```
 
-Tags can be null if you only wish to transmit custom data. Send calls can take these objects inside a catch block (if you want one instance to contain specific local variables), or in a global exception handler ()if you want every exception to contain a set of tags/custom data, initialized on construction).
+or attach to the client:
+
+```java
+client
+    .withTag("tag1")
+    .withTag("tag2")
+    .withData("data1", 1)
+    .withData("data2", 2);
+```
 
 ### Breadcrumbs
 You can set breadcrumbs to record the flow through your application. Breadcrumbs are set against the current `RaygunClient`.

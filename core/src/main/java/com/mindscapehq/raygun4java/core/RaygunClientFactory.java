@@ -2,6 +2,11 @@ package com.mindscapehq.raygun4java.core;
 
 import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 /**
  * An out-of-the-box RaygunClient factory.
  *
@@ -22,6 +27,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     private String apiKey;
     private AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
+    protected List<String> tags;
+    protected Map data;
     private RaygunClient client;
     private boolean shouldProcessBreadcrumbLocations = false;
     private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new IRaygunMessageBuilderFactory() {
@@ -37,6 +44,9 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     public RaygunClientFactory(String apiKey) {
         this.apiKey = apiKey;
         version = new RaygunMessageBuilder().setVersion(null).build().getDetails().getVersion();
+
+        tags = new ArrayList<String>();
+        data = new WeakHashMap();
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
 
@@ -79,6 +89,9 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         client.setOnAfterSend(onAfterSendChainFactory.create());
         client.string = version;
         client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
+        client.setTags(new ArrayList<String>(tags));
+        client.setData(new WeakHashMap(data));
+
         return client;
     }
 
@@ -115,6 +128,32 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      */
     public IRaygunClientFactory withBreadcrumbLocations() {
         this.shouldProcessBreadcrumbLocations = true;
+        return this;
+    }
+
+    public IRaygunClientFactory withTag(String tag) {
+        tags.add(tag);
+        return this;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public Map<?, ?> getData() {
+        return data;
+    }
+
+    public void setData(Map<?, ?> data) {
+        this.data = data;
+    }
+
+    public IRaygunClientFactory withData(Object key, Object value) {
+        data.put(key, value);
         return this;
     }
 }
