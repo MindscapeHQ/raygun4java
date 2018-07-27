@@ -69,9 +69,9 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     }
 
     /**
-     * Add a RaygunOnBeforeSend handler
+     * Add a RaygunOnBeforeSend handler factory
      *
-     * factory.withBeforeSend(myRaygunOnBeforeSend)
+     * factory.withBeforeSend(myRaygunOnBeforeSendFactory)
      *
      * @param onBeforeSend
      * @return factory
@@ -82,9 +82,9 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     }
 
     /**
-     * Add a RaygunOnAfterSend handler
+     * Add a RaygunOnAfterSend handler factory
      *
-     * factory.withAfterSend(myRaygunOnAfterSend)
+     * factory.withAfterSend(myRaygunOnAfterSendFactory)
      *
      * @param onAfterSend
      * @return factory

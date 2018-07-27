@@ -95,9 +95,9 @@ public class RaygunIdentifier {
     }
 
     /**
-     * @param uniqueUserIdentifier Unique identifier for this user. Set this to the internal identifier you use to look up users,
-     *                             or a correlation ID for anonymous users if you have one. It doesn't have to be unique, but we will treat
-     *                             any duplicated values as the same user. If you use their email address here, pass it in as the 'emailAddress' parameter too.
+     * @param identifier Unique identifier for this user. Set this to the internal identifier you use to look up users,
+     *                   or a correlation ID for anonymous users if you have one. It doesn't have to be unique, but we will treat
+     *                   any duplicated values as the same user. If you use their email address here, pass it in as the 'emailAddress' parameter too.
      * @return this
      */
     public RaygunIdentifier withIdentifier(String identifier) {

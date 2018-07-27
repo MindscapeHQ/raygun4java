@@ -1,8 +1,11 @@
 package com.mindscapehq.raygun4java.core;
 
 import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,6 +21,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RaygunClientFactoryTest {
+
+    @Mock
+    private IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSendhandlerFactory;
+    @Mock
+    private IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSendhandlerFactory;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void shouldConstructFactoryWithDefaultVersionDetection() {
@@ -59,26 +72,24 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithOnBeforeSendHandler() {
-        IRaygunSendEventFactory handlerFactory = mock(IRaygunSendEventFactory.class);
         IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
-        when(handlerFactory.create()).thenReturn(handler);
+        when(onBeforeSendhandlerFactory.create()).thenReturn(handler);
 
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(handlerFactory);
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(onBeforeSendhandlerFactory);
 
-        assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), handlerFactory);
+        assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), onBeforeSendhandlerFactory);
 
         assertEquals(((RaygunOnBeforeSendChain)factory.newClient().onBeforeSend).getHandlers().get(0), handler);
     }
 
     @Test
     public void shouldConstructFactoryWithOnAfterSendHandler() {
-        IRaygunSendEventFactory handlerFactory = mock(IRaygunSendEventFactory.class);
         IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
-        when(handlerFactory.create()).thenReturn(handler);
+        when(onAfterSendhandlerFactory.create()).thenReturn(handler);
 
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withAfterSend(handlerFactory);
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withAfterSend(onAfterSendhandlerFactory);
 
-        assertEquals(factory.getRaygunOnAfterSendChainFactory().getHandlersFactory().get(1), handlerFactory);
+        assertEquals(factory.getRaygunOnAfterSendChainFactory().getHandlersFactory().get(1), onAfterSendhandlerFactory);
 
         assertEquals(((RaygunOnAfterSendChain)factory.newClient().onAfterSend).getHandlers().get(1), handler);
     }

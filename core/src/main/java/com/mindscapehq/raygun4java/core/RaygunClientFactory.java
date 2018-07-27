@@ -6,9 +6,12 @@ import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactor
  * An out-of-the-box RaygunClient factory.
  *
  * Developers are encouraged to hold this as a singleton and inject it into their main classes
- * .newClient() should be called at the start of a process. The instance could be stored as a static ThreadLocal<RaygunClient>
- *     so that it can be used statically throughout the process. Don't forget to remove the instance at the end of your process
  *
+ * .newClient() should be called at the start of a process/request/thread.
+ *
+ * The instance could be stored as a static ThreadLocal<RaygunClient>
+ * so that it can be used statically throughout the process.
+ * Don't forget to remove the instance at the end of your process.
  *
  * RaygunClientFactory factory = new RaygunClientFactory(myApiKey).withBeforeSend(myRaygunOnBeforeSend);
  * ...
@@ -44,7 +47,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     /**
      * Add a RaygunOnBeforeSend handler
      *
-     * factory.withBeforeSend(myRaygunOnBeforeSend)
+     * factory.withBeforeSend(myRaygunOnBeforeSendFactory)
      *
      * @param onBeforeSend
      * @return factory
@@ -57,7 +60,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     /**
      * Add a RaygunOnAfterSend handler
      *
-     * factory.withAfterSend(myRaygunOnAfterSend)
+     * factory.withAfterSend(myRaygunOnAfterSendFactory)
      *
      * @param onAfterSend
      * @return factory

@@ -17,7 +17,7 @@ public class RaygunPlayScalaRequestMessage extends RaygunPlayRequestMessage {
             headers = JavaConverters.mapAsJavaMapConverter(request.headers().toSimpleMap()).asJava();
             String rawQuery = request.rawQueryString();
 
-            if (!rawQuery.isEmpty()) {
+            if (rawQuery != null && rawQuery.length() > 0) {
                 queryString = queryStringToMap(rawQuery);
             }
         } catch (NullPointerException e) {

@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 
 /**
  * This is the main sending object that you instantiate with your API key
+ *
+ * There should only be on RaygunClient per process/thread/request as it stores state about the said process/thread/request
  */
 public class RaygunClient {
 

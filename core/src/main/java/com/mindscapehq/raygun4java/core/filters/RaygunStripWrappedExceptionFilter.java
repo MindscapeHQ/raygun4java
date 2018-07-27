@@ -5,11 +5,15 @@ import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
+/**
+ * Given a set of class names, this filter will remove matching exceptions from the exception chain.
+ * The intention is to remove generic "wrapping" exceptions like ServletException
+ */
 public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, IRaygunSendEventFactory {
 
     private Class[] stripClasses;
 
-    public RaygunStripWrappedExceptionFilter(Class... stripClasses) {
+    public RaygunStripWrappedExceptionFilter(Class<?>... stripClasses) {
         this.stripClasses = stripClasses;
     }
 
@@ -20,7 +24,7 @@ public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, I
                 && message.getDetails().getError().getInnerError() != null
                 && message.getDetails().getError().getThrowable() != null) {
 
-            for (Class stripClass : stripClasses) {
+            for (Class<?> stripClass : stripClasses) {
                 if (stripClass.isAssignableFrom(message.getDetails().getError().getThrowable().getClass())) {
                     RaygunErrorMessage innerError = message.getDetails().getError().getInnerError();
                     message.getDetails().setError(innerError);

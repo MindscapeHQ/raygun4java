@@ -7,7 +7,7 @@ package com.mindscapehq.raygun4java.webprovider;
  *
  * Usage:
  * RaygunClient.Initialize(new RaygunServletClientFactory(apiKey, servletContext));
- * myWebContainer.AddFilter(new DefaultRaygunServletFilter());
+ * myWebContainer.AddFilter(new DefaultRaygunServletFilter()); // this is specific to your web container
  */
 public class DefaultRaygunServletFilter extends RaygunServletFilter {
     public DefaultRaygunServletFilter() {

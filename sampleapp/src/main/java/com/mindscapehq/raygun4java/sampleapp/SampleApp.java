@@ -11,6 +11,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class SampleApp {
 
         final Exception exceptionToThrowLater = new Exception("Raygun4Java test exception");
 
+        // sets the global unhandled exception handler
         Thread.setDefaultUncaughtExceptionHandler(MyExceptionHandler.instance());
 
         MyExceptionHandler.getClient().recordBreadcrumb("App starting up");
@@ -52,7 +54,7 @@ public class SampleApp {
                     MyExceptionHandler.getClient().recordBreadcrumb("handling exception");
 
                     // lets handle this exception - this should appear in the raygun console
-                    Map<String, String> customData = new HashMap();
+                    Map<String, String> customData = new HashMap<String, String>();
                     customData.put("thread id", "" + Thread.currentThread().getId());
                     MyExceptionHandler.getClient().send(
                             exceptionToThrowLater,
@@ -63,7 +65,7 @@ public class SampleApp {
                     MyExceptionHandler.getClient().recordBreadcrumb("This should not appear because we're sending the same exception on the same thread");
                     MyExceptionHandler.getClient().send(
                             exceptionToThrowLater,
-                            Arrays.asList("should not appear in console")
+                            Collections.singletonList("should not appear in console")
                     );
                 }
             }
@@ -74,7 +76,7 @@ public class SampleApp {
     }
 }
 
-class BeforeSendImplementation implements IRaygunOnBeforeSend, IRaygunSendEventFactory {
+class BeforeSendImplementation implements IRaygunOnBeforeSend, IRaygunSendEventFactory<IRaygunOnBeforeSend> {
     @Override
     public RaygunMessage onBeforeSend(RaygunMessage message) {
         String errorMessage = message.getDetails().getError().getMessage();

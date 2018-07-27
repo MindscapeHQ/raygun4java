@@ -4,23 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * OnBefore event handler chains and OnAfter event handler chains are so similar the and both be created by this class.
  * This is a factory base class that can create the likes of
  * RaygunOnBeforeSendChain or RaygunOnAfterSendChain
+ *
+ * OnBefore event handler chains and OnAfter event handler chains are so similar they can both be created by this class.
  *
  * Main methods:
  *
  * .beforeAll(firstFilterFactory) will set a factory to create a filter to be run before the main filters
- * .withFilterFactory(filterFactory) will add a factory that will create a filter that will be run as a main filter
+ * .withFilterFactory(filterFactory) will add a factory to a list that will create a filter that will be run as a main filter
  * .afterAll(lastFilterFactory) will set a factory to create a filter to be run after the main filters
+ * .create() will use all the factories to create an implementation that is used by a single RaygunClient instance
  *
  * @param <T> is either IRaygunOnBeforeSend or IRaygunOnAfterSend
  */
 public abstract class AbstractRaygunSendEventChainFactory<T extends IRaygunSentEvent> {
 
-    private List<IRaygunSendEventFactory> mainHandlersFactories;
-    private IRaygunSendEventFactory lastFilterFactory;
-    private IRaygunSendEventFactory firstFilterFactory;
+    private List<IRaygunSendEventFactory<T>> mainHandlersFactories;
+    private IRaygunSendEventFactory<T> lastFilterFactory;
+    private IRaygunSendEventFactory<T> firstFilterFactory;
 
     protected abstract T create(List<T> handlers);
 
@@ -28,62 +30,60 @@ public abstract class AbstractRaygunSendEventChainFactory<T extends IRaygunSentE
         List<T> handlers = new ArrayList<T>(mainHandlersFactories.size() + 2);
 
         if (firstFilterFactory != null) {
-            handlers.add((T) firstFilterFactory.create());
+            handlers.add(firstFilterFactory.create());
         }
 
-        for (IRaygunSendEventFactory mainHandlerFactory : mainHandlersFactories) {
-            handlers.add((T) mainHandlerFactory.create());
+        for (IRaygunSendEventFactory<T> mainHandlerFactory : mainHandlersFactories) {
+            handlers.add(mainHandlerFactory.create());
         }
 
         if (lastFilterFactory != null) {
-            handlers.add((T) lastFilterFactory.create());
+            handlers.add(lastFilterFactory.create());
         }
 
         return create(handlers);
     }
 
     public AbstractRaygunSendEventChainFactory() {
-        this(new ArrayList<IRaygunSendEventFactory>());
+        this(new ArrayList<IRaygunSendEventFactory<T>>());
     }
 
-    public AbstractRaygunSendEventChainFactory(List<IRaygunSendEventFactory> handlers) {
+    public AbstractRaygunSendEventChainFactory(List<IRaygunSendEventFactory<T>> handlers) {
         this.mainHandlersFactories = handlers;
     }
 
     /**
-     * @param handler adds handler to the main handler list
-     * @return
+     * @param handler adds handler factory to the main handler factory list
+     * @return this
      */
-    public AbstractRaygunSendEventChainFactory<T> withFilterFactory(IRaygunSendEventFactory handler) {
+    public AbstractRaygunSendEventChainFactory<T> withFilterFactory(IRaygunSendEventFactory<T> handler) {
         mainHandlersFactories.add(handler);
         return this;
     }
 
     /**
-     * Perform a specific filter before the other filters
-     * @param firstFilter
-     * @return
+     * @param firstFilter Sets a single specific filter factory before the other filter factories
+     * @return this
      */
-    public AbstractRaygunSendEventChainFactory<T> beforeAll(IRaygunSendEventFactory firstFilter) {
+    public AbstractRaygunSendEventChainFactory<T> beforeAll(IRaygunSendEventFactory<T> firstFilter) {
         this.firstFilterFactory = firstFilter;
         return this;
     }
 
     /**
-     * Perform a specific filter after the other filters
-     * @param lastFilter
-     * @return
+     * @param lastFilter Set a single specific filter factory after the other filter factories
+     * @return this
      */
-    public AbstractRaygunSendEventChainFactory<T> afterAll(IRaygunSendEventFactory lastFilter) {
+    public AbstractRaygunSendEventChainFactory<T> afterAll(IRaygunSendEventFactory<T> lastFilter) {
         this.lastFilterFactory = lastFilter;
         return this;
     }
 
-    public List<IRaygunSendEventFactory> getHandlersFactory() {
+    public List<IRaygunSendEventFactory<T>> getHandlersFactory() {
         return mainHandlersFactories;
     }
 
-    public void setHandlersFactory(List<IRaygunSendEventFactory> handlersFactory) {
+    public void setHandlersFactory(List<IRaygunSendEventFactory<T>> handlersFactory) {
         this.mainHandlersFactories = handlersFactory;
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractRaygunSendEventChainFactory<T extends IRaygunSentE
         return lastFilterFactory;
     }
 
-    public void setLastFilterFactory(IRaygunSendEventFactory lastFilterFactory) {
+    public void setLastFilterFactory(IRaygunSendEventFactory<T> lastFilterFactory) {
         this.lastFilterFactory = lastFilterFactory;
     }
 
@@ -99,7 +99,7 @@ public abstract class AbstractRaygunSendEventChainFactory<T extends IRaygunSentE
         return firstFilterFactory;
     }
 
-    public void setFirstFilterFactory(IRaygunSendEventFactory firstFilterFactory) {
+    public void setFirstFilterFactory(IRaygunSendEventFactory<T> firstFilterFactory) {
         this.firstFilterFactory = firstFilterFactory;
     }
 }

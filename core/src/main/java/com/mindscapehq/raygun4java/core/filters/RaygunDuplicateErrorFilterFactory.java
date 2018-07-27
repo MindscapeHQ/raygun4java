@@ -5,7 +5,7 @@ import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 /**
  * This factory creates the two filters required for duplicate error detection.
  *
- * For duplicate error detection to work, there must be a shared state between the onBefore and onAfter
+ * For duplicate error detection to work, there must be a shared state between the onBefore and onAfter filters
  * so that onAfter can record the error being sent, and onBefore can check it its been sent.
  *
  * As the factory will be called twice to produce a single filter that will be used for both onBefore and onAfter
@@ -16,7 +16,7 @@ public class RaygunDuplicateErrorFilterFactory implements IRaygunSendEventFactor
     private ThreadLocal<RaygunDuplicateErrorFilter> instance = new ThreadLocal<RaygunDuplicateErrorFilter>();
 
     /**
-     * When called twice from the same thread, both calls will receive the same instance,
+     * When called twice in a row from the same thread, both calls will receive the same instance,
      * a third call will return a new instance
      * @return
      */

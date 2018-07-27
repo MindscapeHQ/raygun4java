@@ -5,7 +5,9 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import java.util.List;
 
 /**
- * This is a generic send event chain handler.
+ * This is a generic send-event chain handler.
+ * Given a list of handlers executes each handler with the message,
+ * stopping in any handler returns null
  *
  * Instances are not shared between RaygunClient instances
  *
