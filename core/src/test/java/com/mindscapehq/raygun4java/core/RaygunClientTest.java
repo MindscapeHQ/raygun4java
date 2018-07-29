@@ -25,7 +25,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +52,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbFromMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(44));
+        assertThat(assertBreadcrumb.getLineNumber(), is(47));
     }
 
     @Test
@@ -63,7 +66,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(58));
+        assertThat(assertBreadcrumb.getLineNumber(), is(61));
     }
 
     //////////////////////////////
@@ -208,6 +211,17 @@ public class RaygunClientTest {
         assertThat(breadcrumb.getMessage(), is("hello there"));
         assertThat(breadcrumb.getCategory(), is("greetings"));
         assertNotNull(breadcrumb.getTimestamp());
+    }
+
+    @Test
+    public void shouldUseOnFailHandler() throws IOException {
+        when(raygunConnectionMock.getConnection(anyString())).thenThrow(new IOException());
+        raygunClient.onFailedSend = mock(IRaygunOnFailedSend.class);
+        raygunClient.onAfterSend = mock(IRaygunOnAfterSend.class);
+        raygunClient.send(new RaygunMessage());
+
+        verify(raygunClient.onFailedSend, times(1)).handle(anyString(), (Exception) anyObject());
+        verify(raygunClient.onAfterSend, times(1)).onAfterSend((RaygunMessage) anyObject());
     }
 
     private RaygunMessage fromJson() {
