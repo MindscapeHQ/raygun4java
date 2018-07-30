@@ -42,6 +42,11 @@ public class RaygunSendStoredExceptionsTest {
     }
 
     @Test
+    public void shouldNotSendWhenStorageNotInitialized() {
+        new RaygunSendStoredExceptions(client, null).run();
+    }
+
+    @Test
     public void processFilesShouldProcessRaygunFilesOnly() throws IOException {
         RaygunSendStoredExceptions sendStoredExceptions = new RaygunSendStoredExceptions(client, storage) {
             @Override

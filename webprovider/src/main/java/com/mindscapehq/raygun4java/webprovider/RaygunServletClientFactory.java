@@ -51,17 +51,14 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         data = new WeakHashMap();
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
-        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler("");
 
         onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory()
-                .withFilterFactory(sendOfflineStorageHandler)
                 .afterAll(duplicateErrorRecordFilterFactory);
 
         onAfterSendChainFactory = new RaygunOnAfterSendChainFactory()
                 .withFilterFactory(duplicateErrorRecordFilterFactory);
 
-        onFailedSendChainFactory = new RaygunOnFailedSendChainFactory()
-                .withFilterFactory(sendOfflineStorageHandler);
+        onFailedSendChainFactory = new RaygunOnFailedSendChainFactory();
     }
 
     public IRaygunClientFactory withApiKey(String apiKey) {
@@ -94,7 +91,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     }
 
     public IRaygunServletClientFactory withOfflineStorage(String storageDir) {
-        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir);
+        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
 
         onBeforeSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
         onFailedSendChainFactory.withFilterFactory(sendOfflineStorageHandler);

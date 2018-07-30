@@ -153,7 +153,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     }
 
     public IRaygunClientFactory withOfflineStorage(String storageDir) {
-        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir);
+        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
 
         onBeforeSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
         onFailedSendChainFactory.withFilterFactory(sendOfflineStorageHandler);

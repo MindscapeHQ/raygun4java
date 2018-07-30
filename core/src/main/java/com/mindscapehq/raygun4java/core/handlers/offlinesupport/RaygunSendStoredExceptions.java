@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 public class RaygunSendStoredExceptions implements Runnable {
     private final RaygunClient client;
     private final File storage;
+    private static final Object globalSendLock = new Object();
 
     public RaygunSendStoredExceptions(RaygunClient client, File storage) {
         this.client = client;
@@ -21,10 +22,18 @@ public class RaygunSendStoredExceptions implements Runnable {
     }
 
     public void run() {
-        processFiles();
+        if (storage == null) {
+            // on first send of errors, the offline will be checked but may not have anything to send
+            return;
+        }
 
-        // one final time just in case some more have arrived since then
-        processFiles();
+        // ensure that only one process can do that at any time
+        synchronized (globalSendLock) {
+            processFiles();
+
+            // one final time just in case some more have arrived since then
+            processFiles();
+        }
     }
 
     void processFiles() {

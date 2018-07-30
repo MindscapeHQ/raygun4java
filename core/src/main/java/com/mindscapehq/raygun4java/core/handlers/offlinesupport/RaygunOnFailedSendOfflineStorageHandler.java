@@ -6,33 +6,33 @@ import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.Random;
 import java.util.logging.Logger;
 
 /**
  * When a send failure occurs, this class attempts to write the payload to disk
- * When a send success occurs, it resends any stored payloads
+ * When a send success occurs, it resends any stored payloads on a new thread
  */
 public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedSend, IRaygunOnBeforeSend, IRaygunSendEventFactory {
 
     static final String fileExtension = ".raygunpayload";
+    private final String apiKeyHash;
     private Random random = new Random();
     private String storageDir;
     File storage;
     boolean enabled = true;
     private boolean exceptionLogged = false;
-    boolean hasStoredExceptions = false;
+    boolean hasStoredExceptions = true;
     private volatile Runnable sendingStoredExceptions;
 
-    public RaygunOnFailedSendOfflineStorageHandler(String storageDir) {
+    public RaygunOnFailedSendOfflineStorageHandler(String storageDir, String apiKey) {
+        this.apiKeyHash = new BigInteger(String.valueOf(Math.abs(apiKey.hashCode()))).toString(36);
         this.storageDir = storageDir;
     }
 
@@ -42,7 +42,7 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
 
     public RaygunMessage onBeforeSend(RaygunClient client, RaygunMessage message) {
         if (enabled && hasStoredExceptions && sendingStoredExceptions == null) {
-            // begin sending
+            // begin sending on new thread
             synchronized (this) {
                 if (sendingStoredExceptions == null) {
                     sendingStoredExceptions = new RaygunSendStoredExceptions(client, storage);
@@ -67,7 +67,7 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
 
         OutputStream fileOutputStream = null;
         try {
-            File file = createFile();
+            File file = getFile();
 
             if (file == null) {
                 return jsonPayload;
@@ -97,12 +97,12 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
         return jsonPayload;
     }
 
-    File createFile() {
+    File getFile() {
         try {
             if (storage == null) {
                 synchronized (this) {
                     if (storage == null) {
-                        storage = createStorage(storageDir);
+                        storage = getStorage(storageDir);
 
                         if (!storage.exists()) {
                             if(!storage.mkdirs()) {
@@ -110,10 +110,15 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
                             }
                         }
                     }
+
+                    // this case could occur if a second thread was blocked on the synchronized
+                    if (!enabled) {
+                        return disable();
+                    }
                 }
             }
 
-            File file = createFile(storage, random.nextInt()+ fileExtension);
+            File file = getFile(storage, random.nextInt()+ fileExtension);
 
             if (!file.createNewFile()) {
                 return disable();
@@ -129,12 +134,12 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
         return new FileOutputStream(file);
     }
 
-    File createStorage(String storageDir) {
-        return new File(new File(storageDir).getAbsolutePath(), ".raygun_offline_storage").getAbsoluteFile();
+    File getStorage(String storageDir) {
+        return new File(new File(storageDir).getAbsolutePath(), ".raygun_offline_storage_" + apiKeyHash).getAbsoluteFile();
     }
 
-    File createFile(File storage, String name) {
-        return new File(storage, name);
+    File getFile(File storage, String name) {
+        return new File(storage, name).getAbsoluteFile();
     }
 
     private File disable() {

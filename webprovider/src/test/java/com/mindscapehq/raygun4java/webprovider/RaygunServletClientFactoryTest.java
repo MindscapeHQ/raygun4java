@@ -73,9 +73,9 @@ public class RaygunServletClientFactoryTest {
 
         IRaygunServletClientFactory factory = new RaygunServletClientFactory("apiKey").withBeforeSend(onBeforeSendhandlerFactory);
 
-        assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(1), onBeforeSendhandlerFactory);
+        assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), onBeforeSendhandlerFactory);
 
-        assertEquals(((RaygunOnBeforeSendChain)factory.newClient(null).getOnBeforeSend()).getHandlers().get(1), handler);
+        assertEquals(((RaygunOnBeforeSendChain)factory.newClient(null).getOnBeforeSend()).getHandlers().get(0), handler);
     }
 
     @Test

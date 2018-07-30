@@ -15,7 +15,9 @@ import java.io.OutputStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -40,14 +42,14 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
     public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
         final File storageMock = storage;
-        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir) {
+        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, "apiKey") {
             @Override
-            File createStorage(String storageDir) {
+            File getStorage(String storageDir) {
                 return storageMock;
             }
 
             @Override
-            File createFile(File storage, String name) {
+            File getFile(File storage, String name) {
                 return file;
             }
 
@@ -59,6 +61,12 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
 
         when(storage.exists()).thenReturn(true);
         when(file.createNewFile()).thenReturn(true);
+    }
+
+    @Test
+    public void shouldDefaultToHasStoredExceptionsSoThatSendsOnFirstError() throws InterruptedException {
+        assertTrue(handler.hasStoredExceptions);
+        handler.onBeforeSend(client, null);
     }
 
     @Test
@@ -81,9 +89,9 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
 
     @Test
     public void shouldDisableIfCanMakeStorageDirs() throws IOException {
-        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir) {
+        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, "apiKey") {
             @Override
-            File createStorage(String storageDir) {
+            File getStorage(String storageDir) {
                 return storage;
             }
 
@@ -103,10 +111,10 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
     }
 
     @Test
-    public void shouldDisableIfCanMakeFile() throws IOException {
-        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir) {
+    public void shouldDisableIfCantMakeFile() throws IOException {
+        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, "apiKey") {
             @Override
-            File createStorage(String storageDir) {
+            File getStorage(String storageDir) {
                 return storage;
             }
 
@@ -116,7 +124,7 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
             }
 
             @Override
-            File createFile(File storage, String name) {
+            File getFile(File storage, String name) {
                 return file;
             }
         };
@@ -131,9 +139,9 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
 
     @Test
     public void shouldDisableOnFileCreateException() throws IOException {
-        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir) {
+        handler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, "apiKey") {
             @Override
-            File createStorage(String storageDir) {
+            File getStorage(String storageDir) {
                 throw new RuntimeException();
             }
         };
@@ -144,7 +152,6 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
 
         verify(outputStream, never()).write((byte[]) anyObject());
         assertFalse(handler.enabled);
-        assertFalse(handler.hasStoredExceptions);
     }
 
     @Test
@@ -163,5 +170,16 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
         assertThat(handler.onBeforeSend(client, message), is(message));
         Thread.sleep(200);
         verify(storage, times(2)).listFiles((FilenameFilter) anyObject());
+    }
+
+    @Test
+    public void shouldCreateDifferentStorageForDifferentApiKeys() {
+        String s1 = new RaygunOnFailedSendOfflineStorageHandler(storageDir, "myApiKey").getStorage("").getName();
+        String s2 = new RaygunOnFailedSendOfflineStorageHandler(storageDir, "myApiKey").getStorage("").getName();
+        assertEquals(s1, ".raygun_offline_storage_lxertb");
+        assertEquals(s2, s2);
+
+        String s3 = new RaygunOnFailedSendOfflineStorageHandler(storageDir, "notMyApiKey").getStorage("").getName();
+        assertNotEquals(s1, s3);
     }
 }
