@@ -56,7 +56,11 @@ public class RaygunSettings {
      * @param port The TCP port
      */
     public void setHttpProxy(String host, int port) {
-        this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+        if (host == null) {
+            this.proxy = null;
+        } else {
+            this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+        }
     }
 
 }

@@ -47,7 +47,7 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
             }
 
             @Override
-            File createFile(String storageDir, String name) {
+            File createFile(File storage, String name) {
                 return file;
             }
 
@@ -116,7 +116,7 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
             }
 
             @Override
-            File createFile(String storageDir, String name) {
+            File createFile(File storage, String name) {
                 return file;
             }
         };

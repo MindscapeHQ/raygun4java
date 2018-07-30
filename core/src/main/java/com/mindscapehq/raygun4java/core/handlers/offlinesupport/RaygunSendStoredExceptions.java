@@ -50,6 +50,7 @@ public class RaygunSendStoredExceptions implements Runnable {
                 while ((length = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, length);
                 }
+                inputStream.close();
 
                 int reponseCode = client.send(outputStream.toString("UTF-8"));
                 if (reponseCode == 202 || reponseCode == 429 /* rate limited */) {

@@ -125,6 +125,7 @@ public class RaygunClient {
                     if (onFailedSend != null) {
                         onFailedSend.onFailedSend(this, jsonPayload);
                     }
+                    return responseCode;
                 }
 
                 try {

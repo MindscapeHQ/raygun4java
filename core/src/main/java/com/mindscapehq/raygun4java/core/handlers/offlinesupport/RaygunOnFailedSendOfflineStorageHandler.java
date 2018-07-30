@@ -113,7 +113,7 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
                 }
             }
 
-            File file = createFile(storageDir, random.nextInt()+ fileExtension);
+            File file = createFile(storage, random.nextInt()+ fileExtension);
 
             if (!file.createNewFile()) {
                 return disable();
@@ -130,11 +130,11 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
     }
 
     File createStorage(String storageDir) {
-        return new File(storageDir);
+        return new File(new File(storageDir).getAbsolutePath(), ".raygun_offline_storage").getAbsoluteFile();
     }
 
-    File createFile(String storageDir, String name) {
-        return new File(storageDir, name);
+    File createFile(File storage, String name) {
+        return new File(storage, name);
     }
 
     private File disable() {

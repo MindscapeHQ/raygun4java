@@ -6,6 +6,7 @@ import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.RaygunClientFactory;
+import com.mindscapehq.raygun4java.core.RaygunSettings;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
@@ -59,6 +60,18 @@ public class SampleApp {
                     MyExceptionHandler.getClient().recordBreadcrumb("This should not appear because we're sending the same exception on the same thread");
                     MyExceptionHandler.getClient().withTag("should not appear in console").send(exceptionToThrowLater);
                 }
+
+                // test offline storage by breaking the proxy
+                RaygunSettings.getSettings().setHttpProxy("nothing here", 80);
+
+                System.out.println("No Send below this line");
+                MyExceptionHandler.getClient().send(new Exception("This should offline"));
+                System.out.println("No Send above this lines ^");
+
+                // fix the proxy and send offline data
+                RaygunSettings.getSettings().setHttpProxy(null, 80);
+                MyExceptionHandler.getClient().send(new Exception("This should trigger offline"));
+
             }
         }).start();
 
@@ -104,6 +117,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
                 .withBreadcrumbLocations() // don't do this in production
                 .withBeforeSend(new BeforeSendImplementation())
                 .withAfterSend(new MyOnAfterHandler())
+                .withOfflineStorage()
                 .withTag("from sample app")
                 .withData("how now", "brown cow")
                 .withData(1, Arrays.asList(123));
