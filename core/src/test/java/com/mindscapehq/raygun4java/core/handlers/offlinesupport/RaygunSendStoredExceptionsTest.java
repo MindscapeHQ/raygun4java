@@ -15,6 +15,9 @@ import java.io.InputStream;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RaygunSendStoredExceptionsTest {
@@ -35,7 +38,7 @@ public class RaygunSendStoredExceptionsTest {
         when(storage.listFiles((FilenameFilter) anyObject())).thenReturn(files);
         when(client.send(anyString())).thenReturn(202);
 
-        inputStream = new ByteArrayInputStream("hello world".getBytes());
+        inputStream = spy(new ByteArrayInputStream("hello world".getBytes()));
     }
 
     @Test
@@ -49,8 +52,8 @@ public class RaygunSendStoredExceptionsTest {
 
         sendStoredExceptions.processFiles();
 
-        Mockito.verify(client).send("hello world");
-
+        verify(client).send("hello world");
+        verify(inputStream, times(2)).close();
     }
 
 }

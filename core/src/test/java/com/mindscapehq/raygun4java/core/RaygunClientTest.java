@@ -218,10 +218,11 @@ public class RaygunClientTest {
         when(raygunConnectionMock.getConnection(anyString())).thenThrow(new IOException());
         raygunClient.onFailedSend = mock(IRaygunOnFailedSend.class);
         raygunClient.onAfterSend = mock(IRaygunOnAfterSend.class);
-        raygunClient.send(new RaygunMessage());
+
+        assertThat(raygunClient.send(new RaygunMessage()), is(-1));
 
         verify(raygunClient.onFailedSend, times(1)).onFailedSend(eq(raygunClient), anyString());
-        verify(raygunClient.onAfterSend, times(1)).onAfterSend(eq(raygunClient), (RaygunMessage) anyObject());
+        verify(raygunClient.onAfterSend, times(0)).onAfterSend(eq(raygunClient), (RaygunMessage) anyObject());
     }
 
     private RaygunMessage fromJson() {
