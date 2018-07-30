@@ -1,7 +1,8 @@
-package com.mindscapehq.raygun4java.core.filters;
+package com.mindscapehq.raygun4java.core.handlers.requestfilters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
+import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
@@ -25,7 +26,7 @@ public abstract class AbstractRaygunRequestMapFilter<T> implements IRaygunOnBefo
         this.replacement = replacement;
     }
 
-    public RaygunMessage onBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunClient client, RaygunMessage message) {
 
         if (message.getDetails() != null && message.getDetails() instanceof RaygunRequestMessageDetails) {
             RaygunRequestMessageDetails requestMessageDetails = (RaygunRequestMessageDetails) message.getDetails();

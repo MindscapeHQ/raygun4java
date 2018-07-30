@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
+import com.mindscapehq.raygun4java.core.handlers.offlinesupport.RaygunOnFailedSendOfflineStorageHandler;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateErrorFilterFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,6 +27,8 @@ public class RaygunClientFactoryTest {
     private IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSendhandlerFactory;
     @Mock
     private IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSendhandlerFactory;
+    @Mock
+    private IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSendhandlerFactory;
 
     @Before
     public void setup() {
@@ -95,6 +98,18 @@ public class RaygunClientFactoryTest {
     }
 
     @Test
+    public void shouldConstructFactoryWithOnFailedSendHandler() {
+        IRaygunOnFailedSend handler = mock(IRaygunOnFailedSend.class);
+        when(onFailedSendhandlerFactory.create()).thenReturn(handler);
+
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withFailedSend(onFailedSendhandlerFactory);
+
+        assertEquals(factory.getRaygunOnFailedSendChainFactory().getHandlersFactory().get(0), onFailedSendhandlerFactory);
+
+        assertEquals(((RaygunOnFailedSendChain)factory.newClient().onFailedSend).getHandlers().get(0), handler);
+    }
+
+    @Test
     public void shouldConstructFactoryDuplicateDetection() throws IOException {
         IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
 
@@ -131,5 +146,13 @@ public class RaygunClientFactoryTest {
 
         factory.withBreadcrumbLocations();
         assertTrue(factory.newClient().shouldProcessBreadcrumbLocation());
+    }
+
+    @Test
+    public void shouldSetOfflineStorageHandler() {
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withOfflineStorage();
+        assertTrue(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0) instanceof RaygunOnFailedSendOfflineStorageHandler);
+
+        assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), factory.getRaygunOnFailedSendChainFactory().getHandlersFactory().get(0));
     }
 }

@@ -1,4 +1,4 @@
-package com.mindscapehq.raygun4java.core.filters;
+package com.mindscapehq.raygun4java.core.handlers.requestfilters;
 
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 

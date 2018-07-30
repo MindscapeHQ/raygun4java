@@ -1,7 +1,8 @@
-package com.mindscapehq.raygun4java.core.filters;
+package com.mindscapehq.raygun4java.core.handlers.requestfilters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.util.Map;
@@ -20,7 +21,7 @@ public class RaygunDuplicateErrorFilter implements IRaygunOnBeforeSend, IRaygunO
      * @param message to check if the error has already been sent
      * @return message
      */
-    public RaygunMessage onBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunClient client, RaygunMessage message) {
         if (message.getDetails() != null
                 && message.getDetails().getError() != null
                 && message.getDetails().getError().getThrowable() != null) {
@@ -35,7 +36,7 @@ public class RaygunDuplicateErrorFilter implements IRaygunOnBeforeSend, IRaygunO
      * @param message to mark as sent
      * @return
      */
-    public RaygunMessage onAfterSend(RaygunMessage message) {
+    public RaygunMessage onAfterSend(RaygunClient client, RaygunMessage message) {
         if (message.getDetails() != null
                 && message.getDetails().getError() != null
                 && message.getDetails().getError().getThrowable() != null) {

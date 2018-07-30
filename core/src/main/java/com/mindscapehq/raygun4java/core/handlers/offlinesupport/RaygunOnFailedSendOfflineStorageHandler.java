@@ -1,41 +1,83 @@
-package com.mindscapehq.raygun4java.core;
+package com.mindscapehq.raygun4java.core.handlers.offlinesupport;
 
+import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnFailedSend;
+import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
+import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 import java.util.logging.Logger;
 
-public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedSend {
+/**
+ * When a send failure occurs, this class attempts to write the payload to disk
+ * When a send success occurs, it resends any stored payloads
+ */
+public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedSend, IRaygunOnBeforeSend, IRaygunSendEventFactory {
 
+    static final String fileExtension = ".raygunpayload";
     private Random random = new Random();
     private String storageDir;
-    private File storage;
+    File storage;
     boolean enabled = true;
     private boolean exceptionLogged = false;
+    boolean hasStoredExceptions = false;
+    private volatile Runnable sendingStoredExceptions;
 
     public RaygunOnFailedSendOfflineStorageHandler(String storageDir) {
         this.storageDir = storageDir;
     }
 
-    public void handle(String jsonPayload, Exception e) {
-        if (!enabled) {
-            return;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public RaygunMessage onBeforeSend(RaygunClient client, RaygunMessage message) {
+        if (enabled && hasStoredExceptions && sendingStoredExceptions == null) {
+            // begin sending
+            synchronized (this) {
+                if (sendingStoredExceptions == null) {
+                    sendingStoredExceptions = new RaygunSendStoredExceptions(client, storage);
+                    new Thread(new Runnable() {
+                        public void run() {
+                            sendingStoredExceptions.run();
+                            sendingStoredExceptions = null;
+                            hasStoredExceptions = false;
+                        }
+                    }).start();
+                }
+            }
         }
+
+        return message;
+    }
+
+    public String onFailedSend(RaygunClient client, String jsonPayload) {
+        if (!enabled) {
+            return jsonPayload;
+        }
+
         OutputStream fileOutputStream = null;
         try {
             File file = createFile();
 
             if (file == null) {
-                return;
+                return jsonPayload;
             }
 
             fileOutputStream = getOutputStream(file);
             fileOutputStream.write(jsonPayload.getBytes());
 
             exceptionLogged = false;
+            hasStoredExceptions = true;
         } catch (Exception e1) {
             if(!exceptionLogged) {
                 Logger.getLogger("Raygun4Java").warning("exception adding to offline storage: " + e1.getMessage());
@@ -51,7 +93,10 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
             }
 
         }
+
+        return jsonPayload;
     }
+
     File createFile() {
         try {
             if (storage == null) {
@@ -68,7 +113,7 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
                 }
             }
 
-            File file = createFile(storageDir, random.nextInt()+".json");
+            File file = createFile(storageDir, random.nextInt()+ fileExtension);
 
             if (!file.createNewFile()) {
                 return disable();
@@ -95,5 +140,9 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
     private File disable() {
         enabled = false;
         return null;
+    }
+
+    public IRaygunOnBeforeSend create() {
+        return this;
     }
 }

@@ -1,7 +1,8 @@
-package com.mindscapehq.raygun4java.core.filters;
+package com.mindscapehq.raygun4java.core.handlers.requestfilters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
+import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
@@ -17,7 +18,7 @@ public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, I
         this.stripClasses = stripClasses;
     }
 
-    public RaygunMessage onBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunClient client, RaygunMessage message) {
 
         if(message.getDetails() != null
                 && message.getDetails().getError() != null
@@ -30,7 +31,7 @@ public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, I
                     message.getDetails().setError(innerError);
 
                     // rerun check on the reassigned error
-                    onBeforeSend(message);
+                    onBeforeSend(client, message);
                 }
             }
         }

@@ -7,10 +7,14 @@ public interface IRaygunClientFactory {
     IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory);
     IRaygunClientFactory withBeforeSend(IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSend);
     IRaygunClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend);
+    IRaygunClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend);
+    IRaygunClientFactory withOfflineStorage();
+    IRaygunClientFactory withOfflineStorage(String storageDir);
     IRaygunClientFactory withBreadcrumbLocations();
     IRaygunClientFactory withTag(String tag);
     IRaygunClientFactory withData(Object key, Object value);
     RaygunClient newClient();
     AbstractRaygunSendEventChainFactory getRaygunOnBeforeSendChainFactory();
     AbstractRaygunSendEventChainFactory getRaygunOnAfterSendChainFactory();
+    AbstractRaygunSendEventChainFactory getRaygunOnFailedSendChainFactory();
 }

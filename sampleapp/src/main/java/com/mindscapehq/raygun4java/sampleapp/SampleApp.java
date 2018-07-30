@@ -51,7 +51,7 @@ public class SampleApp {
                 } catch (Exception e) {
                     MyExceptionHandler.getClient().recordBreadcrumb("handling exception");
 
-                    // lets handle this exception - this should appear in the raygun console
+                    // lets onFailedSend this exception - this should appear in the raygun console
                     Map<String, String> customData = new HashMap<String, String>();
                     customData.put("thread id", "" + Thread.currentThread().getId());
                     MyExceptionHandler.getClient().withTag("thrown from thread").withTag("no user withData").withData("thread id", "" + Thread.currentThread().getId()).send(exceptionToThrowLater);
@@ -69,7 +69,7 @@ public class SampleApp {
 
 class BeforeSendImplementation implements IRaygunOnBeforeSend, IRaygunSendEventFactory<IRaygunOnBeforeSend> {
     @Override
-    public RaygunMessage onBeforeSend(RaygunMessage message) {
+    public RaygunMessage onBeforeSend(RaygunClient client, RaygunMessage message) {
         String errorMessage = message.getDetails().getError().getMessage();
         message.getDetails().getError().setMessage(errorMessage + " - I have been mutated by onBeforeSend");
 
@@ -126,7 +126,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
 class MyOnAfterHandler implements IRaygunOnAfterSend, IRaygunSendEventFactory<IRaygunOnAfterSend> {
 
     @Override
-    public RaygunMessage onAfterSend(RaygunMessage message) {
+    public RaygunMessage onAfterSend(RaygunClient client, RaygunMessage message) {
         System.out.println("We sent a error to ragun!");
         return message;
     }
