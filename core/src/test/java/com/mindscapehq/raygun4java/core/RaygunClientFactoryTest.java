@@ -141,7 +141,7 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldSetBreadcrumbLocations() {
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
+        RaygunClientFactory factory = new RaygunClientFactory("apiKey");
         assertFalse(factory.newClient().shouldProcessBreadcrumbLocation());
 
         factory.withBreadcrumbLocations();

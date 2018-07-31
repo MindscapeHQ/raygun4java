@@ -60,6 +60,7 @@ public class RaygunOnFailedSendOfflineStorageHandlerTest {
         };
 
         when(storage.exists()).thenReturn(true);
+        when(storage.isDirectory()).thenReturn(true);
         when(file.createNewFile()).thenReturn(true);
     }
 

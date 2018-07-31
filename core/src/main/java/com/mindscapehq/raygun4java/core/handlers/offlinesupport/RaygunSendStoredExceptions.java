@@ -27,7 +27,7 @@ public class RaygunSendStoredExceptions implements Runnable {
     }
 
     public void run() {
-        if (storage == null) {
+        if (storage == null || !storage.isDirectory()) {
             // on first send of errors, the offline will be checked but may not have anything to send
             return;
         }

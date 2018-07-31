@@ -227,9 +227,9 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 When implementing web applications you can use the `webprovider` dependency to get a lot of out-of-the-box support. For example the `com.mindscapehq.raygun4java.webprovider.RaygunClient` class provides the described `ThreadLocal<RaygunClient>` pattern. The `RaygunServletFilter` creates the `RaygunClient` for each request, intercepts and sends unhandled exceptions to Raygun, and removes the `RaygunClient` at the end of the request.
 
 For the out-of-the-box implementation of capturing exceptions thrown out of your controllers, simply do the following:
-1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `DefaultRaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
+1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `RaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
     ```java
-    IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory(apiKey, servletContext);
+    IRaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey, servletContext);
     RaygunClient.initialize(factory);
     ```
 2. In the servlet configuration step in your container that allows you to add servlet filters, add a `new DefaultRaygunServletFilter()` - this filter will use the static accessor above.
@@ -493,15 +493,41 @@ It is very common for exceptions to be wrapped in other exceptions whose stack t
 ```java
 factory.withBeforeSend(new RaygunStripWrappedExceptionFilter(ServletException.class));
 ```
+or you can use the factory helper
+```java
+factory.withWrappedExceptionStripping(ServletException.class);
+```
 
+#### Exlcuding exceptions
+It is very common for exceptions such as `AccessDeniedException` to be thrown that do not need to be reported to the developer the `RaygunExcludeExceptionFilter` can remove them for you:
+```java
+factory.withBeforeSend(new RaygunExcludeExceptionFilter(ServletException.class));
+```
+or you can use the factory helper
+```java
+factory.withExcludedExceptions(ServletException.class);
+```
+
+#### Offline storage
+If you want to record errors that occur while the client is unable to communicate with Raygun API, you can enable offline storage with the `RaygunOnFailedSendOfflineStorageHandler`
+This should be added by the factory so that it is configured correctly. By default it will attempt to create a storage directory in the working directory of the application, otherwise you can provide a writable directory
+```java
+factory.withOfflineStorage()
+```
+or
+```java
+factory.withOfflineStorage("/tmp/raygun")
+```
+
+Errors are stored in plain text and are send when the next error occurs.
 
 ### Web specific features
 
 #### Web specific factory
-The `webprovider` dependency adds a `DefaultRaygunServletClientFactory` which exposes convenience methods to add the provided filters.
+The `webprovider` dependency adds a `RaygunServletClientFactory` which exposes convenience methods to add the provided filters.
 
 ```java
-IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory("YOUR_APP_API_KEY", servletContext)
+IRaygunServletClientFactory factory = new RaygunServletClientFactory("YOUR_APP_API_KEY", servletContext)
     .withLocalRequestsFilter()
     .withRequestFormFilters("password", "ssn", "creditcard")
     .withRequestHeaderFilters("auth")
