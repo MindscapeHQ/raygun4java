@@ -14,12 +14,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -52,7 +53,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbFromMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(47));
+        assertThat(assertBreadcrumb.getLineNumber(), is(48));
     }
 
     @Test
@@ -66,7 +67,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(61));
+        assertThat(assertBreadcrumb.getLineNumber(), is(62));
     }
 
     //////////////////////////////
@@ -108,17 +109,17 @@ public class RaygunClientTest {
 
     @Test
     public void post_SendWithTags_Returns202() throws IOException {
-        raygunClient.setTags(new ArrayList(Arrays.asList("these", "are", "tags")));
+        raygunClient.setTags(new HashSet(Arrays.asList("these", "are", "tags")));
         raygunClient.withTag("boom").withTag("bang");
 
         assertEquals(202, raygunClient.send(new Exception()));
 
-        List<?> tags1 = fromJsonStream().getDetails().getTags();
-        assertThat(tags1.get(0), Is.<Object>is("these"));
-        assertThat(tags1.get(1), Is.<Object>is("are"));
-        assertThat(tags1.get(2), Is.<Object>is("tags"));
-        assertThat(tags1.get(3), Is.<Object>is("boom"));
-        assertThat(tags1.get(4), Is.<Object>is("bang"));
+        Set<String> tags1 = fromJsonStream().getDetails().getTags();
+        assertTrue(tags1.contains("these"));
+        assertTrue(tags1.contains("are"));
+        assertTrue(tags1.contains("tags"));
+        assertTrue(tags1.contains("boom"));
+        assertTrue(tags1.contains("bang"));
     }
 
     @Test
@@ -137,7 +138,7 @@ public class RaygunClientTest {
 
     @Test
     public void post_SendWithUserDataAndTagsCustomData_Returns202() throws IOException {
-        List<String> tags = Arrays.asList("these", "are", "tags");
+        Set<String> tags = new HashSet<String>(Arrays.asList("these", "are", "tags"));
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("hello", "world");
         raygunClient.setTags(tags);
@@ -145,10 +146,10 @@ public class RaygunClientTest {
 
         assertEquals(202, raygunClient.send(new Exception()));
 
-        List<?> tags1 = fromJsonStream().getDetails().getTags();
-        assertThat(tags1.get(0), Is.<Object>is("these"));
-        assertThat(tags1.get(1), Is.<Object>is("are"));
-        assertThat(tags1.get(2), Is.<Object>is("tags"));
+        Set<String> tags1 = fromJsonStream().getDetails().getTags();
+        assertTrue(tags1.contains("these"));
+        assertTrue(tags1.contains("are"));
+        assertTrue(tags1.contains("tags"));
 
         Map<?, ?> customData = fromJsonStream().getDetails().getUserCustomData();
         assertThat(customData.get("hello"), Is.<Object>is("world"));
@@ -226,7 +227,7 @@ public class RaygunClientTest {
     }
 
     private RaygunMessage fromJson() {
-        String body = raygunClient.toJson(raygunClient.buildMessage(null));
+        String body = raygunClient.toJson(raygunClient.buildMessage(null, null));
         return gson.fromJson(body, RaygunMessage.class);
     }
 

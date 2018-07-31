@@ -6,6 +6,8 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -21,17 +23,17 @@ public class RaygunServletClient extends RaygunClient {
         this.request = request;
     }
 
-    public int send(Throwable throwable) {
-        if (throwable != null) {
-            return send(buildServletMessage(throwable));
-        }
-        return -1;
+    /**
+     * Use this method to send a handled exception to Raygun
+     * @param throwable a handled exception
+     * @return send status code
+     */
+    public void sendAsync(Throwable throwable) {
+        sendAsync(buildMessage(throwable, null));
     }
 
-    public void sendAsync(Throwable throwable) {
-        if (throwable != null) {
-            sendAsync(buildServletMessage(throwable));
-        }
+    public void sendAsync(Throwable throwable, Set<String> tags) {
+        sendAsync(buildMessage(throwable, tags));
     }
 
     private void sendAsync(final RaygunMessage message) {
@@ -44,8 +46,30 @@ public class RaygunServletClient extends RaygunClient {
         Executors.newSingleThreadExecutor().submit(r);
     }
 
-    private RaygunMessage buildServletMessage(Throwable throwable) {
+    /**
+     * Use this method to send an unhandled exception to Raygun (it will be tagged as an unhandled exception)
+     * @param throwable an unhandled exception
+     * @return send status code
+     */
+    public void sendAsyncUnhandled(Throwable throwable) {
+        Set<String> tags = new HashSet<String>();
+        tags.add(UNHANDLED_EXCEPTION);
+        sendAsync(throwable, tags);
+    }
+
+    public void sendAsyncUnhandled(Throwable throwable, Set<String> tags) {
+        Set<String> errorTags = new HashSet<String>(tags);
+        errorTags.add(UNHANDLED_EXCEPTION);
+        sendAsync(throwable, errorTags);
+    }
+
+    public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
         try {
+            Set<String> tags = new HashSet<String>(clientTags);
+            if (errorTags != null) {
+                tags.addAll(errorTags);
+            }
+
             return RaygunServletMessageBuilder.New()
                     .setRequestDetails(request, response)
                     .setEnvironmentDetails()

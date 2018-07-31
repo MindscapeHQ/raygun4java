@@ -338,7 +338,7 @@ The previous method, SetUser(string) has been deprecated as of 1.5.0 and removed
 
 ### Custom user data and tags
 
-You can attatch custom data or tags on the factory so that all error will be tagged ie:
+You can attatch custom data or tags on the factory so that all errors will be tagged ie:
 ```java
 factory
     .withTag("tag1")
@@ -347,7 +347,7 @@ factory
     .withData("data2", 2);
 ```
 
-or attach to the client:
+or attach to the client so that the tags will be added to only errors send by this client instance:
 
 ```java
 client
@@ -356,6 +356,12 @@ client
     .withData("data1", 1)
     .withData("data2", 2);
 ```
+
+or attach while sending the error:
+```java
+client.send(exception, tags);
+```
+
 
 ### Breadcrumbs
 You can set breadcrumbs to record the flow through your application. Breadcrumbs are set against the current `RaygunClient`.

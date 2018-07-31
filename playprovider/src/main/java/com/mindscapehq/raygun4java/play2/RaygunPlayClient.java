@@ -5,8 +5,10 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import play.api.mvc.RequestHeader;
 import play.mvc.Http.Request;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -37,33 +39,34 @@ public class RaygunPlayClient extends RaygunClient {
         this.scalaRequest = request;
     }
 
-    public int send(Throwable throwable) {
-        return send(throwable, null, null);
-    }
-
-    public int send(Throwable throwable, List<?> tags) {
-        return send(throwable, tags, null);
-    }
-
-    public int send(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
-        if (throwable != null) {
-            return send(buildServletMessage(throwable, tags, userCustomData));
-        }
-        return -1;
-    }
-
+    /**
+     * Use this method to send a handled exception to Raygun
+     * @param throwable a handled exception
+     * @return send status code
+     */
     public void sendAsync(Throwable throwable) {
-        sendAsync(throwable, null, null);
+        sendAsync(throwable, null);
     }
 
-    public void sendAsync(Throwable throwable, List<?> tags) {
-        sendAsync(throwable, tags, null);
+    public void sendAsync(Throwable throwable, Set<String> tags) {
+        postAsync(buildMessage(throwable, tags));
     }
 
-    public void sendAsync(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
-        if (throwable != null) {
-            postAsync(buildServletMessage(throwable, tags, userCustomData));
-        }
+    /**
+     * Use this method to send an unhandled exception to Raygun (it will be tagged as an unhandled exception)
+     * @param throwable an unhandled exception
+     * @return send status code
+     */
+    public void sendAsyncUnhandled(Throwable throwable) {
+        Set<String> tags = new HashSet<String>();
+        tags.add(UNHANDLED_EXCEPTION);
+        sendAsync(throwable, tags);
+    }
+
+    public void sendAsyncUnhandled(Throwable throwable, Set<String> tags) {
+        Set<String> errorTags = new HashSet<String>(tags);
+        errorTags.add(UNHANDLED_EXCEPTION);
+        sendAsync(throwable, errorTags);
     }
 
     private void postAsync(final RaygunMessage message) {
@@ -76,7 +79,12 @@ public class RaygunPlayClient extends RaygunClient {
         Executors.newSingleThreadExecutor().submit(r);
     }
 
-    private RaygunMessage buildServletMessage(Throwable throwable, List<?> tags, Map<?, ?> userCustomData) {
+    public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
+        Set<String> tags = new HashSet<String>(clientTags);
+        if (errorTags != null) {
+            tags.addAll(errorTags);
+        }
+
         try {
             return RaygunPlayMessageBuilder.newMessageBuilder()
                     .setRequestDetails(httpRequest, scalaRequest, scalaRequestHeader, javaRequestHeader)
@@ -87,7 +95,7 @@ public class RaygunPlayClient extends RaygunClient {
                     .setVersion(string)
                     .setUser(user)
                     .setTags(tags)
-                    .setUserCustomData(userCustomData)
+                    .setUserCustomData(data)
                     .build();
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());

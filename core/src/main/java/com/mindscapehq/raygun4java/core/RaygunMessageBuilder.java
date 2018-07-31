@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
@@ -67,7 +68,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         return this;
     }
 
-    public IRaygunMessageBuilder setTags(List<?> tags) {
+    public IRaygunMessageBuilder setTags(Set<String> tags) {
         raygunMessage.getDetails().setTags(tags);
         return this;
     }

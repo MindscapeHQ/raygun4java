@@ -6,6 +6,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IRaygunMessageBuilder {
 
@@ -23,7 +24,7 @@ public interface IRaygunMessageBuilder {
 
     IRaygunMessageBuilder setVersionFrom(Class versionFrom);
 
-    IRaygunMessageBuilder setTags(List<?> tags);
+    IRaygunMessageBuilder setTags(Set<String> tags);
 
     IRaygunMessageBuilder setUserCustomData(Map<?, ?> userCustomData);
 

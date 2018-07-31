@@ -25,8 +25,10 @@ import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunStripWrapp
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 /**
@@ -40,7 +42,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     protected AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
     protected AbstractRaygunSendEventChainFactory<IRaygunOnFailedSend> onFailedSendChainFactory;
-    protected List<String> tags;
+    protected Set<String> factoryTags;
     protected Map data;
     private RaygunClient client;
     protected String version;
@@ -55,7 +57,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         this.apiKey = apiKey;
         this.version = new RaygunServletMessageBuilder().getVersion(context);
 
-        tags = new ArrayList<String>();
+        factoryTags = new HashSet<String>();
         data = new WeakHashMap();
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
@@ -204,16 +206,16 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     }
 
     public IRaygunClientFactory withTag(String tag) {
-        tags.add(tag);
+        factoryTags.add(tag);
         return this;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public Set<String> getTags() {
+        return factoryTags;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTags(Set<String> tags) {
+        factoryTags = tags;
     }
 
     public Map<?, ?> getData() {
@@ -240,6 +242,9 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         client.setOnFailedSend(onFailedSendChainFactory.create());
         client.setVersion(version);
         client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
+        client.setTags(new HashSet<String>(factoryTags));
+        client.setData(new WeakHashMap(data));
+
         return client;
     }
 

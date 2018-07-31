@@ -27,8 +27,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -93,7 +95,7 @@ public class RaygunServletClientTest {
 
     @Test
     public void send_WithTags_Returns202() throws MalformedURLException, IOException {
-        List<String> tags = new ArrayList<String>();
+        Set<String> tags = new HashSet<String>();
         tags.add("test");
         raygunClient.setTags(tags);
         raygunClient.withTag("withTag");
@@ -102,7 +104,7 @@ public class RaygunServletClientTest {
 
     @Test
     public void send_WithTagsAndCustomData_Returns202() throws MalformedURLException, IOException {
-        List<String> tags = new ArrayList<String>();
+        Set<String> tags = new HashSet<String>();
         tags.add("a_tag");
         Map<Integer, String> customData = new HashMap<Integer, String>();
         customData.put(0, "zero");
@@ -218,7 +220,7 @@ public class RaygunServletClientTest {
     }
 
     private RaygunServletMessage fromJson() {
-        String body = raygunClient.toJson(raygunClient.buildMessage(null));
+        String body = raygunClient.toJson(raygunClient.buildMessage(null, null));
         return gson.fromJson(body, RaygunServletMessage.class);
     }
 

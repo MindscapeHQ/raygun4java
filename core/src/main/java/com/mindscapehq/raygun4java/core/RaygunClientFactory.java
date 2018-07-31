@@ -6,8 +6,10 @@ import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunExcludeExc
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunStripWrappedExceptionFilter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 /**
@@ -31,7 +33,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     private AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnFailedSend> onFailedSendChainFactory;
-    protected List<String> tags;
+    protected Set<String> factoryTags;
     protected Map data;
     private RaygunClient client;
     private boolean shouldProcessBreadcrumbLocations = false;
@@ -49,7 +51,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         this.apiKey = apiKey;
         version = new RaygunMessageBuilder().setVersion(null).build().getDetails().getVersion();
 
-        tags = new ArrayList<String>();
+        factoryTags = new HashSet<String>();
         data = new WeakHashMap();
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
@@ -143,17 +145,22 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         return this;
     }
 
+    /**
+     * These tags will be added to every error sent
+     * @param tag
+     * @return factory
+     */
     public RaygunClientFactory withTag(String tag) {
-        tags.add(tag);
+        factoryTags.add(tag);
         return this;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public Set<String> getTags() {
+        return factoryTags;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTags(Set<String> tags) {
+        factoryTags = tags;
     }
 
     public Map<?, ?> getData() {
@@ -164,6 +171,12 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         this.data = data;
     }
 
+    /**
+     * This data will be added to every error sent
+     * @param key
+     * @param value
+     * @return factory
+     */
     public RaygunClientFactory withData(Object key, Object value) {
         data.put(key, value);
         return this;
@@ -189,7 +202,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         client.setOnFailedSend(onFailedSendChainFactory.create());
         client.string = version;
         client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
-        client.setTags(new ArrayList<String>(tags));
+        client.setTags(new HashSet<String>(factoryTags));
         client.setData(new WeakHashMap(data));
 
         return client;
