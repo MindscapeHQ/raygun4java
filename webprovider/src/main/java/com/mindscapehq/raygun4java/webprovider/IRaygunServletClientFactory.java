@@ -4,6 +4,7 @@ import com.mindscapehq.raygun4java.core.AbstractRaygunSendEventChainFactory;
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.IRaygunOnFailedSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChain;
 import com.mindscapehq.raygun4java.core.AbstractRaygunOnSendEventChain;
@@ -17,7 +18,9 @@ public interface IRaygunServletClientFactory extends IRaygunClientFactory {
 
     IRaygunServletClientFactory withBeforeSend(IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSend);
     IRaygunServletClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend);
+    IRaygunServletClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend);
 
     AbstractRaygunSendEventChainFactory getRaygunOnBeforeSendChainFactory();
     AbstractRaygunSendEventChainFactory getRaygunOnAfterSendChainFactory();
+    AbstractRaygunSendEventChainFactory getRaygunOnFailedSendChainFactory();
 }

@@ -2,6 +2,8 @@ package com.mindscapehq.raygun4java.core;
 
 import com.mindscapehq.raygun4java.core.handlers.offlinesupport.RaygunOnFailedSendOfflineStorageHandler;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateErrorFilterFactory;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunExcludeExceptionFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunStripWrappedExceptionFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +84,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @param onAfterSend
      * @return factory
      */
-    public IRaygunClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend) {
+    public RaygunClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend) {
         this.onAfterSendChainFactory.withFilterFactory(onAfterSend);
         return this;
     }
@@ -95,8 +97,85 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @param onFailedSend
      * @return factory
      */
-    public IRaygunClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {
+    public RaygunClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {
         this.onFailedSendChainFactory.withFilterFactory(onFailedSend);
+        return this;
+    }
+
+    public RaygunClientFactory withApiKey(String apiKey) {
+        this.apiKey = apiKey;
+        return this;
+    }
+
+    public RaygunClientFactory withVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
+    public RaygunClientFactory withVersionFrom(Class versionFromClass) {
+        version = raygunMessageBuilderFactory.newMessageBuilder().setVersionFrom(versionFromClass).build().getDetails().getVersion();
+        return this;
+    }
+
+    public RaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory) {
+        this.raygunMessageBuilderFactory = messageBuilderFactory;
+        return this;
+    }
+
+    public RaygunClientFactory withOfflineStorage() {
+        return withOfflineStorage("");
+    }
+
+    public RaygunClientFactory withOfflineStorage(String storageDir) {
+        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
+
+        onBeforeSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
+        onFailedSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
+
+        return this;
+    }
+
+    /**
+     * BEWARE: enabling could seriously degrade performance of your application
+     */
+    public RaygunClientFactory withBreadcrumbLocations() {
+        this.shouldProcessBreadcrumbLocations = true;
+        return this;
+    }
+
+    public RaygunClientFactory withTag(String tag) {
+        tags.add(tag);
+        return this;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public Map<?, ?> getData() {
+        return data;
+    }
+
+    public void setData(Map<?, ?> data) {
+        this.data = data;
+    }
+
+    public RaygunClientFactory withData(Object key, Object value) {
+        data.put(key, value);
+        return this;
+    }
+
+    public RaygunClientFactory withWrappedExceptionStripping(Class... stripWrappers) {
+        onBeforeSendChainFactory.withFilterFactory(new RaygunStripWrappedExceptionFilter(stripWrappers));
+        return this;
+    }
+
+    public RaygunClientFactory withExcludedExceptions(Class... excludedWrappers) {
+        onBeforeSendChainFactory.withFilterFactory(new RaygunExcludeExceptionFilter(excludedWrappers));
         return this;
     }
 
@@ -126,72 +205,5 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     public AbstractRaygunSendEventChainFactory getRaygunOnFailedSendChainFactory() {
         return onFailedSendChainFactory;
-    }
-
-    public IRaygunClientFactory withApiKey(String apiKey) {
-        this.apiKey = apiKey;
-        return this;
-    }
-
-    public IRaygunClientFactory withVersion(String version) {
-        this.version = version;
-        return this;
-    }
-
-    public IRaygunClientFactory withVersionFrom(Class versionFromClass) {
-        version = raygunMessageBuilderFactory.newMessageBuilder().setVersionFrom(versionFromClass).build().getDetails().getVersion();
-        return this;
-    }
-
-    public IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory) {
-        this.raygunMessageBuilderFactory = messageBuilderFactory;
-        return this;
-    }
-
-    public IRaygunClientFactory withOfflineStorage() {
-        return withOfflineStorage("");
-    }
-
-    public IRaygunClientFactory withOfflineStorage(String storageDir) {
-        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
-
-        onBeforeSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
-        onFailedSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
-
-        return this;
-    }
-
-    /**
-     * BEWARE: enabling could seriously degrade performance of your application
-     */
-    public IRaygunClientFactory withBreadcrumbLocations() {
-        this.shouldProcessBreadcrumbLocations = true;
-        return this;
-    }
-
-    public IRaygunClientFactory withTag(String tag) {
-        tags.add(tag);
-        return this;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public Map<?, ?> getData() {
-        return data;
-    }
-
-    public void setData(Map<?, ?> data) {
-        this.data = data;
-    }
-
-    public IRaygunClientFactory withData(Object key, Object value) {
-        data.put(key, value);
-        return this;
     }
 }

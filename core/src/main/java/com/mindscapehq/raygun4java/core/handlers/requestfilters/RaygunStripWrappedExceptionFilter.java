@@ -10,7 +10,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
  * Given a set of class names, this filter will remove matching exceptions from the exception chain.
  * The intention is to remove generic "wrapping" exceptions like ServletException
  */
-public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, IRaygunSendEventFactory {
+public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, IRaygunSendEventFactory<IRaygunOnBeforeSend> {
 
     private Class[] stripClasses;
 
@@ -32,6 +32,7 @@ public class RaygunStripWrappedExceptionFilter implements IRaygunOnBeforeSend, I
 
                     // rerun check on the reassigned error
                     onBeforeSend(client, message);
+                    return message;
                 }
             }
         }

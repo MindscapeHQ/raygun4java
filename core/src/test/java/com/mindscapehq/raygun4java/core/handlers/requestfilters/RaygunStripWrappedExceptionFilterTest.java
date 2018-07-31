@@ -55,13 +55,13 @@ public class RaygunStripWrappedExceptionFilterTest {
 
     @Test
     public void shouldLeaveOneStrippedNestedException () {
-        RaygunStripWrappedExceptionFilter f = new RaygunStripWrappedExceptionFilter(ClassNotFoundException.class);
+        RaygunStripWrappedExceptionFilter f = new RaygunStripWrappedExceptionFilter(ClassNotFoundException.class, IllegalStateException.class);
 
         RaygunMessage message = new RaygunMessage();
-        message.getDetails().setError(new RaygunErrorMessage(new ClassNotFoundException("wrapper1", new ClassNotFoundException("wrapper2", new ClassNotFoundException("wrapper3")))));
+        message.getDetails().setError(new RaygunErrorMessage(new ClassNotFoundException("wrapper1", new ClassNotFoundException("wrapper2", new IllegalStateException("wrapper3")))));
         f.onBeforeSend(null, message);
 
-        assertThat(message.getDetails().getError().getMessage(), is("ClassNotFoundException: wrapper3"));
+        assertThat(message.getDetails().getError().getMessage(), is("IllegalStateException: wrapper3"));
     }
 
     @Test

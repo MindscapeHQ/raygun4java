@@ -45,7 +45,7 @@ public class RaygunOnFailedSendOfflineStorageHandler implements IRaygunOnFailedS
             // begin sending on new thread
             synchronized (this) {
                 if (sendingStoredExceptions == null) {
-                    sendingStoredExceptions = new RaygunSendStoredExceptions(client, storage);
+                    sendingStoredExceptions = new RaygunSendStoredExceptions(client, this.getStorage(this.storageDir));
                     new Thread(new Runnable() {
                         public void run() {
                             sendingStoredExceptions.run();

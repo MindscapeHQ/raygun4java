@@ -227,9 +227,9 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 When implementing web applications you can use the `webprovider` dependency to get a lot of out-of-the-box support. For example the `com.mindscapehq.raygun4java.webprovider.RaygunClient` class provides the described `ThreadLocal<RaygunClient>` pattern. The `RaygunServletFilter` creates the `RaygunClient` for each request, intercepts and sends unhandled exceptions to Raygun, and removes the `RaygunClient` at the end of the request.
 
 For the out-of-the-box implementation of capturing exceptions thrown out of your controllers, simply do the following:
-1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `DefaultRaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
+1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `RaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
     ```java
-    IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory(apiKey, servletContext);
+    IRaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey, servletContext);
     RaygunClient.initialize(factory);
     ```
 2. In the servlet configuration step in your container that allows you to add servlet filters, add a `new DefaultRaygunServletFilter()` - this filter will use the static accessor above.
@@ -498,10 +498,10 @@ factory.withBeforeSend(new RaygunStripWrappedExceptionFilter(ServletException.cl
 ### Web specific features
 
 #### Web specific factory
-The `webprovider` dependency adds a `DefaultRaygunServletClientFactory` which exposes convenience methods to add the provided filters.
+The `webprovider` dependency adds a `RaygunServletClientFactory` which exposes convenience methods to add the provided filters.
 
 ```java
-IRaygunServletClientFactory factory = new DefaultRaygunServletClientFactory("YOUR_APP_API_KEY", servletContext)
+IRaygunServletClientFactory factory = new RaygunServletClientFactory("YOUR_APP_API_KEY", servletContext)
     .withLocalRequestsFilter()
     .withRequestFormFilters("password", "ssn", "creditcard")
     .withRequestHeaderFilters("auth")

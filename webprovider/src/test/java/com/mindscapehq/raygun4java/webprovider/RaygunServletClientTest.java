@@ -185,7 +185,7 @@ public class RaygunServletClientTest {
     public void send_WithFilters_FiltersRequest() {
         setupFilterMocks();
 
-        raygunClient = new DefaultRaygunServletClientFactory("1234", mock(ServletContext.class))
+        raygunClient = new RaygunServletClientFactory("1234", mock(ServletContext.class))
                 .withRequestFormFilters("form1", "form2")
                 .withRequestHeaderFilters("header1", "header2")
                 .withRequestQueryStringFilters("queryParam1", "queryParam2")
