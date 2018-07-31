@@ -493,7 +493,33 @@ It is very common for exceptions to be wrapped in other exceptions whose stack t
 ```java
 factory.withBeforeSend(new RaygunStripWrappedExceptionFilter(ServletException.class));
 ```
+or you can use the factory helper
+```java
+factory.withWrappedExceptionStripping(ServletException.class);
+```
 
+#### Exlcuding exceptions
+It is very common for exceptions such as `AccessDeniedException` to be thrown that do not need to be reported to the developer the `RaygunExcludeExceptionFilter` can remove them for you:
+```java
+factory.withBeforeSend(new RaygunExcludeExceptionFilter(ServletException.class));
+```
+or you can use the factory helper
+```java
+factory.withExcludedExceptions(ServletException.class);
+```
+
+#### Offline storage
+If you want to record errors that occur while the client is unable to communicate with Raygun API, you can enable offline storage with the `RaygunOnFailedSendOfflineStorageHandler`
+This should be added by the factory so that it is configured correctly. By default it will attempt to create a storage directory in the working directory of the application, otherwise you can provide a writable directory
+```java
+factory.withOfflineStorage()
+```
+or
+```java
+factory.withOfflineStorage("/tmp/raygun")
+```
+
+Errors are stored in plain text and are send when the next error occurs.
 
 ### Web specific features
 
