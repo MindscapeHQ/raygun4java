@@ -9,12 +9,17 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class RaygunSendStoredExceptions implements Runnable {
     private final RaygunClient client;
     private final File storage;
     private static final Object globalSendLock = new Object();
+
+    private static final Set<Integer> deleteOnStatusCodes = new HashSet<Integer>(Arrays.asList(202, 429, 400, 403, 413));
 
     public RaygunSendStoredExceptions(RaygunClient client, File storage) {
         this.client = client;
@@ -62,7 +67,7 @@ public class RaygunSendStoredExceptions implements Runnable {
                 inputStream.close();
 
                 int reponseCode = client.send(outputStream.toString("UTF-8"));
-                if (reponseCode == 202 || reponseCode == 429 /* rate limited */) {
+                if (deleteOnStatusCodes.contains(reponseCode)) {
                     file.delete();
                 }
             } catch (IOException e) {

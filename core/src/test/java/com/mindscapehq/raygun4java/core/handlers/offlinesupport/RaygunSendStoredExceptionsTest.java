@@ -15,6 +15,7 @@ import java.io.InputStream;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -28,6 +29,7 @@ public class RaygunSendStoredExceptionsTest {
     File storage, file;
 
     InputStream inputStream;
+    private RaygunSendStoredExceptions sendStoredExceptions;
 
     @Before
     public void setup() throws IOException {
@@ -39,26 +41,39 @@ public class RaygunSendStoredExceptionsTest {
         when(client.send(anyString())).thenReturn(202);
 
         inputStream = spy(new ByteArrayInputStream("hello world".getBytes()));
-    }
 
-    @Test
-    public void shouldNotSendWhenStorageNotInitialized() {
-        new RaygunSendStoredExceptions(client, null).run();
-    }
-
-    @Test
-    public void processFilesShouldProcessRaygunFilesOnly() throws IOException {
-        RaygunSendStoredExceptions sendStoredExceptions = new RaygunSendStoredExceptions(client, storage) {
+        sendStoredExceptions = new RaygunSendStoredExceptions(client, storage) {
             @Override
             InputStream getInputStream(File file) {
                 return inputStream;
             }
         };
+    }
 
+    @Test
+    public void shouldNotThrowExceptionWhenStorageNotInitialized() {
+        new RaygunSendStoredExceptions(client, null).run();
+    }
+
+    @Test
+    public void processFilesShouldProcessRaygunFilesOnly() throws IOException {
         sendStoredExceptions.processFiles();
 
         verify(client).send("hello world");
         verify(inputStream, times(2)).close();
+        verify(file).delete();
     }
+
+    @Test
+    public void shouldNotDeleteFileAfterA500() throws IOException {
+        when(client.send(anyString())).thenReturn(500);
+
+        sendStoredExceptions.processFiles();
+
+        verify(client).send("hello world");
+        verify(file, never()).delete();
+    }
+
+
 
 }
