@@ -2,13 +2,13 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
-import com.mindscapehq.raygun4java.core.filters.RaygunExcludeLocalRequestFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunRequestCookieFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunRequestFormFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunRequestHeaderFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunRequestHttpStatusFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunRequestQueryStringFilter;
-import com.mindscapehq.raygun4java.core.filters.RaygunStripWrappedExceptionFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunExcludeLocalRequestFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestCookieFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestFormFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestHeaderFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestHttpStatusFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestQueryStringFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunStripWrappedExceptionFilter;
 
 import javax.servlet.ServletContext;
 

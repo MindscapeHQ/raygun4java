@@ -1,5 +1,6 @@
-package com.mindscapehq.raygun4java.core.filters;
+package com.mindscapehq.raygun4java.core.handlers.requestfilters;
 
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunExcludeLocalRequestFilter;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
@@ -29,7 +30,7 @@ public class RaygunExcludeLocalRequestFilterTest {
         details.setRequest(request);
         localMessage.setDetails(details);
 
-        assertNull(new RaygunExcludeLocalRequestFilter().onBeforeSend(localMessage));
+        assertNull(new RaygunExcludeLocalRequestFilter().onBeforeSend(null, localMessage));
     }
 
     @Test
@@ -39,7 +40,7 @@ public class RaygunExcludeLocalRequestFilterTest {
         details.setRequest(request);
         localMessage.setDetails(details);
 
-        assertNotNull(new RaygunExcludeLocalRequestFilter().onBeforeSend(localMessage));
+        assertNotNull(new RaygunExcludeLocalRequestFilter().onBeforeSend(null, localMessage));
     }
 
     @Test

@@ -1,12 +1,15 @@
 package com.mindscapehq.raygun4java.webprovider;
 
+import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.RaygunClientFactory;
 import com.mindscapehq.raygun4java.core.RaygunConnection;
 import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChain;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChain;
+import com.mindscapehq.raygun4java.core.handlers.offlinesupport.RaygunOnFailedSendOfflineStorageHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -124,5 +127,13 @@ public class RaygunServletClientFactoryTest {
         client.send(exception);
 
         verify(raygunConnection, times(1)).getConnection(anyString());
+    }
+
+    @Test
+    public void shouldSetOfflineStorageHandler() {
+        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withOfflineStorage();
+        assertTrue(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0) instanceof RaygunOnFailedSendOfflineStorageHandler);
+
+        assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), factory.getRaygunOnFailedSendChainFactory().getHandlersFactory().get(0));
     }
 }

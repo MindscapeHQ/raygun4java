@@ -5,6 +5,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunBreadcrumbMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -35,6 +36,7 @@ public class RaygunClient {
     protected String string = null;
     protected IRaygunOnBeforeSend onBeforeSend;
     protected IRaygunOnAfterSend onAfterSend;
+    protected IRaygunOnFailedSend onFailedSend;
     protected List<RaygunBreadcrumbMessage> breadcrumbs;
     protected List<String> tags;
     protected Map data;
@@ -107,7 +109,7 @@ public class RaygunClient {
         try {
             if (validateApiKey()) {
                 if (onBeforeSend != null) {
-                    raygunMessage = onBeforeSend.onBeforeSend(raygunMessage);
+                    raygunMessage = onBeforeSend.onBeforeSend(this, raygunMessage);
 
                     if (raygunMessage == null) {
                         return -1;
@@ -116,29 +118,42 @@ public class RaygunClient {
 
                 String jsonPayload = toJson(raygunMessage);
 
-                HttpURLConnection connection = this.raygunConnection.getConnection(apiKey);
-
-                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF8");
-                writer.write(jsonPayload);
-                writer.flush();
-                writer.close();
-                connection.disconnect();
+                int responseCode = -1;
+                try {
+                    responseCode = send(jsonPayload);
+                } catch (Exception e) {
+                    if (onFailedSend != null) {
+                        onFailedSend.onFailedSend(this, jsonPayload);
+                    }
+                    return responseCode;
+                }
 
                 try {
                     if(onAfterSend != null) {
-                        onAfterSend.onAfterSend(raygunMessage);
+                        onAfterSend.onAfterSend(this, raygunMessage);
                     }
                 } catch (Exception e) {
                     Logger.getLogger("Raygun4Java").warning("exception processing onAfterSend: " + e.getMessage());
                 }
 
-                return connection.getResponseCode();
+                return responseCode;
 
             }
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").warning("Couldn't send exception: " + t.getMessage());
         }
         return -1;
+    }
+
+    public int send(String payload) throws IOException {
+        HttpURLConnection connection = this.raygunConnection.getConnection(apiKey);
+
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF8");
+        writer.write(payload);
+        writer.flush();
+        writer.close();
+        connection.disconnect();
+        return connection.getResponseCode();
     }
 
     public String toJson(Object o) {
@@ -151,6 +166,10 @@ public class RaygunClient {
 
     public void setOnAfterSend(IRaygunOnAfterSend onAfterSend) {
         this.onAfterSend = onAfterSend;
+    }
+
+    public void setOnFailedSend(IRaygunOnFailedSend onFailedSend) {
+        this.onFailedSend = onFailedSend;
     }
 
     public IRaygunOnBeforeSend getOnBeforeSend() {

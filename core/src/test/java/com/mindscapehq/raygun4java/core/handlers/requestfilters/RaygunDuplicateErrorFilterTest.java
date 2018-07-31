@@ -1,5 +1,7 @@
-package com.mindscapehq.raygun4java.core.filters;
+package com.mindscapehq.raygun4java.core.handlers.requestfilters;
 
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateErrorFilter;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateErrorFilterFactory;
 import com.mindscapehq.raygun4java.core.messages.RaygunErrorMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
@@ -22,8 +24,8 @@ public class RaygunDuplicateErrorFilterTest {
         details.setError(error);
         message.setDetails(details);
 
-        assertEquals(message, filter.onBeforeSend(message)); // not filtered first time
-        filter.onAfterSend(message);
+        assertEquals(message, filter.onBeforeSend(null, message)); // not filtered first time
+        filter.onAfterSend(null, message);
 
         message = new RaygunMessage();
         details = new RaygunMessageDetails();
@@ -31,14 +33,14 @@ public class RaygunDuplicateErrorFilterTest {
         details.setError(error);
         message.setDetails(details);
 
-        assertNull(filter.onBeforeSend(message)); // filtered second time
+        assertNull(filter.onBeforeSend(null, message)); // filtered second time
 
         message = new RaygunMessage();
         details = new RaygunMessageDetails();
         error = new RaygunErrorMessage(new Exception()); // different exception
         details.setError(error);
         message.setDetails(details);
-        assertEquals(message, filter.onBeforeSend(message)); // not filtered
+        assertEquals(message, filter.onBeforeSend(null, message)); // not filtered
     }
 
     @Test

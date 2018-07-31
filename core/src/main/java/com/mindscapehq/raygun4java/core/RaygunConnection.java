@@ -20,7 +20,7 @@ public class RaygunConnection {
         this.raygunSettings = raygunSettings;
     }
 
-    public HttpURLConnection getConnection(String apiKey) throws MalformedURLException, IOException {
+    public HttpURLConnection getConnection(String apiKey) throws IOException {
 
         HttpURLConnection connection = null;
 

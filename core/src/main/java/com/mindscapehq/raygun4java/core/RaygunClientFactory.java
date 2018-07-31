@@ -1,6 +1,7 @@
 package com.mindscapehq.raygun4java.core;
 
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
+import com.mindscapehq.raygun4java.core.handlers.offlinesupport.RaygunOnFailedSendOfflineStorageHandler;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateErrorFilterFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     private String apiKey;
     private AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
+    private AbstractRaygunSendEventChainFactory<IRaygunOnFailedSend> onFailedSendChainFactory;
     protected List<String> tags;
     protected Map data;
     private RaygunClient client;
@@ -50,8 +52,13 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
 
-        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory().afterAll(duplicateErrorRecordFilterFactory);
-        onAfterSendChainFactory = new RaygunOnAfterSendChainFactory().withFilterFactory(duplicateErrorRecordFilterFactory);
+        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory()
+                .afterAll(duplicateErrorRecordFilterFactory);
+
+        onAfterSendChainFactory = new RaygunOnAfterSendChainFactory()
+                .withFilterFactory(duplicateErrorRecordFilterFactory);
+
+        onFailedSendChainFactory = new RaygunOnFailedSendChainFactory();
     }
 
     /**
@@ -81,12 +88,26 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     }
 
     /**
+     * Add a RaygunOnFailedSend handler
+     *
+     * factory.withFailedSend(myRaygunOnFailedSendFactory)
+     *
+     * @param onFailedSend
+     * @return factory
+     */
+    public IRaygunClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {
+        this.onFailedSendChainFactory.withFilterFactory(onFailedSend);
+        return this;
+    }
+
+    /**
      * @return a new RaygunClient configured by this factory
      */
     public RaygunClient newClient() {
         RaygunClient client = new RaygunClient(apiKey);
         client.setOnBeforeSend(onBeforeSendChainFactory.create());
         client.setOnAfterSend(onAfterSendChainFactory.create());
+        client.setOnFailedSend(onFailedSendChainFactory.create());
         client.string = version;
         client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
         client.setTags(new ArrayList<String>(tags));
@@ -101,6 +122,10 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     public AbstractRaygunSendEventChainFactory getRaygunOnAfterSendChainFactory() {
         return onAfterSendChainFactory;
+    }
+
+    public AbstractRaygunSendEventChainFactory getRaygunOnFailedSendChainFactory() {
+        return onFailedSendChainFactory;
     }
 
     public IRaygunClientFactory withApiKey(String apiKey) {
@@ -120,6 +145,19 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     public IRaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory) {
         this.raygunMessageBuilderFactory = messageBuilderFactory;
+        return this;
+    }
+
+    public IRaygunClientFactory withOfflineStorage() {
+        return withOfflineStorage("");
+    }
+
+    public IRaygunClientFactory withOfflineStorage(String storageDir) {
+        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
+
+        onBeforeSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
+        onFailedSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
+
         return this;
     }
 

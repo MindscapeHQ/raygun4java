@@ -5,11 +5,14 @@ import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
 import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunMessageBuilderFactory;
+import com.mindscapehq.raygun4java.core.IRaygunOnFailedSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChainFactory;
 import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChainFactory;
-import com.mindscapehq.raygun4java.core.filters.RaygunDuplicateErrorFilterFactory;
+import com.mindscapehq.raygun4java.core.RaygunOnFailedSendChainFactory;
+import com.mindscapehq.raygun4java.core.handlers.offlinesupport.RaygunOnFailedSendOfflineStorageHandler;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateErrorFilterFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +31,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     private String apiKey;
     private AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
+    private AbstractRaygunSendEventChainFactory<IRaygunOnFailedSend> onFailedSendChainFactory;
     protected List<String> tags;
     protected Map data;
     private RaygunClient client;
@@ -48,8 +52,13 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
 
-        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory().afterAll(duplicateErrorRecordFilterFactory);
-        onAfterSendChainFactory = new RaygunOnAfterSendChainFactory().withFilterFactory(duplicateErrorRecordFilterFactory);
+        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory()
+                .afterAll(duplicateErrorRecordFilterFactory);
+
+        onAfterSendChainFactory = new RaygunOnAfterSendChainFactory()
+                .withFilterFactory(duplicateErrorRecordFilterFactory);
+
+        onFailedSendChainFactory = new RaygunOnFailedSendChainFactory();
     }
 
     public IRaygunClientFactory withApiKey(String apiKey) {
@@ -77,6 +86,19 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         return this;
     }
 
+    public IRaygunServletClientFactory withOfflineStorage() {
+        return withOfflineStorage("");
+    }
+
+    public IRaygunServletClientFactory withOfflineStorage(String storageDir) {
+        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
+
+        onBeforeSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
+        onFailedSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
+
+        return this;
+    }
+
     /**
      * Add a RaygunOnBeforeSend handler factory
      *
@@ -100,6 +122,19 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      */
     public IRaygunServletClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend) {
         this.onAfterSendChainFactory.withFilterFactory(onAfterSend);
+        return this;
+    }
+
+    /**
+     * Add a RaygunOnFailedSend handler
+     *
+     * factory.withFailedSend(myRaygunOnFailedSendFactory)
+     *
+     * @param onFailedSend
+     * @return factory
+     */
+    public IRaygunServletClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {
+        this.onFailedSendChainFactory.withFilterFactory(onFailedSend);
         return this;
     }
 
@@ -159,5 +194,9 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
 
     public AbstractRaygunSendEventChainFactory getRaygunOnAfterSendChainFactory() {
         return onAfterSendChainFactory;
+    }
+
+    public AbstractRaygunSendEventChainFactory getRaygunOnFailedSendChainFactory() {
+        return onFailedSendChainFactory;
     }
 }

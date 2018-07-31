@@ -38,7 +38,7 @@ public class RaygunOnBeforeSendChainTest {
 
     @Test
     public void shouldExecuteAllOnHappyPath() {
-        assertThat(chain.handle(message), is(message));
+        assertThat(chain.onFailedSend(message), is(message));
 
         verify(first).onBeforeSend(message);
         verify(main).onBeforeSend(message);
@@ -49,7 +49,7 @@ public class RaygunOnBeforeSendChainTest {
     public void shouldFilterOnFirstFilter() {
         when(first.onBeforeSend(message)).thenReturn(null);
 
-        assertNull(chain.handle(message));
+        assertNull(chain.onFailedSend(message));
 
         verify(first).onBeforeSend(message);
         verify(main, never()).onBeforeSend(message);
@@ -60,7 +60,7 @@ public class RaygunOnBeforeSendChainTest {
     public void shouldFilterOnMainFilter() {
         when(main.onBeforeSend(message)).thenReturn(null);
 
-        assertNull(chain.handle(message));
+        assertNull(chain.onFailedSend(message));
 
         verify(first).onBeforeSend(message);
         verify(main).onBeforeSend(message);
@@ -71,7 +71,7 @@ public class RaygunOnBeforeSendChainTest {
     public void shouldFilterOnLastFilter() {
         when(last.onBeforeSend(message)).thenReturn(null);
 
-        assertNull(chain.handle(message));
+        assertNull(chain.onFailedSend(message));
 
         verify(first).onBeforeSend(message);
         verify(main).onBeforeSend(message);
@@ -79,7 +79,7 @@ public class RaygunOnBeforeSendChainTest {
     }
 
     private interface ForTest extends IRaygunSendEventFactory, IRaygunOnBeforeSend, IRaygunOnAfterSend {
-        RaygunMessage handle(RaygunMessage message);
+        RaygunMessage onFailedSend(RaygunMessage message);
         RaygunMessage onBeforeSend(RaygunMessage message);
         ForTest create();
     }*/

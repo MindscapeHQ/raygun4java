@@ -25,7 +25,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +52,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbFromMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(44));
+        assertThat(assertBreadcrumb.getLineNumber(), is(47));
     }
 
     @Test
@@ -63,7 +66,7 @@ public class RaygunClientTest {
         assertThat(assertBreadcrumb.getLevel(), is(RaygunBreadcrumbLevel.INFO));
         assertThat(assertBreadcrumb.getClassName(), is("com.mindscapehq.raygun4java.core.RaygunClientTest"));
         assertThat(assertBreadcrumb.getMethodName(), is("shouldAddBreadCrumbMessageWithLocation"));
-        assertThat(assertBreadcrumb.getLineNumber(), is(58));
+        assertThat(assertBreadcrumb.getLineNumber(), is(61));
     }
 
     //////////////////////////////
@@ -155,12 +158,12 @@ public class RaygunClientTest {
     public void post_SendWithOnBeforeSend_Returns202() throws IOException {
         IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
         RaygunMessage message = new RaygunMessage();
-        when(handler.onBeforeSend((RaygunMessage) anyObject())).thenReturn(message);
+        when(handler.onBeforeSend((RaygunClient) anyObject(), (RaygunMessage) anyObject())).thenReturn(message);
         raygunClient.setOnBeforeSend(handler);
 
         assertEquals(202, raygunClient.send(new Exception()));
 
-        verify(handler).onBeforeSend((RaygunMessage) anyObject());
+        verify(handler).onBeforeSend(eq(raygunClient), (RaygunMessage) anyObject());
     }
 
     @Test
@@ -171,7 +174,7 @@ public class RaygunClientTest {
 
         assertEquals(202, this.raygunClient.send(new Exception()));
 
-        verify(handler).onAfterSend((RaygunMessage) anyObject());
+        verify(handler).onAfterSend(eq(raygunClient), (RaygunMessage) anyObject());
     }
 
     @Test
@@ -208,6 +211,18 @@ public class RaygunClientTest {
         assertThat(breadcrumb.getMessage(), is("hello there"));
         assertThat(breadcrumb.getCategory(), is("greetings"));
         assertNotNull(breadcrumb.getTimestamp());
+    }
+
+    @Test
+    public void shouldUseOnFailHandler() throws IOException {
+        when(raygunConnectionMock.getConnection(anyString())).thenThrow(new IOException());
+        raygunClient.onFailedSend = mock(IRaygunOnFailedSend.class);
+        raygunClient.onAfterSend = mock(IRaygunOnAfterSend.class);
+
+        assertThat(raygunClient.send(new RaygunMessage()), is(-1));
+
+        verify(raygunClient.onFailedSend, times(1)).onFailedSend(eq(raygunClient), anyString());
+        verify(raygunClient.onAfterSend, times(0)).onAfterSend(eq(raygunClient), (RaygunMessage) anyObject());
     }
 
     private RaygunMessage fromJson() {

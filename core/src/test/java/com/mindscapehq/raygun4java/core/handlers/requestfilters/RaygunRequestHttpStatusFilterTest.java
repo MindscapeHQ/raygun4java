@@ -1,6 +1,7 @@
-package com.mindscapehq.raygun4java.core.filters;
+package com.mindscapehq.raygun4java.core.handlers.requestfilters;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestHttpStatusFilter;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
@@ -22,7 +23,7 @@ public class RaygunRequestHttpStatusFilterTest {
         requestDetails.setRequest(new RaygunRequestMessage());
         requestDetails.setResponse(response);
         message.setDetails(requestDetails);
-        assertNull(filter.onBeforeSend(message));
+        assertNull(filter.onBeforeSend(null, message));
     }
 
     @Test

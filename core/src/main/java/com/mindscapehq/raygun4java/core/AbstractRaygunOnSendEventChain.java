@@ -12,19 +12,20 @@ import java.util.List;
  * Instances are not shared between RaygunClient instances
  *
  * @param <T> either IRaygunOnBeforeSend or IRaygunOnAfterSend
+ * @param <M> RaygunMessage or String
  */
-public abstract class AbstractRaygunOnSendEventChain<T extends IRaygunSentEvent> {
+public abstract class AbstractRaygunOnSendEventChain<T extends IRaygunSentEvent, M> {
     private List<T> handlers;
 
     public AbstractRaygunOnSendEventChain(List<T> handlers) {
         this.handlers = handlers;
     }
 
-    public abstract RaygunMessage handle(T handler, RaygunMessage message);
+    public abstract M handle(RaygunClient client, T handler, M message);
 
-    public RaygunMessage handle(RaygunMessage message) {
+    public M handle(RaygunClient client, M message) {
         for (T handler : handlers) {
-            message = handle(handler, message);
+            message = handle(client, handler, message);
             if (message == null) {
                 return null;
             }
