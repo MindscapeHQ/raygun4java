@@ -67,6 +67,13 @@ This example shows the absolute minimum to send an exception to Raygun:
 ```java
 new RaygunClient("YOUR_API_KEY").send(new Exception("my first error"));
 ```
+
+or for an unhandled exception (the client simply adds a tag so that you know that it was unhandled):
+```java
+new RaygunClient("YOUR_API_KEY").sendUnhandled(new Exception("my first error"));
+```
+
+
 While this is extremely simple, **that is not the recommended usage**: as your application complexity increases, scattering that code snippet throughout your code base will become unwieldy. A good practice is to encapsulate the setup and access to the `RaygunClient` instance in a factory. 
 
 Using a factory and dependency injection to manage your `RaygunClient` use will greatly reduce the complexity of your code. You can make your own factories or use the ones provided which allow the configuring of the main features on the factories, which will produce `RaygunClient`s with that configuration.
