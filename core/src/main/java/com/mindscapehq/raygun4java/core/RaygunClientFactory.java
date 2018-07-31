@@ -28,8 +28,8 @@ import java.util.WeakHashMap;
  * RaygunClient client = factory.getClient();
  */
 public class RaygunClientFactory implements IRaygunClientFactory {
-    private String version;
-    private String apiKey;
+    protected String version;
+    protected String apiKey;
     private AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnFailedSend> onFailedSendChainFactory;
@@ -196,7 +196,10 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @return a new RaygunClient configured by this factory
      */
     public RaygunClient newClient() {
-        RaygunClient client = new RaygunClient(apiKey);
+        return buildClient(new RaygunClient(apiKey));
+    }
+
+    public <T extends RaygunClient> T buildClient(T client) {
         client.setOnBeforeSend(onBeforeSendChainFactory.create());
         client.setOnAfterSend(onAfterSendChainFactory.create());
         client.setOnFailedSend(onFailedSendChainFactory.create());
@@ -208,7 +211,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         return client;
     }
 
-    public AbstractRaygunSendEventChainFactory getRaygunOnBeforeSendChainFactory() {
+    public AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> getRaygunOnBeforeSendChainFactory() {
         return onBeforeSendChainFactory;
     }
 
