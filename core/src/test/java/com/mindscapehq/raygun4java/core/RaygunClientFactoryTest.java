@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -164,5 +166,42 @@ public class RaygunClientFactoryTest {
         assertTrue(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0) instanceof RaygunOnFailedSendOfflineStorageHandler);
 
         assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), factory.getRaygunOnFailedSendChainFactory().getHandlersFactory().get(0));
+    }
+
+    @Test
+    public void shouldAddTagsToFactory() {
+        RaygunClientFactory f1 = getFactory("apiKey").withTag("a");
+        assertTrue(f1.factoryTags.contains("a"));
+
+        RaygunClientFactory f2 = getFactory("apiKey").withTag("b");
+        assertTrue(!f2.factoryTags.contains("a"));
+        assertTrue(f2.factoryTags.contains("b"));
+
+        RaygunClient c1 = getClient(f1);
+        c1.withTag("a1");
+
+        RaygunClient c2 = getClient(f2);
+        c2.withTag("b1");
+
+        assertTrue(c1.getTags().contains("a"));
+        assertTrue(c1.getTags().contains("a1"));
+        assertTrue(!c1.getTags().contains("b"));
+        assertTrue(!c1.getTags().contains("b1"));
+
+        assertTrue(!c2.getTags().contains("a"));
+        assertTrue(!c2.getTags().contains("a1"));
+        assertTrue(c2.getTags().contains("b"));
+        assertTrue(c2.getTags().contains("b1"));
+
+
+        Set<String> errorTags = new HashSet<String>();
+        errorTags.add("a2");
+        errorTags = c1.getTagsForError(errorTags);
+        assertTrue(errorTags.contains("a"));
+        assertTrue(errorTags.contains("a1"));
+        assertTrue(errorTags.contains("a2"));
+
+        assertTrue(!f1.factoryTags.contains("a2"));
+        assertTrue(!c1.getTags().contains("a2"));
     }
 }
