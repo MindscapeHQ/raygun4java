@@ -534,6 +534,21 @@ factory.withOfflineStorage("/tmp/raygun")
 
 Errors are stored in plain text and are send when the next error occurs.
 
+### Global settings
+There are some settings that will be set globally, as such you probably should not set these if you are writing a library that will be included into other systems.
+
+#### Proxy
+To set an Http Proxy:
+```java
+RaygunSettings.getSettings().setHttpProxy("http://myproxy.com", 123);
+```
+
+#### Connect timeout
+To set an Http connect timeout in milliseconds:
+```java
+RaygunSettings.getSettings().setConnectTimeout(100);
+``` 
+
 ### Web specific features
 
 #### Web specific factory

@@ -14,7 +14,7 @@ public class RaygunSettingsTest {
         RaygunSettings raygunSettings = RaygunSettings.getSettings();
         raygunSettings.setHttpProxy("proxy.example.org", 1234);
 
-        InetSocketAddress socketAddress = (InetSocketAddress) raygunSettings.getProxy().address();
+        InetSocketAddress socketAddress = (InetSocketAddress) raygunSettings.getHttpProxy().address();
 
         assertEquals("proxy.example.org", socketAddress.getHostName());
         assertEquals(1234, socketAddress.getPort());
