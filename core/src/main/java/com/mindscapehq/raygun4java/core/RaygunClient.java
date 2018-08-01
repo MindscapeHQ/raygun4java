@@ -113,21 +113,15 @@ public class RaygunClient {
      * @return send status code
      */
     public int sendUnhandled(Throwable throwable) {
-        Set<String> tags = new HashSet<String>();
-        tags.add(UNHANDLED_EXCEPTION);
-        return send(buildMessage(throwable, tags, null));
+        return send(throwable, new HashSet<String>(), null);
     }
 
     public int sendUnhandled(Throwable throwable, Map data) {
-        Set<String> tags = new HashSet<String>();
-        tags.add(UNHANDLED_EXCEPTION);
-        return send(buildMessage(throwable, tags, data));
+        return send(throwable, new HashSet<String>(), data);
     }
 
     public int sendUnhandled(Throwable throwable, Set<String> tags) {
-        Set<String> newTags = new HashSet<String>(tags);
-        newTags.add(UNHANDLED_EXCEPTION);
-        return send(buildMessage(throwable, newTags, null));
+        return send(throwable, tags, null);
     }
 
     public int sendUnhandled(Throwable throwable, Set<String> tags, Map data) {
@@ -308,7 +302,7 @@ public class RaygunClient {
     }
 
     /**
-     * This clientData will be added to all errors sent from this instance of the client
+     * This data will be added to all errors sent from this instance of the client
      * @param key
      * @param value
      * @return

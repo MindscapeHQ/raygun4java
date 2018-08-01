@@ -170,7 +170,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     }
 
     /**
-     * This clientData will be added to every error sent
+     * This data will be added to every error sent
      * @param key
      * @param value
      * @return factory
