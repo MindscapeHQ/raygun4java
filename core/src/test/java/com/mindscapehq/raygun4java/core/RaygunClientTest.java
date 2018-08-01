@@ -72,13 +72,17 @@ public class RaygunClientTest {
 
     //////////////////////////////
 
-    private RaygunClient raygunClient;
-    private RaygunConnection raygunConnectionMock;
-    private ByteArrayOutputStream outputStream;
+    protected RaygunClient raygunClient;
+    protected RaygunConnection raygunConnectionMock;
+    protected ByteArrayOutputStream outputStream;
+
+    protected RaygunClient getRaygunClient() {
+        return new RaygunClient("1234");
+    }
 
     @Before
     public void setUp() throws IOException {
-        raygunClient = new RaygunClient("1234");
+        raygunClient = getRaygunClient();
         raygunConnectionMock = mock(RaygunConnection.class);
         raygunClient.setRaygunConnection(raygunConnectionMock);
 

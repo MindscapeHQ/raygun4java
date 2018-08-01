@@ -80,22 +80,9 @@ public class RaygunPlayClient extends RaygunClient {
     }
 
     public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
-        Set<String> tags = new HashSet<String>(clientTags);
-        if (errorTags != null) {
-            tags.addAll(errorTags);
-        }
-
         try {
-            return RaygunPlayMessageBuilder.newMessageBuilder()
+            return ((RaygunPlayMessageBuilder)buildMessage(RaygunPlayMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags)))
                     .setRequestDetails(httpRequest, scalaRequest, scalaRequestHeader, javaRequestHeader)
-                    .setEnvironmentDetails()
-                    .setMachineName(getMachineName())
-                    .setExceptionDetails(throwable)
-                    .setClientDetails()
-                    .setVersion(string)
-                    .setUser(user)
-                    .setTags(tags)
-                    .setUserCustomData(data)
                     .build();
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());

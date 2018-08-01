@@ -2,6 +2,7 @@ package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
+import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,21 +66,8 @@ public class RaygunServletClient extends RaygunClient {
 
     public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
         try {
-            Set<String> tags = new HashSet<String>(clientTags);
-            if (errorTags != null) {
-                tags.addAll(errorTags);
-            }
-
-            return RaygunServletMessageBuilder.New()
+            return ((RaygunServletMessageBuilder)buildMessage(RaygunServletMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags)))
                     .setRequestDetails(request, response)
-                    .setEnvironmentDetails()
-                    .setMachineName(getMachineName())
-                    .setExceptionDetails(throwable)
-                    .setClientDetails()
-                    .setVersion(string)
-                    .setUser(user)
-                    .setTags(tags)
-                    .setUserCustomData(data)
                     .build();
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Failed to build RaygunMessage: " + e.getMessage());

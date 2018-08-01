@@ -115,28 +115,34 @@ public class RaygunClient {
         return send(buildMessage(throwable, newTags));
     }
 
+    protected Set<String> getTagsForError(Set<String> errorTags) {
+        Set<String> tags = new HashSet<String>(clientTags);
+        if (errorTags != null) {
+            tags.addAll(errorTags);
+        }
+        return tags;
+    }
+
     public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
         try {
-            Set<String> tags = new HashSet<String>(clientTags);
-            if (errorTags != null) {
-                tags.addAll(errorTags);
-            }
-
-            return RaygunMessageBuilder.newMessageBuilder()
-                    .setEnvironmentDetails()
-                    .setMachineName(getMachineName())
-                    .setExceptionDetails(throwable)
-                    .setClientDetails()
-                    .setVersion(string)
-                    .setTags(tags)
-                    .setUserCustomData(data)
-                    .setUser(user)
-                    .setBreadrumbs(breadcrumbs)
-                    .build();
+            return buildMessage(RaygunMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags)).build();
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").throwing("RaygunClient", "buildMessage-t-m", t);
         }
         return null;
+    }
+
+    protected <T extends IRaygunMessageBuilder> IRaygunMessageBuilder buildMessage(T builder, Throwable throwable, Set<String> tags) {
+        return builder
+                .setEnvironmentDetails()
+                .setMachineName(getMachineName())
+                .setExceptionDetails(throwable)
+                .setClientDetails()
+                .setVersion(string)
+                .setTags(tags)
+                .setUserCustomData(data)
+                .setUser(user)
+                .setBreadrumbs(breadcrumbs);
     }
 
     public int send(RaygunMessage raygunMessage) {

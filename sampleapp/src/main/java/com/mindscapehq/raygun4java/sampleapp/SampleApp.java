@@ -17,9 +17,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * To test with getting the version from the jar
+ * mvn clean package install
+ * java -jar sampleapp\target\sampleapp-3.0.0-SNAPSHOT-jar-with-dependencies.jar
+ */
 public class SampleApp {
 
-    public static final String API_KEY = "kxiM7MSMbrTVvuYNSGklbw==";
+    public static final String API_KEY = "YOUR_API_KEY";
 
     /**
      * An example of how to use Raygun4Java
