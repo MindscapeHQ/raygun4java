@@ -45,11 +45,15 @@ public class RaygunPlayClient extends RaygunClient {
      * @return send status code
      */
     public void sendAsync(Throwable throwable) {
-        sendAsync(throwable, null);
+        sendAsync(throwable, null, null);
     }
 
     public void sendAsync(Throwable throwable, Set<String> tags) {
-        postAsync(buildMessage(throwable, tags));
+        sendAsync(throwable, tags, null);
+    }
+
+    public void sendAsync(Throwable throwable, Set<String> tags, Map data) {
+        postAsync(buildMessage(throwable, tags, data));
     }
 
     /**
@@ -58,15 +62,21 @@ public class RaygunPlayClient extends RaygunClient {
      * @return send status code
      */
     public void sendAsyncUnhandled(Throwable throwable) {
-        Set<String> tags = new HashSet<String>();
-        tags.add(UNHANDLED_EXCEPTION);
-        sendAsync(throwable, tags);
+        sendAsyncUnhandled(throwable, new HashSet<String>(), null);
     }
 
     public void sendAsyncUnhandled(Throwable throwable, Set<String> tags) {
+        sendAsyncUnhandled(throwable, tags, null);
+    }
+
+    public void sendAsyncUnhandled(Throwable throwable, Map data) {
+        sendAsyncUnhandled(throwable, new HashSet<String>(), data);
+    }
+
+    public void sendAsyncUnhandled(Throwable throwable, Set<String> tags, Map data) {
         Set<String> errorTags = new HashSet<String>(tags);
         errorTags.add(UNHANDLED_EXCEPTION);
-        sendAsync(throwable, errorTags);
+        sendAsync(throwable, errorTags, data);
     }
 
     private void postAsync(final RaygunMessage message) {
@@ -79,9 +89,9 @@ public class RaygunPlayClient extends RaygunClient {
         Executors.newSingleThreadExecutor().submit(r);
     }
 
-    public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
+    public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags, Map errorData) {
         try {
-            return ((RaygunPlayMessageBuilder)buildMessage(RaygunPlayMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags)))
+            return ((RaygunPlayMessageBuilder)buildMessage(RaygunPlayMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags), getDataForError(errorData)))
                     .setRequestDetails(httpRequest, scalaRequest, scalaRequestHeader, javaRequestHeader)
                     .build();
         } catch (Exception e) {

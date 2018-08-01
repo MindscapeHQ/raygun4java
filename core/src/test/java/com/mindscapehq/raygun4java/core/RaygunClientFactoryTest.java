@@ -11,7 +11,9 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -203,5 +205,42 @@ public class RaygunClientFactoryTest {
 
         assertTrue(!f1.factoryTags.contains("a2"));
         assertTrue(!c1.getTags().contains("a2"));
+    }
+
+    @Test
+    public void shouldAddDataToFactory() {
+        RaygunClientFactory f1 = getFactory("apiKey").withData("a", 1);
+        assertTrue(f1.factoryData.containsKey("a"));
+
+        RaygunClientFactory f2 = getFactory("apiKey").withData("b", 1);
+        assertTrue(!f2.factoryData.containsKey("a"));
+        assertTrue(f2.factoryData.containsKey("b"));
+
+        RaygunClient c1 = getClient(f1);
+        c1.withData("a1", 1);
+
+        RaygunClient c2 = getClient(f2);
+        c2.withData("b1", 1);
+
+        assertTrue(c1.getData().containsKey("a"));
+        assertTrue(c1.getData().containsKey("a1"));
+        assertTrue(!c1.getData().containsKey("b"));
+        assertTrue(!c1.getData().containsKey("b1"));
+
+        assertTrue(!c2.getData().containsKey("a"));
+        assertTrue(!c2.getData().containsKey("a1"));
+        assertTrue(c2.getData().containsKey("b"));
+        assertTrue(c2.getData().containsKey("b1"));
+
+
+        Map errorData = new HashMap();
+        errorData.put("a2", 1);
+        errorData = c1.getDataForError(errorData);
+        assertTrue(errorData.containsKey("a"));
+        assertTrue(errorData.containsKey("a1"));
+        assertTrue(errorData.containsKey("a2"));
+
+        assertTrue(!f1.factoryData.containsKey("a2"));
+        assertTrue(!c1.getData().containsKey("a2"));
     }
 }

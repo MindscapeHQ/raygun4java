@@ -231,7 +231,7 @@ public class RaygunClientTest {
     }
 
     private RaygunMessage fromJson() {
-        String body = raygunClient.toJson(raygunClient.buildMessage(null, null));
+        String body = raygunClient.toJson(raygunClient.buildMessage(null, null, null));
         return gson.fromJson(body, RaygunMessage.class);
     }
 

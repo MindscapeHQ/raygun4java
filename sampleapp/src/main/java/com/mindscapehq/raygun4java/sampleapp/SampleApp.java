@@ -81,7 +81,7 @@ public class SampleApp {
                 MyExceptionHandler.getClient().send(new Exception("occurred while offline offline"));
                 System.out.println("No Send above this lines ^");
 
-                // fix the proxy and send offline data
+                // fix the proxy and send offline clientData
                 RaygunSettings.getSettings().setHttpProxy(null, 80);
                 MyExceptionHandler.getClient().send(new Exception("This should trigger offline"));
 
