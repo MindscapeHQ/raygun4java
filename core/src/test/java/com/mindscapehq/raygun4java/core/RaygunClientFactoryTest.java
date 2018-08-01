@@ -35,11 +35,18 @@ public class RaygunClientFactoryTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    public RaygunClientFactory getFactory(String key) {
+        return new RaygunClientFactory(key);
+    }
+
+    public RaygunClient getClient(IRaygunClientFactory factory) {
+        return factory.newClient();
+    }
+
     @Test
     public void shouldConstructFactoryWithDefaultVersionDetection() {
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
-
-        RaygunClient client = factory.newClient();
+        IRaygunClientFactory factory = getFactory("apiKey");
+        RaygunClient client = getClient(factory);
 
         assertEquals("Not supplied", client.string);
         assertEquals("apiKey", client.apiKey);
@@ -47,9 +54,8 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithVersionDetectionFromClass() {
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withVersionFrom(org.apache.commons.io.IOUtils.class);
-
-        RaygunClient client = factory.newClient();
+        IRaygunClientFactory factory = getFactory("apiKey").withVersionFrom(org.apache.commons.io.IOUtils.class);
+        RaygunClient client = getClient(factory);
 
         assertEquals("2.5", client.string);
         assertEquals("apiKey", client.apiKey);
@@ -57,9 +63,8 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithSuppliedVersion() {
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withVersion("1.2.3");
-
-        RaygunClient client = factory.newClient();
+        IRaygunClientFactory factory = getFactory("apiKey").withVersion("1.2.3");
+        RaygunClient client = getClient(factory);
 
         assertEquals("1.2.3", client.string);
         assertEquals("apiKey", client.apiKey);
@@ -67,7 +72,8 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldConstructFactoryWithDuplicateErrorHandler() {
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
+        IRaygunClientFactory factory = getFactory("apiKey");
+        RaygunClient client = getClient(factory);
 
         assertTrue(factory.getRaygunOnBeforeSendChainFactory().getLastFilterFactory() instanceof RaygunDuplicateErrorFilterFactory);
         assertEquals(factory.getRaygunOnAfterSendChainFactory().getHandlersFactory().get(0), factory.getRaygunOnBeforeSendChainFactory().getLastFilterFactory());
@@ -78,11 +84,12 @@ public class RaygunClientFactoryTest {
         IRaygunOnBeforeSend handler = mock(IRaygunOnBeforeSend.class);
         when(onBeforeSendhandlerFactory.create()).thenReturn(handler);
 
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withBeforeSend(onBeforeSendhandlerFactory);
+        IRaygunClientFactory factory = getFactory("apiKey").withBeforeSend(onBeforeSendhandlerFactory);
+        RaygunClient client = getClient(factory);
 
         assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), onBeforeSendhandlerFactory);
 
-        assertEquals(((RaygunOnBeforeSendChain)factory.newClient().onBeforeSend).getHandlers().get(0), handler);
+        assertEquals(((RaygunOnBeforeSendChain)getClient(factory).onBeforeSend).getHandlers().get(0), handler);
     }
 
     @Test
@@ -90,11 +97,12 @@ public class RaygunClientFactoryTest {
         IRaygunOnAfterSend handler = mock(IRaygunOnAfterSend.class);
         when(onAfterSendhandlerFactory.create()).thenReturn(handler);
 
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withAfterSend(onAfterSendhandlerFactory);
+        IRaygunClientFactory factory = getFactory("apiKey").withAfterSend(onAfterSendhandlerFactory);
+        RaygunClient client = getClient(factory);
 
         assertEquals(factory.getRaygunOnAfterSendChainFactory().getHandlersFactory().get(1), onAfterSendhandlerFactory);
 
-        assertEquals(((RaygunOnAfterSendChain)factory.newClient().onAfterSend).getHandlers().get(1), handler);
+        assertEquals(((RaygunOnAfterSendChain)getClient(factory).onAfterSend).getHandlers().get(1), handler);
     }
 
     @Test
@@ -102,18 +110,18 @@ public class RaygunClientFactoryTest {
         IRaygunOnFailedSend handler = mock(IRaygunOnFailedSend.class);
         when(onFailedSendhandlerFactory.create()).thenReturn(handler);
 
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withFailedSend(onFailedSendhandlerFactory);
+        IRaygunClientFactory factory = getFactory("apiKey").withFailedSend(onFailedSendhandlerFactory);
+        RaygunClient client = getClient(factory);
 
         assertEquals(factory.getRaygunOnFailedSendChainFactory().getHandlersFactory().get(0), onFailedSendhandlerFactory);
 
-        assertEquals(((RaygunOnFailedSendChain)factory.newClient().onFailedSend).getHandlers().get(0), handler);
+        assertEquals(((RaygunOnFailedSendChain)getClient(factory).onFailedSend).getHandlers().get(0), handler);
     }
 
     @Test
     public void shouldConstructFactoryDuplicateDetection() throws IOException {
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey");
-
-        RaygunClient client = factory.newClient();
+        IRaygunClientFactory factory = getFactory("apiKey");
+        RaygunClient client = getClient(factory);
 
         RaygunConnection raygunConnection = mock(RaygunConnection.class);
         client.setRaygunConnection(raygunConnection);
@@ -131,7 +139,7 @@ public class RaygunClientFactoryTest {
 
         // and a new client
         Mockito.reset(raygunConnection);
-        client = factory.newClient();
+        client = getClient(factory);
         client.setRaygunConnection(raygunConnection);
 
         client.send(exception);
@@ -141,16 +149,18 @@ public class RaygunClientFactoryTest {
 
     @Test
     public void shouldSetBreadcrumbLocations() {
-        RaygunClientFactory factory = new RaygunClientFactory("apiKey");
-        assertFalse(factory.newClient().shouldProcessBreadcrumbLocation());
+        RaygunClientFactory factory = getFactory("apiKey");
+
+        assertFalse(getClient(factory).shouldProcessBreadcrumbLocation());
 
         factory.withBreadcrumbLocations();
-        assertTrue(factory.newClient().shouldProcessBreadcrumbLocation());
+        assertTrue(getClient(factory).shouldProcessBreadcrumbLocation());
     }
 
     @Test
     public void shouldSetOfflineStorageHandler() {
-        IRaygunClientFactory factory = new RaygunClientFactory("apiKey").withOfflineStorage();
+        IRaygunClientFactory factory = getFactory("apiKey").withOfflineStorage();
+
         assertTrue(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0) instanceof RaygunOnFailedSendOfflineStorageHandler);
 
         assertEquals(factory.getRaygunOnBeforeSendChainFactory().getHandlersFactory().get(0), factory.getRaygunOnFailedSendChainFactory().getHandlersFactory().get(0));
