@@ -12,12 +12,19 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+/**
+ * To test with getting the version from the jar
+ * mvn clean package install
+ * java -jar sampleapp\target\sampleapp-3.0.0-SNAPSHOT-jar-with-dependencies.jar
+ */
 public class SampleApp {
 
-    public static final String API_KEY = "kxiM7MSMbrTVvuYNSGklbw==";
+    public static final String API_KEY = "YOUR_API_KEY";
 
     /**
      * An example of how to use Raygun4Java
@@ -52,20 +59,26 @@ public class SampleApp {
                 } catch (Exception e) {
                     MyExceptionHandler.getClient().recordBreadcrumb("handling exception");
 
-                    // lets onFailedSend this exception - this should appear in the raygun console
                     Map<String, String> customData = new HashMap<String, String>();
                     customData.put("thread id", "" + Thread.currentThread().getId());
-                    MyExceptionHandler.getClient().withTag("thrown from thread").withTag("no user withData").withData("thread id", "" + Thread.currentThread().getId()).send(exceptionToThrowLater);
+                    MyExceptionHandler.getClient()
+                            .withTag("thrown from thread")
+                            .withTag("no user withData")
+                            .withData("thread id", "" + Thread.currentThread().getId())
+                            .send(exceptionToThrowLater);
 
+                    // this should appear in the raygun console as its already been sed
                     MyExceptionHandler.getClient().recordBreadcrumb("This should not appear because we're sending the same exception on the same thread");
-                    MyExceptionHandler.getClient().withTag("should not appear in console").send(exceptionToThrowLater);
+                    Set<String> tags = new HashSet<String>();
+                    tags.add("should not appear in console");
+                    MyExceptionHandler.getClient().send(exceptionToThrowLater, tags);
                 }
 
                 // test offline storage by breaking the proxy
                 RaygunSettings.getSettings().setHttpProxy("nothing here", 80);
 
                 System.out.println("No Send below this line");
-                MyExceptionHandler.getClient().send(new Exception("This should offline"));
+                MyExceptionHandler.getClient().send(new Exception("occurred while offline offline"));
                 System.out.println("No Send above this lines ^");
 
                 // fix the proxy and send offline data
@@ -133,7 +146,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     public void uncaughtException(Thread t, Throwable e) {
-        getClient().withTag("thrown from unhandled exception handler").send(e);
+        getClient().sendUnhandled(e);
     }
 }
 

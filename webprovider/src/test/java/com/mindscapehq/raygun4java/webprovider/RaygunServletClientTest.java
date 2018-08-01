@@ -6,6 +6,8 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.mindscapehq.raygun4java.core.RaygunClient;
+import com.mindscapehq.raygun4java.core.RaygunClientTest;
 import com.mindscapehq.raygun4java.core.RaygunConnection;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessageDetails;
@@ -27,8 +29,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,34 +43,26 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RaygunServletClientTest {
+public class RaygunServletClientTest extends RaygunClientTest {
 
     private Gson gson;
 
-    private RaygunServletClient raygunClient;
-
-    private RaygunConnection raygunConnectionMock;
     @Mock
     private HttpServletRequest request;
 
-    private ByteArrayOutputStream requestBody;
+    protected RaygunClient getRaygunClient() {
+        return new RaygunServletClient("1234", request);
+    }
 
     @Before
     public void setUp() throws IOException {
+        MockitoAnnotations.initMocks(this);
+        super.setUp();
         gson = new GsonBuilder().registerTypeAdapter(RaygunMessageDetails.class, new RaygunRequestMessageDetailsDeserializer()).create();
 
-        MockitoAnnotations.initMocks(this);
 
-        raygunClient = new RaygunServletClient("1234", request);
-        raygunConnectionMock = mock(RaygunConnection.class);
-        raygunClient.setRaygunConnection(raygunConnectionMock);
+
         raygunClient.setOnBeforeSend(null);
-
-        HttpURLConnection httpURLConnection = mock(HttpURLConnection.class);
-        when(httpURLConnection.getResponseCode()).thenReturn(202);
-        requestBody = new ByteArrayOutputStream();
-        when(httpURLConnection.getOutputStream()).thenReturn(requestBody);
-        when(raygunConnectionMock.getConnection(Mockito.anyString())).thenReturn(httpURLConnection);
     }
 
     @Test
@@ -75,6 +71,8 @@ public class RaygunServletClientTest {
         assertEquals(-1, raygunClient.send(new Exception()));
     }
 
+
+
     @Test
     public void post_AsyncWithInvalidKey_MinusOneReturned() {
         raygunClient = new RaygunServletClient("", request);
@@ -82,7 +80,7 @@ public class RaygunServletClientTest {
         try {
             throw new Exception("Test");
         } catch (Exception e) {
-            raygunClient.sendAsync(e);
+            ((RaygunServletClient)raygunClient).sendAsync(e);
         }
     }
 
@@ -93,7 +91,7 @@ public class RaygunServletClientTest {
 
     @Test
     public void send_WithTags_Returns202() throws MalformedURLException, IOException {
-        List<String> tags = new ArrayList<String>();
+        Set<String> tags = new HashSet<String>();
         tags.add("test");
         raygunClient.setTags(tags);
         raygunClient.withTag("withTag");
@@ -102,7 +100,7 @@ public class RaygunServletClientTest {
 
     @Test
     public void send_WithTagsAndCustomData_Returns202() throws MalformedURLException, IOException {
-        List<String> tags = new ArrayList<String>();
+        Set<String> tags = new HashSet<String>();
         tags.add("a_tag");
         Map<Integer, String> customData = new HashMap<Integer, String>();
         customData.put(0, "zero");
@@ -116,19 +114,12 @@ public class RaygunServletClientTest {
     }
 
     @Test
-    public void send_WithUser_Returns202() throws MalformedURLException, IOException {
-        raygunClient.setUser(new RaygunIdentifier("abc"));
-
-        assertEquals(202, raygunClient.send(new Exception()));
-    }
-
-    @Test
     public void send_WithQueryString_Returns202() throws MalformedURLException, IOException {
         when(request.getQueryString()).thenReturn("paramA=valueA&paramB=&");
 
         int send = raygunClient.send(new Exception());
         assertEquals(202, send);
-        String requestBodyAsString = requestBody.toString();
+        String requestBodyAsString = outputStream.toString();
         assertEquals(true, requestBodyAsString.contains("paramA"));
         assertEquals(true, requestBodyAsString.contains("valueA"));
     }
@@ -218,12 +209,12 @@ public class RaygunServletClientTest {
     }
 
     private RaygunServletMessage fromJson() {
-        String body = raygunClient.toJson(raygunClient.buildMessage(null));
+        String body = raygunClient.toJson(raygunClient.buildMessage(null, null));
         return gson.fromJson(body, RaygunServletMessage.class);
     }
 
     private RaygunServletMessage fromJsonStream() {
-        String body = new String(requestBody.toByteArray());
+        String body = new String(outputStream.toByteArray());
         return gson.fromJson(body, RaygunServletMessage.class);
     }
 

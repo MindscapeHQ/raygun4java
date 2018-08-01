@@ -11,8 +11,10 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
@@ -24,8 +26,9 @@ import java.util.logging.Logger;
  */
 public class RaygunClient {
 
-    private RaygunConnection raygunConnection;
+    protected static final String UNHANDLED_EXCEPTION = "UnhandledException";
 
+    private RaygunConnection raygunConnection;
     public void setRaygunConnection(RaygunConnection raygunConnection) {
         this.raygunConnection = raygunConnection;
     }
@@ -38,7 +41,7 @@ public class RaygunClient {
     protected IRaygunOnAfterSend onAfterSend;
     protected IRaygunOnFailedSend onFailedSend;
     protected List<RaygunBreadcrumbMessage> breadcrumbs;
-    protected List<String> tags;
+    protected Set<String> clientTags;
     protected Map data;
     protected boolean shouldProcessBreadcrumbLocation = false;
 
@@ -46,7 +49,7 @@ public class RaygunClient {
         this.apiKey = apiKey;
         this.raygunConnection = new RaygunConnection(RaygunSettings.getSettings());
         breadcrumbs = new ArrayList<RaygunBreadcrumbMessage>();
-        tags = new ArrayList<String>();
+        clientTags = new HashSet<String>();
         data = new WeakHashMap<Object, Object>();
     }
 
@@ -82,27 +85,64 @@ public class RaygunClient {
         string = new RaygunMessageBuilder().setVersionFrom(getVersionFrom).build().getDetails().getVersion();
     }
 
+    /**
+     * Use this method to send a handled exception to Raygun
+     * @param throwable a handled exception
+     * @return send status code
+     */
     public int send(Throwable throwable) {
-        return send(buildMessage(throwable));
+        return send(throwable, null);
     }
 
-    public RaygunMessage buildMessage(Throwable throwable) {
+    public int send(Throwable throwable, Set<String> tags) {
+        return send(buildMessage(throwable, tags));
+    }
+
+    /**
+     * Use this method to send an unhandled exception to Raygun (it will be tagged as an unhandled exception)
+     * @param throwable an unhandled exception
+     * @return send status code
+     */
+    public int sendUnhandled(Throwable throwable) {
+        Set<String> tags = new HashSet<String>();
+        tags.add(UNHANDLED_EXCEPTION);
+        return send(buildMessage(throwable, tags));
+    }
+
+    public int sendUnhandled(Throwable throwable, Set<String> tags) {
+        Set<String> newTags = new HashSet<String>(tags);
+        newTags.add(UNHANDLED_EXCEPTION);
+        return send(buildMessage(throwable, newTags));
+    }
+
+    protected Set<String> getTagsForError(Set<String> errorTags) {
+        Set<String> tags = new HashSet<String>(clientTags);
+        if (errorTags != null) {
+            tags.addAll(errorTags);
+        }
+        return tags;
+    }
+
+    public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
         try {
-            return RaygunMessageBuilder.newMessageBuilder()
-                    .setEnvironmentDetails()
-                    .setMachineName(getMachineName())
-                    .setExceptionDetails(throwable)
-                    .setClientDetails()
-                    .setVersion(string)
-                    .setTags(tags)
-                    .setUserCustomData(data)
-                    .setUser(user)
-                    .setBreadrumbs(breadcrumbs)
-                    .build();
+            return buildMessage(RaygunMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags)).build();
         } catch (Throwable t) {
             Logger.getLogger("Raygun4Java").throwing("RaygunClient", "buildMessage-t-m", t);
         }
         return null;
+    }
+
+    protected <T extends IRaygunMessageBuilder> IRaygunMessageBuilder buildMessage(T builder, Throwable throwable, Set<String> tags) {
+        return builder
+                .setEnvironmentDetails()
+                .setMachineName(getMachineName())
+                .setExceptionDetails(throwable)
+                .setClientDetails()
+                .setVersion(string)
+                .setTags(tags)
+                .setUserCustomData(data)
+                .setUser(user)
+                .setBreadrumbs(breadcrumbs);
     }
 
     public int send(RaygunMessage raygunMessage) {
@@ -212,17 +252,22 @@ public class RaygunClient {
         return breadcrumb;
     }
 
+    /**
+     * These tags will be added to all errors sent from this instance of the client
+     * @param tag
+     * @return client
+     */
     public RaygunClient withTag(String tag) {
-        tags.add(tag);
+        clientTags.add(tag);
         return this;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public Set<String> getTags() {
+        return clientTags;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTags(Set<String> tags) {
+        this.clientTags = tags;
     }
 
     public Map<?, ?> getData() {
@@ -233,6 +278,12 @@ public class RaygunClient {
         this.data = data;
     }
 
+    /**
+     * This data will be added to all errors sent from this instance of the client
+     * @param key
+     * @param value
+     * @return
+     */
     public RaygunClient withData(Object key, Object value) {
         data.put(key, value);
         return this;

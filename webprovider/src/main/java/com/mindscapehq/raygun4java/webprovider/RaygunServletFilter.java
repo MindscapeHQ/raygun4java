@@ -37,7 +37,7 @@ public class RaygunServletFilter implements Filter {
                 raygunServletFilterFacade.setCommittedResponse((HttpServletResponse) servletResponse);
             }
 
-            raygunServletFilterFacade.send(ex);
+            raygunServletFilterFacade.sendUnhandled(ex);
 
             if (ex instanceof ServletException) throw (ServletException)ex;
             if (ex instanceof IOException) throw (IOException)ex;

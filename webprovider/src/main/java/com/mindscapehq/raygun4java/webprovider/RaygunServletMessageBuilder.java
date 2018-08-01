@@ -10,35 +10,27 @@ import java.net.URL;
 
 public class RaygunServletMessageBuilder extends RaygunMessageBuilder implements IRaygunHttpMessageBuilder {
 
-    private RaygunServletMessage raygunServletMessage;
+
 
     public RaygunServletMessageBuilder() {
-        raygunServletMessage = new RaygunServletMessage();
+        raygunMessage = new RaygunServletMessage();
     }
 
-    public static RaygunServletMessageBuilder New() {
+    public static RaygunServletMessageBuilder newMessageBuilder() {
         return new RaygunServletMessageBuilder();
     }
 
     @Override
     public RaygunServletMessage build() {
-        raygunServletMessage.getDetails().setEnvironment(raygunMessage.getDetails().getEnvironment());
-        raygunServletMessage.getDetails().setMachineName(raygunMessage.getDetails().getMachineName());
-        raygunServletMessage.getDetails().setError(raygunMessage.getDetails().getError());
-        raygunServletMessage.getDetails().setClient(raygunMessage.getDetails().getClient());
-        raygunServletMessage.getDetails().setVersion(raygunMessage.getDetails().getVersion());
-        raygunServletMessage.getDetails().setTags(raygunMessage.getDetails().getTags());
-        raygunServletMessage.getDetails().setUserCustomData(raygunMessage.getDetails().getUserCustomData());
-        raygunServletMessage.getDetails().setUser(raygunMessage.getDetails().getUser());
-        raygunServletMessage.getDetails().setGroupingKey(raygunMessage.getDetails().getGroupingKey());
-        return raygunServletMessage;
+        return (RaygunServletMessage) raygunMessage;
     }
 
     public IRaygunHttpMessageBuilder setRequestDetails(HttpServletRequest request, HttpServletResponse response) {
-        raygunServletMessage.getDetails().setRequest(new RaygunRequestMessage(request));
+        RaygunServletMessage servletMessage = (RaygunServletMessage) raygunMessage;
+        servletMessage.getDetails().setRequest(new RaygunRequestMessage(request));
 
         if(response != null) {
-            raygunServletMessage.getDetails().setResponse(new RaygunResponseMessage(response.getStatus()));
+            servletMessage.getDetails().setResponse(new RaygunResponseMessage(response.getStatus()));
         }
 
         return this;

@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         return raygunMessage;
     }
 
-    public static RaygunMessageBuilder newMessageBuilder() {
+    public static IRaygunMessageBuilder newMessageBuilder() {
         return new RaygunMessageBuilder();
     }
 
@@ -67,7 +68,7 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
         return this;
     }
 
-    public IRaygunMessageBuilder setTags(List<?> tags) {
+    public IRaygunMessageBuilder setTags(Set<String> tags) {
         raygunMessage.getDetails().setTags(tags);
         return this;
     }
@@ -108,10 +109,11 @@ public class RaygunMessageBuilder implements IRaygunMessageBuilder {
             String className = cl.getSimpleName() + ".class";
             String classPath = cl.getResource(className).toString();
 
-            String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
-
-            return readVersionFromManifest(new URL(manifestPath).openStream());
-
+            String jarPath = classPath.substring(0, classPath.lastIndexOf("!") + 1);
+            if (jarPath.length() > 0) {
+                String manifestPath =  jarPath + "/META-INF/MANIFEST.MF";
+                return readVersionFromManifest(new URL(manifestPath).openStream());
+            }
         } catch (Exception e) {
             Logger.getLogger("Raygun4Java").warning("Cannot read version from manifest: " + e.getMessage());
         }

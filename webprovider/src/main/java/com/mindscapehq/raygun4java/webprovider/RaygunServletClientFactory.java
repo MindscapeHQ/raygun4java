@@ -1,33 +1,21 @@
 package com.mindscapehq.raygun4java.webprovider;
 
-import com.mindscapehq.raygun4java.core.AbstractRaygunSendEventChainFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
-import com.mindscapehq.raygun4java.core.IRaygunClientFactory;
 import com.mindscapehq.raygun4java.core.IRaygunMessageBuilderFactory;
 import com.mindscapehq.raygun4java.core.IRaygunOnFailedSend;
 import com.mindscapehq.raygun4java.core.IRaygunSendEventFactory;
 import com.mindscapehq.raygun4java.core.RaygunClient;
-import com.mindscapehq.raygun4java.core.RaygunOnAfterSendChainFactory;
-import com.mindscapehq.raygun4java.core.RaygunOnBeforeSendChainFactory;
-import com.mindscapehq.raygun4java.core.RaygunOnFailedSendChainFactory;
-import com.mindscapehq.raygun4java.core.handlers.offlinesupport.RaygunOnFailedSendOfflineStorageHandler;
-import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateErrorFilterFactory;
-import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunExcludeExceptionFilter;
+import com.mindscapehq.raygun4java.core.RaygunClientFactory;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunExcludeLocalRequestFilter;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestCookieFilter;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestFormFilter;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestHeaderFilter;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestHttpStatusFilter;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestQueryStringFilter;
-import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunStripWrappedExceptionFilter;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * An out-of-the-box RaygunClient factory that can extract the application version from the .WAR file /META-INF/MANIFEST.MF
@@ -35,16 +23,8 @@ import java.util.WeakHashMap;
  * For an out-of-the-box implementation, an instance of this should be used to initialize the static accessor:
  * RaygunClient.Initialize(new RaygunServletClientFactory(apiKey, servletContext).withBeforeSend(myBeforeSendHandler));
  */
-public class RaygunServletClientFactory implements IRaygunServletClientFactory {
-    protected String apiKey;
-    protected AbstractRaygunSendEventChainFactory<IRaygunOnBeforeSend> onBeforeSendChainFactory;
-    private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
-    protected AbstractRaygunSendEventChainFactory<IRaygunOnFailedSend> onFailedSendChainFactory;
-    protected List<String> tags;
-    protected Map data;
-    private RaygunClient client;
-    protected String version;
-    protected boolean shouldProcessBreadcrumbLocations = false;
+public class RaygunServletClientFactory extends RaygunClientFactory implements IRaygunServletClientFactory {
+
     protected IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new RaygunServletMessageBuilderFactory();
 
     public RaygunServletClientFactory(String apiKey) {
@@ -52,55 +32,42 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     }
 
     public RaygunServletClientFactory(String apiKey, ServletContext context) {
-        this.apiKey = apiKey;
-        this.version = new RaygunServletMessageBuilder().getVersion(context);
-
-        tags = new ArrayList<String>();
-        data = new WeakHashMap();
-
-        RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
-
-        onBeforeSendChainFactory = new RaygunOnBeforeSendChainFactory()
-                .afterAll(duplicateErrorRecordFilterFactory);
-
-        onAfterSendChainFactory = new RaygunOnAfterSendChainFactory()
-                .withFilterFactory(duplicateErrorRecordFilterFactory);
-
-        onFailedSendChainFactory = new RaygunOnFailedSendChainFactory();
+        super(apiKey);
+        withVersionFrom(context);
     }
 
     public RaygunServletClientFactory withApiKey(String apiKey) {
-        this.apiKey = apiKey;
+        super.withApiKey(apiKey);
         return this;
     }
 
     public RaygunServletClientFactory withVersion(String version) {
-        this.version = version;
+        super.withVersion(version);
         return this;
     }
 
     public RaygunServletClientFactory withVersionFrom(ServletContext context) {
-        this.version = new RaygunServletMessageBuilder().getVersion(context);
+        super.withVersion(new RaygunServletMessageBuilder().getVersion(context));
         return this;
     }
 
     public RaygunServletClientFactory withVersionFrom(Class versionFromClass) {
-        version = raygunMessageBuilderFactory.newMessageBuilder().setVersionFrom(versionFromClass).build().getDetails().getVersion();
+        super.withVersionFrom(versionFromClass);
         return this;
     }
 
     public RaygunServletClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory) {
-        this.raygunMessageBuilderFactory = messageBuilderFactory;
+        super.withMessageBuilder(messageBuilderFactory);
         return this;
     }
 
     public RaygunServletClientFactory withWrappedExceptionStripping(Class... stripWrappers) {
-        onBeforeSendChainFactory.withFilterFactory(new RaygunStripWrappedExceptionFilter(stripWrappers));
+        super.withWrappedExceptionStripping(stripWrappers);
         return this;
     }
 
     public RaygunServletClientFactory withExcludedExceptions(Class... excludedWrappers) {
-        onBeforeSendChainFactory.withFilterFactory(new RaygunExcludeExceptionFilter(excludedWrappers));
+        super.withExcludedExceptions(excludedWrappers);
         return this;
     }
 
@@ -109,11 +76,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
     }
 
     public RaygunServletClientFactory withOfflineStorage(String storageDir) {
-        RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
-
-        onBeforeSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
-        onFailedSendChainFactory.withFilterFactory(sendOfflineStorageHandler);
-
+        super.withOfflineStorage(storageDir);
         return this;
     }
 
@@ -126,7 +89,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * @return factory
      */
     public RaygunServletClientFactory withBeforeSend(IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSend) {
-        this.onBeforeSendChainFactory.withFilterFactory(onBeforeSend);
+        super.withBeforeSend(onBeforeSend);
         return this;
     }
 
@@ -139,7 +102,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * @return factory
      */
     public RaygunServletClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend) {
-        this.onAfterSendChainFactory.withFilterFactory(onAfterSend);
+        super.withAfterSend(onAfterSend);
         return this;
     }
 
@@ -152,7 +115,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * @return factory
      */
     public RaygunServletClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {
-        this.onFailedSendChainFactory.withFilterFactory(onFailedSend);
+        super.withFailedSend(onFailedSend);
         return this;
     }
 
@@ -160,7 +123,7 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
      * BEWARE: enabling could seriously degrade performance of your application
      */
     public RaygunServletClientFactory withBreadcrumbLocations() {
-        this.shouldProcessBreadcrumbLocations = true;
+        super.withBreadcrumbLocations();
         return this;
     }
 
@@ -194,64 +157,28 @@ public class RaygunServletClientFactory implements IRaygunServletClientFactory {
         return this;
     }
 
-
     public void addFilter(IRaygunSendEventFactory raygunOnBeforeSend) {
         getRaygunOnBeforeSendChainFactory().withFilterFactory(raygunOnBeforeSend);
     }
 
-    public RaygunClient newClient() {
-        throw new IllegalStateException("newClient() is not valid for RaygunServletFactory; use newClient(request)");
-    }
-
-    public IRaygunClientFactory withTag(String tag) {
-        tags.add(tag);
+    public RaygunServletClientFactory withTag(String tag) {
+        super.withTag(tag);
         return this;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public Map<?, ?> getData() {
-        return data;
-    }
-
-    public void setData(Map<?, ?> data) {
-        this.data = data;
     }
 
     public RaygunServletClientFactory withData(Object key, Object value) {
-        data.put(key, value);
+        super.withData(key, value);
         return this;
     }
-
 
     /**
      * @return a new RaygunClient
      */
     public RaygunServletClient newClient(HttpServletRequest request) {
-        RaygunServletClient client = new RaygunServletClient(apiKey, request);
-        client.setOnBeforeSend(onBeforeSendChainFactory.create());
-        client.setOnAfterSend(onAfterSendChainFactory.create());
-        client.setOnFailedSend(onFailedSendChainFactory.create());
-        client.setVersion(version);
-        client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
-        return client;
+        return buildClient(new RaygunServletClient(apiKey, request));
     }
 
-    public AbstractRaygunSendEventChainFactory getRaygunOnBeforeSendChainFactory() {
-        return onBeforeSendChainFactory;
-    }
-
-    public AbstractRaygunSendEventChainFactory getRaygunOnAfterSendChainFactory() {
-        return onAfterSendChainFactory;
-    }
-
-    public AbstractRaygunSendEventChainFactory getRaygunOnFailedSendChainFactory() {
-        return onFailedSendChainFactory;
+    public RaygunClient newClient() {
+        throw new IllegalStateException("newClient() is not valid for RaygunServletFactory; use newClient(request)");
     }
 }
