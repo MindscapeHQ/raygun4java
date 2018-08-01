@@ -2,6 +2,7 @@
     * **Breaking Change:** Case changes for many functions to bring them in line with the Java standard
     * **Breaking Change:** Application version detection is performed by factories once, rather than by the client many times - this caused inaccuracies and inefficiency
     * **Breaking Change:** Removed static RaygunClient.OnBeforeSend to support multiple instances (ie multiple libraries etc)
+    * **Breaking Change:** Moved user data from send functions to factory and client
     * Adds Factory orientated construction of the RaygunClients
     * Adds Application version detection supports "version of executing jar"," version of a jar looked up by class", "version of war from servlet context", "manual string"
     * Adds a chain of RaygunOnBeforeSend to allow multiple handlers
@@ -10,10 +11,13 @@
     * Adds customizable "Dont send these errors" filter
     * Adds "Dont send error that have these http status" filter
     * Adds "Remove these wrapping exceptions before sending" filter
+    * Adds "Don't send errors with this exception" filter
     * Adds response http status code to error details
     * Adds ServletFilter for interception of unhandled exception thrown from servlets
     * Adds static RaygunClient per thread support through ThreadLocal<RaygunClient> for the webprovider
     * Adds cookies to error send to Raygun
+    * Adds offline storage of errors
+    * Adds sendUnhandled() that adds a "UnhandledException" tag
 
 * 2.2.0
 
