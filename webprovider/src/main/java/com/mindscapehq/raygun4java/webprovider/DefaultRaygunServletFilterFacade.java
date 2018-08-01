@@ -23,6 +23,12 @@ public class DefaultRaygunServletFilterFacade implements IRaygunServletFilterFac
         } catch (Exception raygunException){}
     }
 
+    public void sendUnhandled(Throwable throwable) {
+        try {
+            RaygunClient.get().sendUnhandled(throwable);
+        } catch (Exception raygunException){}
+    }
+
     public void done() {
         RaygunClient.done();
     }
