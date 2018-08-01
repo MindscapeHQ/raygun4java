@@ -2,7 +2,6 @@
     * **Breaking Change:** Case changes for many functions to bring them in line with the Java standard
     * **Breaking Change:** Application version detection is performed by factories once, rather than by the client many times - this caused inaccuracies and inefficiency
     * **Breaking Change:** Removed static RaygunClient.OnBeforeSend to support multiple instances (ie multiple libraries etc)
-    * **Breaking Change:** Moved user data from send functions to factory and client
     * Adds Factory orientated construction of the RaygunClients
     * Adds Application version detection supports "version of executing jar"," version of a jar looked up by class", "version of war from servlet context", "manual string"
     * Adds a chain of RaygunOnBeforeSend to allow multiple handlers

@@ -8,6 +8,7 @@ import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -30,11 +31,19 @@ public class RaygunServletClient extends RaygunClient {
      * @return send status code
      */
     public void sendAsync(Throwable throwable) {
-        sendAsync(buildMessage(throwable, null));
+        sendAsync(buildMessage(throwable, null, null));
     }
 
     public void sendAsync(Throwable throwable, Set<String> tags) {
-        sendAsync(buildMessage(throwable, tags));
+        sendAsync(buildMessage(throwable, tags, null));
+    }
+
+    public void sendAsync(Throwable throwable, Set<String> tags, Map data) {
+        sendAsync(buildMessage(throwable, tags, data));
+    }
+
+    public void sendAsync(Throwable throwable, Map data) {
+        sendAsync(buildMessage(throwable, null, data));
     }
 
     private void sendAsync(final RaygunMessage message) {
@@ -53,20 +62,26 @@ public class RaygunServletClient extends RaygunClient {
      * @return send status code
      */
     public void sendAsyncUnhandled(Throwable throwable) {
-        Set<String> tags = new HashSet<String>();
-        tags.add(UNHANDLED_EXCEPTION);
-        sendAsync(throwable, tags);
+        sendAsyncUnhandled(throwable, new HashSet<String>(), null);
     }
 
     public void sendAsyncUnhandled(Throwable throwable, Set<String> tags) {
-        Set<String> errorTags = new HashSet<String>(tags);
-        errorTags.add(UNHANDLED_EXCEPTION);
-        sendAsync(throwable, errorTags);
+        sendAsyncUnhandled(throwable, tags, null);
     }
 
-    public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags) {
+    public void sendAsyncUnhandled(Throwable throwable, Map data) {
+        sendAsyncUnhandled(throwable, new HashSet<String>(), data);
+    }
+
+    public void sendAsyncUnhandled(Throwable throwable, Set<String> tags, Map data) {
+        Set<String> errorTags = new HashSet<String>(tags);
+        errorTags.add(UNHANDLED_EXCEPTION);
+        sendAsync(throwable, errorTags, data);
+    }
+
+    public RaygunMessage buildMessage(Throwable throwable, Set<String> errorTags, Map errorData) {
         try {
-            return ((RaygunServletMessageBuilder)buildMessage(RaygunServletMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags)))
+            return ((RaygunServletMessageBuilder)buildMessage(RaygunServletMessageBuilder.newMessageBuilder(), throwable, getTagsForError(errorTags), getDataForError(errorData)))
                     .setRequestDetails(request, response)
                     .build();
         } catch (Exception e) {

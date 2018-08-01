@@ -209,7 +209,7 @@ public class RaygunServletClientTest extends RaygunClientTest {
     }
 
     private RaygunServletMessage fromJson() {
-        String body = raygunClient.toJson(raygunClient.buildMessage(null, null));
+        String body = raygunClient.toJson(raygunClient.buildMessage(null, null, null));
         return gson.fromJson(body, RaygunServletMessage.class);
     }
 

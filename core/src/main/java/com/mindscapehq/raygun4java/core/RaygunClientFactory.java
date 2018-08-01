@@ -5,9 +5,7 @@ import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunDuplicateE
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunExcludeExceptionFilter;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunStripWrappedExceptionFilter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -34,7 +32,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     private AbstractRaygunSendEventChainFactory<IRaygunOnAfterSend> onAfterSendChainFactory;
     private AbstractRaygunSendEventChainFactory<IRaygunOnFailedSend> onFailedSendChainFactory;
     protected Set<String> factoryTags;
-    protected Map data;
+    protected Map factoryData;
     private RaygunClient client;
     private boolean shouldProcessBreadcrumbLocations = false;
     private IRaygunMessageBuilderFactory raygunMessageBuilderFactory = new IRaygunMessageBuilderFactory() {
@@ -52,7 +50,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         version = new RaygunMessageBuilder().setVersion(null).build().getDetails().getVersion();
 
         factoryTags = new HashSet<String>();
-        data = new WeakHashMap();
+        factoryData = new WeakHashMap();
 
         RaygunDuplicateErrorFilterFactory duplicateErrorRecordFilterFactory = new RaygunDuplicateErrorFilterFactory();
 
@@ -164,11 +162,11 @@ public class RaygunClientFactory implements IRaygunClientFactory {
     }
 
     public Map<?, ?> getData() {
-        return data;
+        return factoryData;
     }
 
     public void setData(Map<?, ?> data) {
-        this.data = data;
+        this.factoryData = data;
     }
 
     /**
@@ -178,7 +176,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      * @return factory
      */
     public RaygunClientFactory withData(Object key, Object value) {
-        data.put(key, value);
+        factoryData.put(key, value);
         return this;
     }
 
@@ -206,7 +204,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         client.string = version;
         client.shouldProcessBreadcrumbLocation(shouldProcessBreadcrumbLocations);
         client.setTags(new HashSet<String>(factoryTags));
-        client.setData(new WeakHashMap(data));
+        client.setData(new WeakHashMap(factoryData));
 
         return client;
     }
