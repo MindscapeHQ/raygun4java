@@ -18,6 +18,7 @@
     * Adds cookies to error send to Raygun
     * Adds offline storage of errors
     * Adds sendUnhandled() that adds a "UnhandledException" tag
+    * Adds connectTimeout
 
 * 2.2.0
 

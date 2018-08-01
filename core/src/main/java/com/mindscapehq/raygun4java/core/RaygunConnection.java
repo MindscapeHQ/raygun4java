@@ -2,7 +2,7 @@ package com.mindscapehq.raygun4java.core;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 
 /**
@@ -16,18 +16,23 @@ public class RaygunConnection {
     private RaygunSettings raygunSettings;
 
     public RaygunConnection(RaygunSettings raygunSettings) {
-        super();
         this.raygunSettings = raygunSettings;
     }
 
     public HttpURLConnection getConnection(String apiKey) throws IOException {
 
         HttpURLConnection connection = null;
+        URL url = new URL(raygunSettings.getApiEndPoint());
+        Proxy proxy = raygunSettings.getHttpProxy();
 
-        if (this.raygunSettings.getProxy() != null) {
-            connection = (HttpURLConnection) new URL(this.raygunSettings.getApiEndPoint()).openConnection(this.raygunSettings.getProxy());
+        if (proxy != null) {
+            connection = (HttpURLConnection) url.openConnection(proxy);
         } else {
-            connection = (HttpURLConnection) new URL(this.raygunSettings.getApiEndPoint()).openConnection();
+            connection = (HttpURLConnection) url.openConnection();
+        }
+
+        if (raygunSettings.getConnectTimeout() != null) {
+            connection.setConnectTimeout(raygunSettings.getConnectTimeout());
         }
 
         connection.setDoOutput(true);

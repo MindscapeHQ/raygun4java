@@ -4,14 +4,15 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 public class RaygunSettings {
+    private static RaygunSettings raygunSettings;
+    private static final String defaultApiEndPoint = "https://api.raygun.io/entries";
+    private Proxy proxy;
+    private Integer connectTimeout;
 
     private RaygunSettings() {
     }
 
-    private static RaygunSettings raygunSettings;
-
-    public static synchronized RaygunSettings getSettings() {
-
+    public static RaygunSettings getSettings() {
         if (RaygunSettings.raygunSettings == null) {
             RaygunSettings.raygunSettings = new RaygunSettings();
         }
@@ -19,20 +20,16 @@ public class RaygunSettings {
         return RaygunSettings.raygunSettings;
     }
 
-    private final String defaultApiEndPoint = "https://api.raygun.io/entries";
-
     public String getApiEndPoint() {
         return this.defaultApiEndPoint;
     }
-
-    private Proxy proxy;
 
     /**
      * The proxy class used when communicating with the Raygun server, this is instantiated with setHttpProxy
      *
      * @return The Proxy instance held and used to communicate with the Raygun API
      */
-    public Proxy getProxy() {
+    public Proxy getHttpProxy() {
         return this.proxy;
     }
 
@@ -63,4 +60,15 @@ public class RaygunSettings {
         }
     }
 
+    /*
+     * Sets HttpURLConnection.setConnectTimeout()
+     * Sets a specified timeout value in milliseconds. A timeout of zero is interpreted as an infinite timeout.
+     */
+    public void setConnectTimeout(Integer ms) {
+        this.connectTimeout = ms;
+    }
+
+    public Integer getConnectTimeout() {
+        return connectTimeout;
+    }
 }
