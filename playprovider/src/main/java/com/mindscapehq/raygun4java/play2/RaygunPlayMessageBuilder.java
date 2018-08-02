@@ -1,44 +1,44 @@
 package com.mindscapehq.raygun4java.play2;
 
+import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 import play.api.mvc.RequestHeader;
 import play.mvc.Http.Request;
-import com.mindscapehq.raygun4java.core.RaygunMessageBuilder;
 
 public class RaygunPlayMessageBuilder extends RaygunMessageBuilder implements IRaygunPlayMessageBuilder {
 
-    private RaygunPlayMessage _raygunServletMessage;
+    private RaygunPlayMessage raygunServletMessage;
 
     public RaygunPlayMessageBuilder() {
-        _raygunServletMessage = new RaygunPlayMessage();
+        raygunServletMessage = new RaygunPlayMessage();
     }
 
-    public static RaygunPlayMessageBuilder New() {
+    public static RaygunPlayMessageBuilder newMessageBuilder() {
         return new RaygunPlayMessageBuilder();
     }
 
     @Override
-    public RaygunPlayMessage Build() {
-        _raygunServletMessage.getDetails().setEnvironment(_raygunMessage.getDetails().getEnvironment());
-        _raygunServletMessage.getDetails().setMachineName(_raygunMessage.getDetails().getMachineName());
-        _raygunServletMessage.getDetails().setError(_raygunMessage.getDetails().getError());
-        _raygunServletMessage.getDetails().setClient(_raygunMessage.getDetails().getClient());
-        _raygunServletMessage.getDetails().setVersion(_raygunMessage.getDetails().getVersion());
-        _raygunServletMessage.getDetails().setTags(_raygunMessage.getDetails().getTags());
-        _raygunServletMessage.getDetails().setUserCustomData(_raygunMessage.getDetails().getUserCustomData());
-        _raygunServletMessage.getDetails().setUser(_raygunMessage.getDetails().getUser());
-        _raygunServletMessage.getDetails().setGroupingKey(_raygunMessage.getDetails().getGroupingKey());
-        return _raygunServletMessage;
+    public RaygunPlayMessage build() {
+        raygunServletMessage.getDetails().setEnvironment(raygunMessage.getDetails().getEnvironment());
+        raygunServletMessage.getDetails().setMachineName(raygunMessage.getDetails().getMachineName());
+        raygunServletMessage.getDetails().setError(raygunMessage.getDetails().getError());
+        raygunServletMessage.getDetails().setClient(raygunMessage.getDetails().getClient());
+        raygunServletMessage.getDetails().setVersion(raygunMessage.getDetails().getVersion());
+        raygunServletMessage.getDetails().setTags(raygunMessage.getDetails().getTags());
+        raygunServletMessage.getDetails().setUserCustomData(raygunMessage.getDetails().getUserCustomData());
+        raygunServletMessage.getDetails().setUser(raygunMessage.getDetails().getUser());
+        raygunServletMessage.getDetails().setGroupingKey(raygunMessage.getDetails().getGroupingKey());
+        return raygunServletMessage;
     }
 
-    public IRaygunPlayMessageBuilder SetRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader, play.mvc.Http.RequestHeader javaRequestHeader) {
+    public IRaygunPlayMessageBuilder setRequestDetails(Request javaRequest, play.api.mvc.Request scalaRequest, RequestHeader scalaRequestHeader, play.mvc.Http.RequestHeader javaRequestHeader) {
         if (javaRequest != null) {
-            _raygunServletMessage.getDetails().setRequest(new RaygunPlayJavaRequestMessage(javaRequest));
+            raygunServletMessage.getDetails().setRequest(new RaygunPlayJavaRequestMessage(javaRequest));
         } else if (scalaRequest != null) {
-            _raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestMessage(scalaRequest));
+            raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestMessage(scalaRequest));
         } else if (scalaRequestHeader != null) {
-            _raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestHeaderMessage(scalaRequestHeader));
+            raygunServletMessage.getDetails().setRequest(new RaygunPlayScalaRequestHeaderMessage(scalaRequestHeader));
         } else if (javaRequestHeader != null) {
-            _raygunServletMessage.getDetails().setRequest(new RaygunPlayJavaRequestHeaderMessage(javaRequestHeader));
+            raygunServletMessage.getDetails().setRequest(new RaygunPlayJavaRequestHeaderMessage(javaRequestHeader));
         }
 
         return this;

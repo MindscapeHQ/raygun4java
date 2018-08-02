@@ -2,6 +2,7 @@ package com.mindscapehq.raygun4java.core.messages;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RaygunMessageDetails {
 
@@ -11,9 +12,10 @@ public class RaygunMessageDetails {
     private RaygunErrorMessage error;
     private RaygunEnvironmentMessage environment;
     private RaygunClientMessage client;
-    private List<?> tags;
+    private Set<String> tags;
     private Map<?, ?> userCustomData;
     private RaygunIdentifier user;
+    private List<RaygunBreadcrumbMessage> breadcrumbs;
 
     public String getMachineName() {
         return machineName;
@@ -55,11 +57,11 @@ public class RaygunMessageDetails {
         this.client = client;
     }
 
-    public List<?> getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<?> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 
@@ -91,7 +93,19 @@ public class RaygunMessageDetails {
         this.user = identifier;
     }
 
-    public void setGroupingKey(String groupingKey) { this.groupingKey = groupingKey; }
+    public void setGroupingKey(String groupingKey) {
+        this.groupingKey = groupingKey;
+    }
 
-    public String getGroupingKey() { return this.groupingKey; }
+    public String getGroupingKey() {
+        return this.groupingKey;
+    }
+
+    public void setBreadcrumbs(List<RaygunBreadcrumbMessage> breadcrumbs) {
+        this.breadcrumbs = breadcrumbs;
+    }
+
+    public List<RaygunBreadcrumbMessage> getBreadcrumbs() {
+        return breadcrumbs;
+    }
 }

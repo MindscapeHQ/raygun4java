@@ -1,20 +1,19 @@
 package com.mindscapehq.raygun4java.webprovider;
 
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
+import com.mindscapehq.raygun4java.core.messages.RaygunRequestMessageDetails;
 
-public class RaygunServletMessage extends RaygunMessage
-{
-	
-	public RaygunServletMessage()
-	{
-		details = new RaygunServletMessageDetails();
-	}
+public class RaygunServletMessage extends RaygunMessage {
 
-	public RaygunServletMessageDetails getDetails() {
-		return (RaygunServletMessageDetails) details;
-	}
+    public RaygunServletMessage() {
+        details = new RaygunRequestMessageDetails();
+    }
 
-	public void setDetails(RaygunServletMessageDetails _details) {
-		this.details = _details;
-	}
+    public RaygunRequestMessageDetails getDetails() {
+        return (RaygunRequestMessageDetails) details;
+    }
+
+    public void setDetails(RaygunRequestMessageDetails details) {
+        this.details = details;
+    }
 }

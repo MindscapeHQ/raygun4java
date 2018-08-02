@@ -1,30 +1,36 @@
 package com.mindscapehq.raygun4java.core;
 
+import com.mindscapehq.raygun4java.core.messages.RaygunBreadcrumbMessage;
 import com.mindscapehq.raygun4java.core.messages.RaygunIdentifier;
 import com.mindscapehq.raygun4java.core.messages.RaygunMessage;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IRaygunMessageBuilder {
 
-	RaygunMessage Build();
-	
-	IRaygunMessageBuilder SetMachineName(String machineName);
-	
-	IRaygunMessageBuilder SetExceptionDetails(Throwable throwable);
-	
-	IRaygunMessageBuilder SetClientDetails();
+    RaygunMessage build();
 
-    IRaygunMessageBuilder SetEnvironmentDetails();
+    IRaygunMessageBuilder setMachineName(String machineName);
 
-    IRaygunMessageBuilder SetVersion(String version);
-    
-    IRaygunMessageBuilder SetTags(List<?> tags);
-    
-    IRaygunMessageBuilder SetUserCustomData(Map<?, ?> userCustomData);
+    IRaygunMessageBuilder setExceptionDetails(Throwable throwable);
 
-    IRaygunMessageBuilder SetUser(RaygunIdentifier user);
+    IRaygunMessageBuilder setClientDetails();
 
-    IRaygunMessageBuilder SetGroupingKey(String groupingKey);
+    IRaygunMessageBuilder setEnvironmentDetails();
+
+    IRaygunMessageBuilder setVersion(String version);
+
+    IRaygunMessageBuilder setVersionFrom(Class versionFrom);
+
+    IRaygunMessageBuilder setTags(Set<String> tags);
+
+    IRaygunMessageBuilder setUserCustomData(Map<?, ?> userCustomData);
+
+    IRaygunMessageBuilder setUser(RaygunIdentifier user);
+
+    IRaygunMessageBuilder setGroupingKey(String groupingKey);
+
+    IRaygunMessageBuilder setBreadrumbs(List<RaygunBreadcrumbMessage> breadcrumbs);
 }
