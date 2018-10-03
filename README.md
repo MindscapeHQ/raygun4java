@@ -10,7 +10,7 @@ This provider provides support for sending exceptions from desktop Java, Scala, 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add `com.mindscape.raygun4java` and `com.mindscapehq.core`, version 2.0.0.
+2. Add `com.mindscape.raygun4java` and `com.mindscapehq.core`, version 3.0.0.
 
     If you are working in a web environment, add `com.mindscapehq.webprovider` dependency too.
 
@@ -225,7 +225,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
 		RaygunClient client = raygunClientFactory.newClient();
-		client.Send(e);
+		client.send(e);
 	}
 }
 ```
@@ -413,12 +413,12 @@ RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY")sSetVer
 
 This provider has an `OnBeforeSend` API to support accessing or mutating the candidate error payload immediately before it is sent, or cancelling the send outright.
 
-This is provided as the public method `RaygunClient.setOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `RaygunOnBeforeSend` interface. Your class needs a public `onBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
+This is provided as the public method `RaygunClient.setOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `IRaygunOnBeforeSend` interface. Your class needs a public `onBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
 
 By example:
 
 ```java
-class BeforeSendImplementation implements RaygunOnBeforeSend {
+class BeforeSendImplementation implements IRaygunOnBeforeSend {
     @Override
     public RaygunMessage onBeforeSend(RaygunMessage message) {
         // About to post to Raygun, returning the payload as is...
@@ -511,7 +511,7 @@ or you can use the factory helper
 factory.withWrappedExceptionStripping(ServletException.class);
 ```
 
-#### Exlcuding exceptions
+#### Excluding exceptions
 It is very common for exceptions such as `AccessDeniedException` to be thrown that do not need to be reported to the developer the `RaygunExcludeExceptionFilter` can remove them for you:
 ```java
 factory.withBeforeSend(new RaygunExcludeExceptionFilter(ServletException.class));
