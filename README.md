@@ -56,7 +56,7 @@ Download the JARs for the latest version from here:
 [gson](http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar): *required* - you will also need the Gson dependency in your classpath.
 
 ## Basic Usage
-An instance of the `RaygunClient` holds all the data for tracking errors, such as user information, tags etc. Whether you're application is single user desktop application or and multi user server application, it is highly recommended to use a single `RaygunClient` per process. For example, in a web context it is essential to use a new `RaygunClient` for each user request.
+An instance of the `RaygunClient` holds all the data for tracking errors, such as user information, tags etc. Whether you're application is single user desktop application and/or multi-user server application, it is highly recommended to use a single `RaygunClient` per process. For example, in a web context it is essential to use a new `RaygunClient` for each user request.
 
 The most basic usage of Raygun is as follows:
 1. Setup `RaygunClient` with configuration options
@@ -74,12 +74,12 @@ new RaygunClient("YOUR_API_KEY").sendUnhandled(new Exception("my first error"));
 ```
 
 
-While this is extremely simple, **that is not the recommended usage**: as your application complexity increases, scattering that code snippet throughout your code base will become unwieldy. A good practice is to encapsulate the setup and access to the `RaygunClient` instance in a factory. 
+While this is extremely simple, **that is not the recommended usage**: as your application complexity increases, scattering that code snippet throughout your code base will become unwieldy. A good practice is to encapsulate the setup and access to the `RaygunClient` instance in a factory.
 
 Using a factory and dependency injection to manage your `RaygunClient` use will greatly reduce the complexity of your code. You can make your own factories or use the ones provided which allow the configuring of the main features on the factories, which will produce `RaygunClient`s with that configuration.
 
 For example:
-- Setup 
+- Setup
 ```java
 IRaygunClientFactory factory = new RaygunClientFactory("YOUR_API_KEY")
     .withVersion("1.2.3")
@@ -120,7 +120,7 @@ public class MyErrorTracker {
     }
 
     /**
-     * Through out your code, call get() to get a reference to the current instance 
+     * Through out your code, call get() to get a reference to the current instance
      * @return the raygun client for this thread
      */
     public static RaygunClient get() {
@@ -131,7 +131,7 @@ public class MyErrorTracker {
         }
         return raygunClient;
     }
-    
+
     /**
      * Custom method to set our user
      * @param user
@@ -141,17 +141,17 @@ public class MyErrorTracker {
             .withFirstName(user.firstName)
             .withFullName(user.fullName)
             .withEmail(user.emailAddress)
-            .withUuid(user.uuid, true)); 
+            .withUuid(user.uuid, true));
     }
-    
+
     /**
      * Custom method to send exception
      * @param exception
      */
     public void send(Exception exception) {
-        client.get().send(exception); 
+        client.get().send(exception);
     }
-    
+
     /**
      * At the end of the user process/thread, it is essential to remove the current instance
      */
@@ -173,31 +173,31 @@ public class MyErrorTracker {
         factory = null;
     }
 }
-``` 
+```
 With this statically accessed error handling class you can do the following:
 ```java
 public class MyApplication {
-    
+
     public void startup() {
         MyErrorTracker.initialize(new RaygunClientFactory("YOUR_API_KEY")
                                         .withVersion("1.2.3")
                                         .withMessageBuilder(myCustomizedMessageBuilder)
                                         .withBeforeSend(myCustomOnBeforeSendHandler));
-    } 
-    
+    }
+
     public void processUserRequest(User user) {
         try {
             MyErrorTracker.setUser(user);
-            
+
             ....
-            
+
         } catch (Exception e) {
             MyErrorTracker.send(e);
         } finally{
             MyErrorTracker.done();
         }
     }
-    
+
 }
 ```
 
@@ -217,11 +217,11 @@ public class MyApp
 class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 {
     private IRaygunClientFactory raygunClientFactory;
-    
+
     public MyExceptionHandler(IRaygunClientFactory factory) {
         raygunClientFactory = factory;
     }
-    
+
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
 		RaygunClient client = raygunClientFactory.newClient();
@@ -284,7 +284,7 @@ For automatic exception sending, in your Play 2 app's global error handler, Rayg
 override def onError(request: RequestHeader, ex: Throwable) = {
   val rg = new RaygunPlayClient("your_api_key", request)
   val result = rg.Send(ex)
-  
+
   super.onError(request, ex)
 }
 ```
@@ -395,7 +395,7 @@ While this can be incredibly useful for debugging it is **very resource intensiv
 
 By default, Raygun4Java reads the manifest file for `Specification-Version` or `Implementation-Version` - make sure that your pom packaging sets either of them correctly.
 
-When using Raygun4Java `core` the `/META-INF/MANIFEST.MF` file in the main executing `.jar` is used. 
+When using Raygun4Java `core` the `/META-INF/MANIFEST.MF` file in the main executing `.jar` is used.
 When using Raygun4Java `webprovider` the `/META-INF/MANIFEST.MF` from the `.war` file.
 
 In the case where your code is neither of the stated situations, you can pass in a class from your jar so that the correct version can be extracted ie
@@ -453,7 +453,7 @@ public RaygunMessage onBeforeSend(RaygunMessage message) {
     RaygunMessageDetails details = message.getDetails();
     RaygunErrorMessage error = details.getError();
     error.setMessage("Mutated message");
-    
+
     return message;
 }
 ```
@@ -547,7 +547,7 @@ RaygunSettings.getSettings().setHttpProxy("http://myproxy.com", 123);
 To set an Http connect timeout in milliseconds:
 ```java
 RaygunSettings.getSettings().setConnectTimeout(100);
-``` 
+```
 
 ### Web specific features
 
@@ -587,7 +587,7 @@ This feature is considered to be in Beta, and it is advised to test it in a stag
 
 #### Ignoring errors which specific http status code
 Sometimes unhandled exceptions are thrown that do not indicate an error. For example, an exception that represents a "Not Authorised" error might set a http status code of 401 onto the response.
-If you want to filter out errors by status code you can use the `RaygunRequestHttpStatusFilter` 
+If you want to filter out errors by status code you can use the `RaygunRequestHttpStatusFilter`
 
 ```java
 factory.withBeforeSend(new RaygunRequestHttpStatusFilter(403, 401));
