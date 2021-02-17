@@ -56,7 +56,7 @@ Download the JARs for the latest version from here:
 [gson](http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar): *required* - you will also need the Gson dependency in your classpath.
 
 ## Basic Usage
-An instance of the `RaygunClient` holds all the data for tracking errors, such as user information, tags etc. Whether you're application is single user desktop application and/or multi-user server application, it is highly recommended to use a single `RaygunClient` per process. For example, in a web context it is essential to use a new `RaygunClient` for each user request.
+An instance of the `RaygunClient` holds all the data for tracking errors, such as customer information, tags etc. Whether you're application is single user desktop application and/or multi-user server application, it is highly recommended to use a single `RaygunClient` per process. For example, in a web context it is essential to use a new `RaygunClient` for each user request.
 
 The most basic usage of Raygun is as follows:
 1. Setup `RaygunClient` with configuration options
@@ -133,7 +133,7 @@ public class MyErrorTracker {
     }
 
     /**
-     * Custom method to set our user
+     * Custom method to set our customer
      * @param user
      */
     public void setUser(User user) {
@@ -335,9 +335,9 @@ def index = Action { implicit request =>
 
 ## Documentation
 
-### Affected user tracking
+### Affected Customers
 
-You can call `client.setUser(RaygunIdentifier)` to set the current user's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the `uniqueUserIdentifier`. This could be the user's email address if available, or an internally unique ID representing the users. Any errors containing this string will be considered to come from that user.
+You can call `client.setUser(RaygunIdentifier)` to set the current customer's data, which will be displayed in the dashboard. There are two constructor overloads available, both of which requires a unique string as the `uniqueUserIdentifier`. This could be the customer's email address if available, or an internally unique ID representing the customers. Any errors containing this string will be considered to come from that customer.
 
 The other overload contains all the available properties, some or all of which can be null and can be also be set individually on the `RaygunIdentifier` object.
 

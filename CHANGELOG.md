@@ -44,7 +44,7 @@
 
 - 1.6.0: Envionemnt log statements now guarded and namespaced under Raygun4java.enironment; upgrade Play to 2.3/support Scala 2.10/2.11
 
-- 1.5.0: Added enhanced user data support with SetUser(RaygunIdentifier) - this deprecates SetUser(string)
+- 1.5.0: Added enhanced user/customer data support with SetUser(RaygunIdentifier) - this deprecates SetUser(string)
 
 - 1.4.2: Added Scala RequestHeader overload in constructor for Play 2 provider (rg4j-play2 is now at 0.4.4)
 
@@ -62,9 +62,9 @@
 
 - 1.2.5: Fix a bug where the package used to populate the environment data was not available in certain runtime environments (OSGi, some JVMs)
 
-- 1.2.4: Refactored webprovider package; added SetUser method for unique user tracking; added authenticated proxy support.
+- 1.2.4: Refactored webprovider package; added SetUser method for unique user tracking/Customers; added authenticated proxy support.
 
-- 1.2.3: Added tags and user custom data method overloads for Send. See usage in the updated Sampleapp class.
+- 1.2.3: Added tags and user/customer custom data method overloads for Send. See usage in the updated Sampleapp class.
 
 - 1.2.1: Breaking change: Completed change from ant to maven for packaging and building. The three parts are now maven modules, core, webprovider and sampleapp. The main provider is now located in the *core* namespace, and the JSP and Servlet module is located in *webprovider*.
 
