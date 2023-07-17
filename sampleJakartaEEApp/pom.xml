@@ -25,6 +25,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.mindscapehq</groupId>
+            <artifactId>raygun4java</artifactId>
+            <type>pom</type>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mindscapehq</groupId>
+            <artifactId>core</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.9.3</version>
@@ -112,12 +124,6 @@
                         <image>
                             <alias>wildfly</alias>
                             <name>quay.io/wildfly/wildfly:27.0.0.Final-jdk11</name>
-                            <!--<build>
-                                <assembly>
-                                    <name>${project.build.directory}/deployments</name>
-                                    <targetDir>/opt/jboss/wildfly/standalone/deployments</targetDir>
-                                </assembly>
-                            </build>-->
                             <run>
                                 <ports>
                                     <port>8080:8080</port>
