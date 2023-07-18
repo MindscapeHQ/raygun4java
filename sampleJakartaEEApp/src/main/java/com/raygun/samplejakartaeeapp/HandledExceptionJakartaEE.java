@@ -13,7 +13,13 @@ public class HandledExceptionJakartaEE {
         try {
             throw(new Exception("Test"));
         } catch (Exception e) {
-            new RaygunClient("qN4yHbTukSa9wU6g25rcXQ").send(new Exception("Hello Raygun from a handled exception in Jakarta EE!"));
+            String raygunApiKey = ApplicationProperties.getProperty("raygun.apiKey");
+            int raygunResponseCode = new RaygunClient(raygunApiKey).send(new Exception("Hello Raygun from a handled exception in Jakarta EE!"));
+
+            if (raygunResponseCode != 202) {
+                return "Sending handled exception to Raygun did not return status code 202, instead it returned: " + raygunResponseCode;
+            }
+
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
