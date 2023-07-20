@@ -4,18 +4,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.raygun</groupId>
+    <parent>
+        <groupId>com.mindscapehq</groupId>
+        <artifactId>raygun4java</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
     <artifactId>sampleJakartaEEApp</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0</version>
-    <name>sampleJakartaEEApp</name>
 
+    <name>sampleJakartaEEApp</name>
+    <url>http://raygun.io</url>
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution />
+        </license>
+    </licenses>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
     </properties>
-
+    <description>The official provider for the Raygun error tracking service. This is an example JakartaEE project, using
+        raygun4java.core and webprovider.
+    </description>
     <dependencies>
         <dependency>
             <groupId>jakarta.platform</groupId>
@@ -26,14 +37,11 @@
 
         <dependency>
             <groupId>com.mindscapehq</groupId>
-            <artifactId>raygun4java</artifactId>
-            <type>pom</type>
-            <version>3.0.0</version>
+            <artifactId>core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.mindscapehq</groupId>
-            <artifactId>core</artifactId>
-            <version>3.0.0</version>
+            <artifactId>webprovider</artifactId>
         </dependency>
 
         <dependency>
@@ -58,6 +66,21 @@
         </dependency>
 
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.mindscapehq</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mindscapehq</groupId>
+                <artifactId>webprovider</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
 

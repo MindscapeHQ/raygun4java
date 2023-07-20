@@ -61,7 +61,7 @@ public class RaygunClientFactoryTest {
         IRaygunClientFactory factory = getFactory("apiKey").withVersionFrom(org.apache.commons.io.IOUtils.class);
         RaygunClient client = getClient(factory);
 
-        assertEquals("2.5", client.string);
+        assertEquals("2.13", client.string);
         assertEquals("apiKey", client.apiKey);
     }
 

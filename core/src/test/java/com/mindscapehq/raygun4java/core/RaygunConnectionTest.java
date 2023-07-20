@@ -51,7 +51,7 @@ public class RaygunConnectionTest {
 
         // Ensure that getHttpProxy is called within the getConnection method, as the proxy injected can not be verified due
         // to it being a real object
-        verify(this.raygunSettings, times(2)).getHttpProxy();
+        verify(this.raygunSettings, times(1)).getHttpProxy();
 
     }
 
