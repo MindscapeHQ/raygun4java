@@ -15,11 +15,9 @@
     </parent>
     <modules>
         <module>/core</module>
-        <module>/sampleapp</module>
         <module>/webprovider</module>
         <module>/webproviderjakarta</module>
         <module>/playprovider</module>
-        <module>/sampleJakartaEEApp</module>
     </modules>
     <scm>
         <url>https://github.com/mindscapehq/raygun4java</url>
@@ -61,6 +59,13 @@
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>integration-tests</id>
+            <modules>
+                <module>/sampleapp</module>
+                <module>/sampleJakartaEEApp</module>
+            </modules>
+        </profile>
         <profile>
             <id>sign</id>
             <build>

@@ -25,6 +25,9 @@ These will be executed for all modules in the project.
 In the project's root directory, execute `mvn <phase>`.
 For example, you can execute `mvn install`, runs *all* the previous phases and then, installs the package into the local repository, for use as a dependency in other projects locally.
 
+To include the two integration-test modules in the lifecycle, add `-P integration-tests`, which specifies the profile in the parent pom file that contains them.
+For instance, to run the tests execute `mvn -P integration-tests verify`.
+
 ## Webprovider and Jakarta modules
 In 2018, the web APIs' namespaces where changed from `javax.*` to `jakarta.*`.
 The webproviderjakarta is a copy of webprovider with just these namespaces changes plus appropriate dependencies.
