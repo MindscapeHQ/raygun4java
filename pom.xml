@@ -17,6 +17,7 @@
         <module>/core</module>
         <module>/sampleapp</module>
         <module>/webprovider</module>
+        <module>/webproviderjakarta</module>
         <module>/playprovider</module>
         <module>/sampleJakartaEEApp</module>
     </modules>
