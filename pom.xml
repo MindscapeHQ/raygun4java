@@ -64,6 +64,35 @@
                 <version>3.0.1</version>
             </plugin>
 
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>8.3.1</version>
+                <configuration>
+                    <!--
+                        Common Vulnerability Scoring System (CVSS) Scores explained:
+
+                        0.0: No risk
+                        0.1-3.9: Low severity
+                        4.0-6.9: Medium severity
+                        7.0-8.9: High severity
+                        9.0-10.0: Critical severity
+                    -->
+                    <failBuildOnCVSS>4</failBuildOnCVSS> <!-- set threshold -->
+
+                    <skipProvidedScope>true</skipProvidedScope>
+                    <skipTestScope>true</skipTestScope>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
     <profiles>

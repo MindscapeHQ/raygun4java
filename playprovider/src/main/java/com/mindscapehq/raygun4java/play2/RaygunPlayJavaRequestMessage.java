@@ -4,6 +4,7 @@ import play.mvc.Http.Request;
 
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class RaygunPlayJavaRequestMessage extends RaygunPlayRequestMessage {
 
@@ -13,7 +14,10 @@ public class RaygunPlayJavaRequestMessage extends RaygunPlayRequestMessage {
             ipAddress = request.remoteAddress();
             hostName = request.host();
             url = request.uri();
-            headers = flattenMap(request.headers());
+            headers = flattenMap(request.headers().asMap().entrySet().stream().collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().toArray(new String[0])
+            )));
 
             Map<String, String[]> queryMap = request.queryString();
 
