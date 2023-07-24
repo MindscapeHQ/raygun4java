@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
  *
  * .newClient() should be called at the start of a process/request/thread.
  *
- * The instance could be stored as a static ThreadLocal<RaygunClient>
+ * The instance could be stored as a static {@code ThreadLocal<RaygunClient>}
  * so that it can be used statically throughout the process.
  * Don't forget to remove the instance at the end of your process.
  *
@@ -43,7 +43,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     /**
      * This constructor will attempt to extract the app version from /META-INF/MANIFEST.MF of the executing jar
-     * @param apiKey
+     * @param apiKey your Raygun apiKey
      */
     public RaygunClientFactory(String apiKey) {
         this.apiKey = apiKey;
@@ -68,7 +68,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      *
      * factory.withBeforeSend(myRaygunOnBeforeSendFactory)
      *
-     * @param onBeforeSend
+     * @param onBeforeSend {@code IRaygunSendEventFactory<IRaygunOnBeforeSend>} to be executed before sending the error to Raygun
      * @return factory
      */
     public RaygunClientFactory withBeforeSend(IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSend) {
@@ -81,7 +81,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      *
      * factory.withAfterSend(myRaygunOnAfterSendFactory)
      *
-     * @param onAfterSend
+     * @param onAfterSend {@code IRaygunSendEventFactory<IRaygunOnAfterSend>} to be executed after sending the
      * @return factory
      */
     public RaygunClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend) {
@@ -94,7 +94,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
      *
      * factory.withFailedSend(myRaygunOnFailedSendFactory)
      *
-     * @param onFailedSend
+     * @param onFailedSend {@code IRaygunSendEventFactory<IRaygunOnFailedSend>} to be executed on error
      * @return factory
      */
     public RaygunClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {
@@ -102,30 +102,64 @@ public class RaygunClientFactory implements IRaygunClientFactory {
         return this;
     }
 
+    /**
+     * Generates a factory with associated apiKey
+     *
+     * @param apiKey Raygun apiKey
+     * @return factory
+     */
     public RaygunClientFactory withApiKey(String apiKey) {
         this.apiKey = apiKey;
         return this;
     }
 
+    /**
+     * Generates a factory with associated version
+     *
+     * @param version of your Java application
+     * @return factory
+     */
     public RaygunClientFactory withVersion(String version) {
         this.version = version;
         return this;
     }
 
+    /**
+     * Generates a factory with associated version derived from class
+     *
+     * @param versionFromClass the class object to derive your app's version from
+     * @return factory
+     */
     public RaygunClientFactory withVersionFrom(Class versionFromClass) {
         version = raygunMessageBuilderFactory.newMessageBuilder().setVersionFrom(versionFromClass).build().getDetails().getVersion();
         return this;
     }
 
+    /**
+     * Generates a factory with associated {@code IRaygunMessageBuilderFactory}
+     * @param messageBuilderFactory the message builder factory object
+     * @return factory
+     */
     public RaygunClientFactory withMessageBuilder(IRaygunMessageBuilderFactory messageBuilderFactory) {
         this.raygunMessageBuilderFactory = messageBuilderFactory;
         return this;
     }
 
+    /**
+     * Generates a factory with associated offline storage on default directory
+     *
+     * @return factory
+     */
     public RaygunClientFactory withOfflineStorage() {
         return withOfflineStorage("");
     }
 
+    /**
+     * Generates a factory with associated offline storage on given directory
+     *
+     * @param storageDir the directory to store errors
+     * @return factory
+     */
     public RaygunClientFactory withOfflineStorage(String storageDir) {
         RaygunOnFailedSendOfflineStorageHandler sendOfflineStorageHandler = new RaygunOnFailedSendOfflineStorageHandler(storageDir, apiKey);
 
@@ -137,6 +171,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     /**
      * BEWARE: enabling could seriously degrade performance of your application
+     *
+     * @return factory
      */
     public RaygunClientFactory withBreadcrumbLocations() {
         this.shouldProcessBreadcrumbLocations = true;
@@ -145,7 +181,7 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     /**
      * These tags will be added to every error sent
-     * @param tag
+     * @param tag to be associated with the error
      * @return factory
      */
     public RaygunClientFactory withTag(String tag) {
@@ -171,8 +207,8 @@ public class RaygunClientFactory implements IRaygunClientFactory {
 
     /**
      * This data will be added to every error sent
-     * @param key
-     * @param value
+     * @param key of key-value pair
+     * @param value of key-value pair
      * @return factory
      */
     public RaygunClientFactory withData(Object key, Object value) {

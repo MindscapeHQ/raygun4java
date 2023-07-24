@@ -257,6 +257,8 @@ public class RaygunClient {
 
     /**
      * BEWARE: setting this to true could seriously degrade performance of your application
+     *
+     * @param shouldProcessBreadcrumbLocation true to process breadcrumpr location
      */
     public void shouldProcessBreadcrumbLocation(boolean shouldProcessBreadcrumbLocation) {
         this.shouldProcessBreadcrumbLocation = shouldProcessBreadcrumbLocation;
@@ -277,7 +279,7 @@ public class RaygunClient {
 
     /**
      * These tags will be added to all errors sent from this instance of the client
-     * @param tag
+     * @param tag the tag to be associated with the errors
      * @return client
      */
     public RaygunClient withTag(String tag) {
@@ -303,9 +305,9 @@ public class RaygunClient {
 
     /**
      * This data will be added to all errors sent from this instance of the client
-     * @param key
-     * @param value
-     * @return
+     * @param key the key of the key-value pair
+     * @param value the value of the key-value pair
+     * @return client
      */
     public RaygunClient withData(Object key, Object value) {
         clientData.put(key, value);
