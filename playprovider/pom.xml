@@ -85,6 +85,9 @@
                             <arguments>
                                 <argument>compile</argument>
                             </arguments>
+                            <environmentVariables>
+                                <project.parent.version>${project.parent.version}</project.parent.version>
+                            </environmentVariables>
                         </configuration>
                     </execution>
                 </executions>
