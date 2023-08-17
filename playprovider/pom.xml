@@ -30,42 +30,6 @@
     <description>The official provider for the Raygun error tracking service. This is the Play Framework provider module
         that sends errors caught from your Play Scala/Java application. Used in conjunction with raygun4java.core
     </description>
-    <repositories>
-        <repository>
-            <id>typesafe</id>
-            <url>https://repo.lightbend.com/typesafe/releases/</url>
-        </repository>
-    </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>com.mindscapehq</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe.play</groupId>
-            <artifactId>play_2.13</artifactId>
-            <version>2.9.0-M6</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe.play</groupId>
-            <artifactId>play-java_2.13</artifactId>
-            <version>2.9.0-M6</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe.play</groupId>
-            <artifactId>play-test_2.13</artifactId>
-            <version>2.9.0-M6</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>2.13.11</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>
@@ -86,6 +50,8 @@
                                 <argument>compile</argument>
                             </arguments>
                             <environmentVariables>
+                                <project.artifactId>${project.artifactId}</project.artifactId>
+                                <project.version>${project.version}</project.version>
                                 <project.parent.version>${project.parent.version}</project.parent.version>
                             </environmentVariables>
                         </configuration>
@@ -97,6 +63,7 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>
+                    <!-- Add managed sources to Maven's source directories -->
                     <execution>
                         <id>play2-add-managed-sources</id>
                         <goals>
@@ -104,10 +71,35 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>
-                                    ${project.build.directory}/scala-2.10/src_managed/main
-                                </source>
+                                <source>${project.build.directory}/scala/src_managed/main</source>
                             </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Add main Scala sources to Maven's source directories -->
+                    <execution>
+                        <id>play2-add-main-sources</id>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/java/com.mindscapehq.raygun4java.play2</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Include compiled Scala classes in the final JAR -->
+                    <execution>
+                        <id>play2-include-compiled-classes</id>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>project/target/scala-2.12/classes</directory>
+                                    <targetPath>com/mindscapehq/raygun4java/play2</targetPath>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
