@@ -85,7 +85,7 @@ public class RaygunServletClientFactory extends RaygunClientFactory implements I
      *
      * factory.withBeforeSend(myRaygunOnBeforeSendFactory)
      *
-     * @param onBeforeSend
+     * @param onBeforeSend the before send action
      * @return factory
      */
     public RaygunServletClientFactory withBeforeSend(IRaygunSendEventFactory<IRaygunOnBeforeSend> onBeforeSend) {
@@ -98,7 +98,7 @@ public class RaygunServletClientFactory extends RaygunClientFactory implements I
      *
      * factory.withAfterSend(myRaygunOnAfterSendFactory)
      *
-     * @param onAfterSend
+     * @param onAfterSend the after send action
      * @return factory
      */
     public RaygunServletClientFactory withAfterSend(IRaygunSendEventFactory<IRaygunOnAfterSend> onAfterSend) {
@@ -111,7 +111,7 @@ public class RaygunServletClientFactory extends RaygunClientFactory implements I
      *
      * factory.withFailedSend(myRaygunOnFailedSendFactory)
      *
-     * @param onFailedSend
+     * @param onFailedSend the on-fail action
      * @return factory
      */
     public RaygunServletClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {

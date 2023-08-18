@@ -33,7 +33,7 @@ public class RaygunClient {
 
     /**
      * Initialize this static accessor with the given factory
-     * @param factory
+     * @param factory the given raygun factory
      */
     public static void initialize(IRaygunServletClientFactory factory) {
         RaygunClient.factory = factory;
@@ -41,7 +41,7 @@ public class RaygunClient {
 
     /**
      * Initialize the static accessor for the given request
-     * @param request
+     * @param request the given web request
      */
     public static void initialize(HttpServletRequest request) {
         if (factory == null) {
@@ -61,7 +61,7 @@ public class RaygunClient {
      * Sets given client to the current thread.
      * This can be useful when forking multiple processes.
      * Be sure to unset after use or pain will ensue.
-     * @param toSet
+     * @param toSet the Raygun Servler client
      */
     public static void set(RaygunServletClient toSet) {
         client.set(toSet);

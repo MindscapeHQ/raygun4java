@@ -28,7 +28,6 @@ public class RaygunServletClient extends RaygunClient {
     /**
      * Use this method to send a handled exception to Raygun
      * @param throwable a handled exception
-     * @return send status code
      */
     public void sendAsync(Throwable throwable) {
         sendAsync(buildMessage(throwable, null, null));
@@ -59,7 +58,6 @@ public class RaygunServletClient extends RaygunClient {
     /**
      * Use this method to send an unhandled exception to Raygun (it will be tagged as an unhandled exception)
      * @param throwable an unhandled exception
-     * @return send status code
      */
     public void sendAsyncUnhandled(Throwable throwable) {
         sendAsyncUnhandled(throwable, new HashSet<String>(), null);
@@ -105,7 +103,7 @@ public class RaygunServletClient extends RaygunClient {
     /**
      * Adds the response information to the error.
      * Only set the response once the response has been committed.
-     * @param response
+     * @param response the http servlet response
      */
     public void setResponse(HttpServletResponse response) {
         if (response.isCommitted()) {
