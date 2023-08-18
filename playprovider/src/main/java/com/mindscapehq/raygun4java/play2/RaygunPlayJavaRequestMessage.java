@@ -14,9 +14,9 @@ public class RaygunPlayJavaRequestMessage extends RaygunPlayRequestMessage {
             ipAddress = request.remoteAddress();
             hostName = request.host();
             url = request.uri();
-            headers = flattenMap(request.headers().asMap().entrySet().stream().collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    e -> e.getValue().toArray(new String[0])
+            headers = flattenMap(request.getHeaders().asMap().entrySet().stream().collect(Collectors.toMap(
+                    entry -> entry.getKey(),
+                    entry -> entry.getValue().toArray(new String[0])
             )));
 
             Map<String, String[]> queryMap = request.queryString();
