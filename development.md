@@ -1,7 +1,7 @@
 # Raygun4Java Development Guide
 
-Raygun4Java is a multi-module maven project.
-All maven projects are specified via their pom files.
+Raygun4Java is a multi-module Maven project.
+All Maven projects are specified via their pom files.
 The parent pom file contains references to the following modules:
 * <b>core</b>, the main functionalities for communicating errors to Raygun
 * <b>playprovider</b>, a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps
@@ -14,6 +14,10 @@ These modules can reference each other as dependencies.
 
 ## Setting up a dev environment
 (Please) use your IDE of choice, e.g., IntelliJ.
+
+<b>Required:</b>
+- Download [Maven](https://maven.apache.org/download.cgi).
+- Download [sbt](https://www.scala-sbt.org/download.html) for compiling the Play provider. This is called via a Maven exec plugin during the `generate-sources` phase of the Play provider's pom.
 
 <b>Important!</b> The sampleJakartaEEApp requires a Raygun API Key.
 After you retrieve it from Raygun, create a config.properties file in `src/main/resources` of `sampleJakartaEEApp` that contains `raygun.apiKey=<YOUR-RAYGUN-API-KEY>`.
