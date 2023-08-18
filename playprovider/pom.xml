@@ -33,7 +33,22 @@
 
     <build>
         <plugins>
-            <!-- Execute sbt compile command using Maven -->
+            <!-- Skip Maven's default compile phase (use "sbt compile" instead) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Execute "sbt compile" command using Maven -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -47,7 +62,26 @@
                         <configuration>
                             <executable>sbt</executable>
                             <arguments>
+                                <argument>update</argument>
                                 <argument>compile</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <project.artifactId>${project.artifactId}</project.artifactId>
+                                <project.version>${project.version}</project.version>
+                                <project.parent.version>${project.parent.version}</project.parent.version>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sbt-clean</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>sbt</executable>
+                            <arguments>
+                                <argument>clean</argument>
                             </arguments>
                             <environmentVariables>
                                 <project.artifactId>${project.artifactId}</project.artifactId>
@@ -63,19 +97,6 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>
-                    <!-- Add managed sources to Maven's source directories -->
-                    <execution>
-                        <id>play2-add-managed-sources</id>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/scala/src_managed/main</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <!-- Add main Scala sources to Maven's source directories -->
                     <execution>
                         <id>play2-add-main-sources</id>
                         <goals>
@@ -96,8 +117,7 @@
                         <configuration>
                             <resources>
                                 <resource>
-                                    <directory>project/target/scala-2.12/classes</directory>
-                                    <targetPath>com/mindscapehq/raygun4java/play2</targetPath>
+                                    <directory>${project.basedir}/target/scala-2.13/classes</directory>
                                 </resource>
                             </resources>
                         </configuration>
