@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.mindscapehq</groupId>
@@ -10,8 +9,8 @@
         <url>https://github.com/mindscapehq/raygun4java</url>
         <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
     <artifactId>raygun4java-play2</artifactId>
     <packaging>jar</packaging>
 
@@ -21,7 +20,7 @@
         <license>
             <name>The MIT License</name>
             <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution/>
+            <distribution />
         </license>
     </licenses>
     <properties>
@@ -30,96 +29,77 @@
     <description>The official provider for the Raygun error tracking service. This is the Play Framework provider module
         that sends errors caught from your Play Scala/Java application. Used in conjunction with raygun4java.core
     </description>
+    <repositories>
+        <repository>
+            <id>typesafe</id>
+            <url>https://repo.lightbend.com/typesafe/releases/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.mindscapehq</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.play</groupId>
+            <artifactId>play_2.13</artifactId>
+            <version>2.9.0-M6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.play</groupId>
+            <artifactId>play-java_2.13</artifactId>
+            <version>2.9.0-M6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.play</groupId>
+            <artifactId>play-test_2.13</artifactId>
+            <version>2.9.0-M6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.nanoko.playframework</groupId>
+            <artifactId>play2-maven-plugin</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.13.10</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
-            <!-- Skip Maven's default compile phase (use "sbt compile" instead) -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Execute "sbt compile" command using Maven -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>sbt</executable>
-                            <arguments>
-                                <argument>update</argument>
-                                <argument>compile</argument>
-                            </arguments>
-                            <environmentVariables>
-                                <project.artifactId>${project.artifactId}</project.artifactId>
-                                <project.version>${project.version}</project.version>
-                                <project.parent.version>${project.parent.version}</project.parent.version>
-                            </environmentVariables>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>sbt-clean</id>
-                        <phase>pre-clean</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>sbt</executable>
-                            <arguments>
-                                <argument>clean</argument>
-                            </arguments>
-                            <environmentVariables>
-                                <project.artifactId>${project.artifactId}</project.artifactId>
-                                <project.version>${project.version}</project.version>
-                                <project.parent.version>${project.parent.version}</project.parent.version>
-                            </environmentVariables>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>org.nanoko.playframework</groupId>
+                <artifactId>play2-maven-plugin</artifactId>
+                <version>1.2.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <lib>target/lib</lib>
+                    <buildDist>false</buildDist>
+                    <buildWar>false</buildWar>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>1.7</version>
                 <executions>
                     <execution>
-                        <id>play2-add-main-sources</id>
+                        <id>play2-add-managed-sources</id>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/java/com.mindscapehq.raygun4java.play2</source>
+                                <source>
+                                    ${project.build.directory}/scala-2.10/src_managed/main
+                                </source>
                             </sources>
-                        </configuration>
-                    </execution>
-                    <!-- Include compiled Scala classes in the final JAR -->
-                    <execution>
-                        <id>play2-include-compiled-classes</id>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/target/scala-2.13/classes</directory>
-                                </resource>
-                            </resources>
                         </configuration>
                     </execution>
                 </executions>

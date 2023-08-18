@@ -1,19 +1,18 @@
-name := fromEnv("project.artifactId").get
+name := fromEnv("project.artifactId").getOrElse("raygun4java-play2")
 
 organization := "com.mindscapehq"
 
-version := fromEnv("project.version").get
+version := fromEnv("project.version").getOrElse("0.4.6-SNAPSHOT")
 
-scalaVersion := "2.13.11"
+scalaVersion := "2.11.4"
 
-crossScalaVersions := Seq("2.12.18", "2.13.11")
+crossScalaVersions := Seq("2.10.4", "2.11.1", "2.11.2", "2.11.4")
 
-resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 resolvers += "Typesafe Releases" at "https://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  "com.mindscapehq" % "core" % fromEnv("project.parent.version").get,
-  "com.typesafe.play" %% "play" % "2.8.20"
+  "com.mindscapehq" % "core" % "2.2.0",
+  "com.typesafe.play" %% "play" % play.core.PlayVersion.current
 )
 
 def fromEnv(name: String) = System.getenv(name) match {
