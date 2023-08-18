@@ -1,6 +1,6 @@
-package com.mindscapehq.raygun4java.webprovider;
+package com.mindscapehq.raygun4java.webproviderjakarta;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * A static accessor for RaygunServletClient
@@ -33,7 +33,7 @@ public class RaygunClient {
 
     /**
      * Initialize this static accessor with the given factory
-     * @param factory the given raygun factory
+     * @param factory the raygun servlet factory
      */
     public static void initialize(IRaygunServletClientFactory factory) {
         RaygunClient.factory = factory;
@@ -41,7 +41,7 @@ public class RaygunClient {
 
     /**
      * Initialize the static accessor for the given request
-     * @param request the given web request
+     * @param request the http request
      */
     public static void initialize(HttpServletRequest request) {
         if (factory == null) {
@@ -61,7 +61,7 @@ public class RaygunClient {
      * Sets given client to the current thread.
      * This can be useful when forking multiple processes.
      * Be sure to unset after use or pain will ensue.
-     * @param toSet the Raygun Servler client
+     * @param toSet the raygun servlet client
      */
     public static void set(RaygunServletClient toSet) {
         client.set(toSet);

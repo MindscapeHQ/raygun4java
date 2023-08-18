@@ -5,10 +5,10 @@
         <artifactId>raygun4java</artifactId>
         <version>4.0.0-rc2-SNAPSHOT</version>
     </parent>
-    <artifactId>webprovider</artifactId>
+    <artifactId>webproviderjakarta</artifactId>
     <packaging>jar</packaging>
 
-    <name>raygun-webprovider</name>
+    <name>raygun-webprovider-jakarta</name>
     <url>http://raygun.io</url>
     <licenses>
         <license>
@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <description>The official provider for the Raygun error tracking service. This is the web provider that sends errors
-        caught from your servlet/JSP application. Used in conjunction with raygun4java.core
+        caught from your Jakarta servlet/JSP application. Used in conjunction with raygun4java.core
     </description>
     <dependencies>
         <dependency>
@@ -30,9 +30,9 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -47,6 +47,12 @@
             <version>${project.parent.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

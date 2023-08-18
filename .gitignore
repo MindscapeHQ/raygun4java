@@ -7,3 +7,4 @@ target/
 .idea/
 out/
 bin/
+.m2/settings.xml

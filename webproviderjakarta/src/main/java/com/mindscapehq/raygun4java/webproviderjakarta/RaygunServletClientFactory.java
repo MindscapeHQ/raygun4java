@@ -1,4 +1,4 @@
-package com.mindscapehq.raygun4java.webprovider;
+package com.mindscapehq.raygun4java.webproviderjakarta;
 
 import com.mindscapehq.raygun4java.core.IRaygunOnAfterSend;
 import com.mindscapehq.raygun4java.core.IRaygunOnBeforeSend;
@@ -14,8 +14,8 @@ import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestHea
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestHttpStatusFilter;
 import com.mindscapehq.raygun4java.core.handlers.requestfilters.RaygunRequestQueryStringFilter;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * An out-of-the-box RaygunClient factory that can extract the application version from the .WAR file /META-INF/MANIFEST.MF
@@ -111,7 +111,7 @@ public class RaygunServletClientFactory extends RaygunClientFactory implements I
      *
      * factory.withFailedSend(myRaygunOnFailedSendFactory)
      *
-     * @param onFailedSend the on-fail action
+     * @param onFailedSend the on-failed action
      * @return factory
      */
     public RaygunServletClientFactory withFailedSend(IRaygunSendEventFactory<IRaygunOnFailedSend> onFailedSend) {
