@@ -249,89 +249,128 @@ For the out-of-the-box implementation of capturing exceptions thrown out of your
 
 Intercepting unhandled exceptions is a standard pattern used by the servlet `Filter`, and provided out-of-the-box by the `com.mindscapehq.raygun4java.webprovider.DefaultRaygunServletFilter`
 
-Unfortuanally most web frameworks implement their own exception handling for exceptions that occur inside their presentation layer, and those exceptions are not perculated through the servlet filter, rather they are handled by the framework. (The `DefaultRaygunServletFilter` could be extended to detect the 500 status code without an exception, but by that point all the useful information about the exception is not available).
+Unfortunately most web frameworks implement their own exception handling for exceptions that occur inside their presentation layer, and those exceptions are not perculated through the servlet filter, rather they are handled by the framework. (The `DefaultRaygunServletFilter` could be extended to detect the 500 status code without an exception, but by that point all the useful information about the exception is not available).
 
 To capture exceptions that occur within the framework presentation layer (or any other area that is handling exceptions), refer to that frameworks documentation about handling exceptions, and send the exception to Raygun using the techniques described above (the static accessor will help out here)
 
 ## Play 2 Framework for Java and Scala
 
-This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. Feedback is appreciated if you use this provider in a Play 2 app. You can use the plain core-3.x.x provider from Scala, but if you use this dedicated Play 2 provider HTTP request data is transmitted too.
+This provider now contains a dedicated Play 2 provider for automatically sending Java and Scala exceptions from Play 2 web apps. Feedback is appreciated if you use this provider in a Play 2 app. You can use the plain core-4.x.x provider from Scala, but if you use this dedicated Play 2 provider, HTTP request data is transmitted too.
 
 ### Installation
 
 #### With SBT
 
-Add the following line to your build.sbt's libraryDependencies:
+Add the following line to your `build.sbt`'s `libraryDependencies`:
 
 ```
 libraryDependencies ++= Seq(
-    "com.mindscapehq" % "raygun4java-play2" % "3.0.0"
+    "com.mindscapehq" % "raygun4java-play2" % "4.0.0"
 )
 ```
 
 #### With Maven
 
-Add the raygun4java-play2-3.x.x dependency to your pom.xml (following the instructions under 'With Maven and a command shell' at the top of this file).
+Add the `raygun4java-play2-4.x.x` dependency to your `pom.xml` (following the instructions under 'With Maven and a command shell' at the top of this file).
 
 ### Usage
 
-For automatic exception sending, in your Play 2 app's global error handler, RaygunPlayClient has a method which allows you to pass in a RequestHeader and send a Throwable:
+To handle exceptions automatically, define a custom error handler by creating a class that inherits from `HttpErrorHandler`. For Play 2's newer versions, `GlobalSettings.onError` is no longer available. Instead, you should use `HttpErrorHandler`.
 
-**In Scala**
-
-**app/Global.scala**
-```scala
-override def onError(request: RequestHeader, ex: Throwable) = {
-  val rg = new RaygunPlayClient("your_api_key", request)
-  val result = rg.Send(ex)
-
-  super.onError(request, ex)
-}
+1. Add the following line to your `conf/application.conf`:
+```
+play.http.errorHandler = "com.raygun.CustomErrorHandler"
 ```
 
-**In Java**
+2. Create the custom error handler class:
 
-**app/Global.java**
+**In Java:**
+
 ```java
+package com.raygun;
+
 import play.*;
 import play.mvc.*;
 import play.mvc.Http.*;
-import play.libs.F.*;
+import play.libs.concurrent.HttpExecutionContext;
+import play.http.HttpErrorHandler;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import com.mindscapehq.raygun4java.play2.RaygunPlayClient;
 
-import static play.mvc.Results.*;
-
-public class Global extends GlobalSettings {
+public class CustomErrorHandler implements HttpErrorHandler {
 
     private String apiKey = "paste_your_api_key_here";
 
-    public Promise<Result> onError(RequestHeader request, Throwable t) {
-        RaygunPlayClient rg = new RaygunPlayClient(apiKey, request);
-        rg.SendAsync(t);
+    @Override
+    public CompletionStage<Result> onClientError(Http.RequestHeader request, int statusCode, String message) {
+        // Handle client errors if necessary. For simplicity, we'll just forward the request to Play's default error handling
+        return CompletableFuture.completedFuture(Results.status(statusCode, "A client error occurred: " + message));
+    }
 
-        return Promise.<Result>pure(internalServerError(
-            views.html.myErrorPage.render(t)
-        ));
+    @Override
+    public CompletionStage<Result> onServerError(Http.RequestHeader request, Throwable exception) {
+    	RaygunPlayClient rg = new RaygunPlayClient(apiKey, request);
+    	rg.sendAsync(exception);
+    	// For simplicity, we'll just return a simple text response
+    	return CompletableFuture.completedFuture(Results.internalServerError("An internal server error occurred."));
     }
 }
 ```
 
-Or, write code that sends an exception in your controller:
+**In Scala:**
+
+While the example above is in Java, here's a quick Scala translation:
+
+```scala
+package com.raygun
+
+import play.api.mvc._
+import play.api.http.HttpErrorHandler
+
+import com.mindscapehq.raygun4java.play2.RaygunPlayClient
+
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+
+class CustomErrorHandler extends HttpErrorHandler {
+
+    private val apiKey = "paste_your_api_key_here"
+
+    def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
+        // Handle client errors if necessary. For simplicity, we'll just forward the request to Play's default error handling
+        Future.successful(Status(statusCode)(s"A client error occurred: $message"))
+    }
+
+    def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
+        val rg = new RaygunPlayClient(apiKey, request)
+        rg.sendAsync(exception)
+        // For simplicity, we'll just return a simple text response
+        Future.successful(Results.InternalServerError("An internal server error occurred."))
+    }
+}
+```
+
+Or, if you want to send an exception explicitly in your controller:
+
+**In Scala:**
 
 ```scala
 import play.api.mvc.{Action, Controller, Request}
-import com.mindscapehq.raygun4java.play2.RaygunPlayClient;
+import com.mindscapehq.raygun4java.play2.RaygunPlayClient
 
-def index = Action { implicit request =>
+class MyController extends Controller {
+
+  def index = Action { implicit request =>
     val rg = new RaygunPlayClient("paste_your_api_key_here", request)
     val result = rg.send(new Exception("From Scala"))
 
     Ok(views.html.index(result.toString))
   }
+}
 ```
-
-
 
 ## Documentation
 
