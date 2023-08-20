@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.mindscapehq</groupId>
         <artifactId>raygun4java</artifactId>
-        <version>4.0.0-rc2-SNAPSHOT</version>
+        <version>4.0.0</version>
     </parent>
     <scm>
         <url>https://github.com/mindscapehq/raygun4java</url>
@@ -30,7 +30,20 @@
     <description>The official provider for the Raygun error tracking service. This is the Play Framework provider module
         that sends errors caught from your Play Scala/Java application. Used in conjunction with raygun4java.core
     </description>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.mindscapehq</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mindscapehq</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.parent.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <!-- Skip Maven's default compile phase (use "sbt compile" instead) -->
@@ -97,17 +110,6 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>
-                    <execution>
-                        <id>play2-add-main-sources</id>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/java/com.mindscapehq.raygun4java.play2</source>
-                            </sources>
-                        </configuration>
-                    </execution>
                     <!-- Include compiled Scala classes in the final JAR -->
                     <execution>
                         <id>play2-include-compiled-classes</id>
