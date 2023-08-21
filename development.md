@@ -41,8 +41,11 @@ This limitation is noted in the Raygun docs.
 
 
 # Releasing a new version
+
 1. Run `mvn clean`.
-2. Bump the version in the following places:
+
+2. Bump the version in the following places (include `-SNAPSHOT`):
+
     - `pom.xml` > `version`.
     - `core/pom.xml` > `parent` > `version`
     - `playprovider/pom.xml` > `parent` > `version`
@@ -50,8 +53,11 @@ This limitation is noted in the Raygun docs.
     - `webproviderjakarta/pom.xml` > `parent` > `version`
     - `sampleapp/pom.xml` > `parent` > `version`
     - `sampleJakartaEEApp/pom.xml` > `parent` > `version`
+
 3. Run `mvn -P integration-tests verify` and ensure all tests pass.
+
 4. Run `mvn clean install`.
+
 5. **Setup Maven settings**:
     - Locate our Sonatype login in 1Password. Modify or create a `settings.xml` in your Maven `conf` or `~/.m2` directory. Add the following:
 
@@ -68,7 +74,7 @@ This limitation is noted in the Raygun docs.
    ```
 
 3. **Prepare the release**:
-    - Ensure all changes are committed to your SCM.
+    - Ensure all changes are committed to git.
     - Run the Maven release prepare command:
       ```bash
       mvn release:prepare
