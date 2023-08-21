@@ -44,7 +44,7 @@ This limitation is noted in the Raygun docs.
 
 1. Run `mvn clean`.
 
-2. Bump the version in the following places (include `-SNAPSHOT`):
+2. Bump the version in the following places (include `-SNAPSHOT` here):
 
     - `pom.xml` > `version`.
     - `core/pom.xml` > `parent` > `version`
@@ -56,52 +56,69 @@ This limitation is noted in the Raygun docs.
 
 3. Run `mvn -P integration-tests verify` and ensure all tests pass.
 
-4. Run `mvn clean install`.
+4. Run `mvn clean install` for good measure.
 
-5. **Setup Maven settings**:
-    - Locate our Sonatype login in 1Password. Modify or create a `settings.xml` in your Maven `conf` or `~/.m2` directory. Add the following:
+5. **Prepare**:
+    - Install GPG (GNU Privacy Guard): [Gpg4win](https://gpg4win.org/download.html). We only need the GnuPG component.
+      - Ensure `gpg.exe` is added to your PATH. By default, this can be found at `C:/Program Files (x86)/GnuPG/bin/gpg.exe`.
+    - Locate our **GPG passphrase** in 1Password.
+    - Run `gpg --gen-key`, enter your details, and use the passphrase when prompted.
+    - Locate our **Sonatype** login in 1Password.
+    - Modify or create a `settings.xml` in your Maven `conf` or `~/.m2` directory. Add the following with credentials substituted in:
+```xml
+<settings>
+   <servers>
+      <server>
+         <id>ossrh</id>
+         <username>SONATYPE_USERNAME</username>
+         <password>SONATYPE_PASSWORD</password>
+      </server>
+   </servers>
+   <profiles>
+      <profile>
+         <id>ossrh</id>
+         <activation>
+            <activeByDefault>true</activeByDefault>
+         </activation>
+         <properties>
+            <gpg.executable>gpg</gpg.executable>
+            <gpg.passphrase>GPG_PASSPHRASE</gpg.passphrase>
+         </properties>
+      </profile>
+   </profiles>
+</settings>
+```
 
-   ```xml
-   <settings>
-      <servers>
-         <server>
-            <id>ossrh</id>
-            <username>SONATYPE_USERNAME</username>
-            <password>SONATYPE_PASSWORD</password>
-         </server>
-      </servers>
-   </settings>
-   ```
-
-3. **Prepare the release**:
-    - Ensure all changes are committed to git.
+6. **Prepare the release**:
+    - Ensure all changes are committed to Git.
     - Run the Maven release prepare command:
       ```bash
       mvn release:prepare
       ```
-      This will ask you for the release version, tag name, and next development version. Make sure the release version doesn't contain "-SNAPSHOT". It will then make changes to your POMs and commit/tag them in SCM.
+    - You may be prompted for our GPG passphrase again.
+    - This will ask you for the release version, tag name, and next development version, which you can likely leave as-is. Make sure the release version doesn't contain `-SNAPSHOT`. It will then make changes to your POMs and commit/tag them in Git.
 
-4. **Perform the release**:
+7. **Perform the release**:
     - After preparing, you can perform the release by running:
       ```bash
       mvn release:perform
       ```
-      This command will checkout the code from SCM using the tag created in the prepare step, build the project and deploy it to the OSSRH repository.
+      This command will checkout the code from Git using the tag created in the prepare step, build the project and deploy it to the OSSRH repository.
 
-5. **Release the artifacts on Sonatype**:
+8. **Release the artifacts on Sonatype**:
     - Once the artifacts are uploaded to OSSRH, you need to release them:
         - Go to [Sonatype OSSRH](https://oss.sonatype.org/).
         - Login with your Sonatype credentials.
         - Navigate to "Staging Repositories".
         - Find your artifact, select it, and click "Release".
 
-6. **Clean up**:
+9. **Clean up**:
     - After releasing, you can clean up the local checkout of the tag created by the `release:perform` command:
       ```bash
       rm -rf target/checkout
       ```
 
-7. **Verify on Maven Central**:
+10. **Verify on Maven Central**:
     - Your artifacts will be synchronized from OSSRH to Maven Central. This might take some time. You can periodically check [Maven Central Repository](https://search.maven.org/) to see if your library has been updated. Search for your library, e.g., "raygun4java", to verify.
 
 Remember:
