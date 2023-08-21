@@ -42,8 +42,10 @@ This limitation is noted in the Raygun docs.
 
 # Releasing a new version
 
-## Version bump
+## Manual version bump
+**Note: this step should not be necessary!** The previous release should have automatically set the next development version.
 
+If necessary:
 1. Run `mvn clean`.
 2. Bump the version in the following places (include `-SNAPSHOT` here):
     - `pom.xml` > `version`.
@@ -141,13 +143,7 @@ This limitation is noted in the Raygun docs.
         - Navigate to "Staging Repositories".
         - Find your artifact, select it, and click "Release".
 
-4. **Clean up**:
-    - After releasing, you can clean up the local checkout of the tag created by the `release:perform` command:
-      ```bash
-      rm -rf target/checkout
-      ```
-
-5. **Verify on Maven Central**:
+4. **Verify on Maven Central**:
     - Your artifacts will be synchronized from OSSRH to Maven Central. This might take some time. You can periodically check [Maven Central Repository](https://search.maven.org/) to see if your library has been updated. Search for your library, e.g., "raygun4java", to verify.
 
 *Remember:*
