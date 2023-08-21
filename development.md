@@ -72,6 +72,10 @@ This limitation is noted in the Raygun docs.
          <username>SONATYPE_USERNAME</username>
          <password>SONATYPE_PASSWORD</password>
       </server>
+      <server>
+         <id>github</id>
+         <privateKey>~/.ssh/id_rsa.pub</privateKey>
+      </server>
    </servers>
    <profiles>
       <profile>
