@@ -55,6 +55,7 @@
                 <version>3.5.0</version>
                 <configuration>
                     <additionalparam>-Xdoclint:none</additionalparam>
+                    <excludePackageNames>com.mindscapehq.raygun4java.play2</excludePackageNames>
                 </configuration>
             </plugin>
 
@@ -151,6 +152,5 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
 
 </project>
