@@ -137,7 +137,7 @@ This limitation is noted in the Raygun docs.
 3. **Release the artifacts on Sonatype**:
     - Once the artifacts are uploaded to OSSRH, you need to release them:
         - Go to [Sonatype OSSRH](https://oss.sonatype.org/).
-        - Login with your Sonatype credentials.
+        - Login with our Sonatype credentials.
         - Navigate to "Staging Repositories".
         - Find your artifact, select it, and click "Release".
 
@@ -150,6 +150,5 @@ This limitation is noted in the Raygun docs.
 5. **Verify on Maven Central**:
     - Your artifacts will be synchronized from OSSRH to Maven Central. This might take some time. You can periodically check [Maven Central Repository](https://search.maven.org/) to see if your library has been updated. Search for your library, e.g., "raygun4java", to verify.
 
-Remember:
+*Remember:*
 - If anything goes wrong during the release process, you can use the `mvn release:rollback` command to rollback any changes made by the `release:prepare` command.
-- Always ensure you have tested the project thoroughly before starting the release process.
