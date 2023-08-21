@@ -1,8 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mindscapehq</groupId>
     <artifactId>raygun4java</artifactId>
-    <version>4.0.0-rc2-SNAPSHOT</version>
+    <version>4.0.0-rc2</version>
     <name>Raygun4Java parent project</name>
     <packaging>pom</packaging>
     <properties>
@@ -23,8 +24,8 @@
         <url>https://github.com/mindscapehq/raygun4java</url>
         <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>raygun4java-4.0.0-rc2</tag>
+    </scm>
     <build>
         <plugins>
             <plugin>
@@ -55,6 +56,7 @@
                 <version>3.5.0</version>
                 <configuration>
                     <additionalparam>-Xdoclint:none</additionalparam>
+                    <excludePackageNames>com.mindscapehq.raygun4java.play2</excludePackageNames>
                 </configuration>
             </plugin>
 
@@ -151,6 +153,5 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
 
 </project>
