@@ -72,10 +72,6 @@ This limitation is noted in the Raygun docs.
          <username>SONATYPE_USERNAME</username>
          <password>SONATYPE_PASSWORD</password>
       </server>
-      <server>
-         <id>github</id>
-         <privateKey>~/.ssh/id_rsa.pub</privateKey>
-      </server>
    </servers>
    <profiles>
       <profile>
@@ -109,6 +105,15 @@ This limitation is noted in the Raygun docs.
 4. Test connection:
    ```bash
    ssh -T git@github.com
+   ```
+5. Ensure `ssh-agent` service is running:
+   - Press Windows + R to open the Run dialog.
+   - Type `services.msc` and hit Enter.
+   - Find **OpenSSH Authentication Agent** in the list.
+   - Right-click on it and select Start.
+6. Add your SSH private key to the agent:
+   ```bash
+   ssh-add C:/Users/your_username/.ssh/id_rsa
    ```
 
 ## Release
