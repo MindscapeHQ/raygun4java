@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mindscapehq</groupId>
     <artifactId>raygun4java</artifactId>
-    <version>4.0.0-rc2</version>
+    <version>4.0.0-rc3-SNAPSHOT</version>
     <name>Raygun4Java parent project</name>
     <packaging>pom</packaging>
     <properties>
@@ -23,7 +23,7 @@
         <url>https://github.com/mindscapehq/raygun4java</url>
         <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
-      <tag>raygun4java-4.0.0-rc2</tag>
+      <tag>HEAD</tag>
   </scm>
     <build>
         <plugins>
