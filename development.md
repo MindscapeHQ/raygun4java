@@ -136,6 +136,17 @@ If necessary:
    ```
    - If you see a message like "Hi [username]! You've successfully authenticated...", then the SSH key is set up correctly.
 
+5. **Ensure `ssh-agent` service is running**:
+   - Press Windows + R to open the Run dialog.
+   - Type `services.msc` and hit Enter.
+   - Find **OpenSSH Authentication Agent** in the list.
+   - Right-click on it and select Start.
+
+6. **Add your SSH private key to the agent**:
+   ```bash
+   ssh-add C:/Users/your_username/.ssh/id_rsa
+   ```
+
 ## Release
 
 1. **Prepare the release**:
