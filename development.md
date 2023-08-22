@@ -84,6 +84,8 @@ If necessary:
          <properties>
             <gpg.executable>gpg</gpg.executable>
             <gpg.passphrase>GPG_PASSPHRASE</gpg.passphrase>
+            <!-- Ensure Maven uses the correct SSH executable -->
+            <maven.scm.provider.git.gitexe>C:/Windows/System32/OpenSSH/ssh.exe</maven.scm.provider.git.gitexe>
          </properties>
       </profile>
    </profiles>
@@ -92,31 +94,31 @@ If necessary:
 
 ### Add an SSH key to GitHub
 
-1. Generate SSH key:
+1. **Generate SSH key**:
    ```bash
    ssh-keygen -t rsa -b 4096 -C "your_github_email@example.com"
    ```
-2. Copy SSH public key:
-   ```bash
-   cat ~/.ssh/id_rsa.pub
-   ```
-3. Add key to GitHub:
-   - Go to GitHub > Profile > Settings.
-   - Click SSH and GPG keys > New SSH key.
-   - Enter a title (e.g., Raygun4Java) and paste the copied key. Click Add SSH key.
-4. Test connection:
+   - When prompted, press Enter to save the key to the default location, and you can choose to set a passphrase or skip it (based on your preference).
+
+2. **Copy SSH public key**:
+   - On Windows, you can use the following command:
+     ```bash
+     type %userprofile%\.ssh\id_rsa.pub | clip
+     ```
+
+3. **Add key to GitHub**:
+   - Go to GitHub and navigate to your profile.
+   - Click on **Settings**.
+   - In the left sidebar, select **SSH and GPG keys**.
+   - Click **New SSH key**.
+   - Provide a descriptive title (e.g., Raygun4Java) and paste the copied key into the "Key" field.
+   - Click **Add SSH key** to save.
+
+4. **Test connection**:
    ```bash
    ssh -T git@github.com
    ```
-5. Ensure `ssh-agent` service is running:
-   - Press Windows + R to open the Run dialog.
-   - Type `services.msc` and hit Enter.
-   - Find **OpenSSH Authentication Agent** in the list.
-   - Right-click on it and select Start.
-6. Add your SSH private key to the agent:
-   ```bash
-   ssh-add C:/Users/your_username/.ssh/id_rsa
-   ```
+   - If you see a message like "Hi [username]! You've successfully authenticated...", then the SSH key is set up correctly.
 
 ## Release
 
