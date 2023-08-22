@@ -64,20 +64,36 @@ If necessary:
     - Ensure `gpg.exe` is added to your PATH. By default, this can be found at `C:/Program Files (x86)/GnuPG/bin/gpg.exe`.
 2. Locate our **GPG passphrase** in 1Password.
 3. Run `gpg --gen-key`, enter your details, and use the passphrase when prompted.
-4. Locate our **Sonatype** login in 1Password.
-5. Modify or create a `settings.xml` in your Maven `conf` or `~/.m2` directory. Add the following with credentials substituted in:
+4. After generating the key, you need to find out the ID of the GPG key. To list your GPG keys, execute:
+   ```bash
+   gpg --list-keys
+   ```
+   You'll see an output like:
+   ```
+   pub   ed25519 2023-08-21 [SC] [expires: 2026-08-20]
+      YYYY
+   uid           [ultimate] Your Name <your_email@example.com>
+   sub   cv25519 2023-08-21 [E] [expires: 2026-08-20]
+   ```
+   Here, `YYYY` is your key ID.
+5. Publish your public GPG key to a key server:
+   ```
+   gpg --keyserver hkps://keyserver.ubuntu.com:443 --send-keys YOUR_KEY_ID
+   ```
+6. Locate our **Sonatype** login in 1Password.
+7. Modify or create a `settings.xml` in your Maven `conf` or `~/.m2` directory. Add the following with credentials substituted in:
 ```xml
 <settings>
    <servers>
       <server>
-         <id>ossrh</id>
+         <id>raygun4java-repo</id>
          <username>SONATYPE_USERNAME</username>
          <password>SONATYPE_PASSWORD</password>
       </server>
    </servers>
    <profiles>
       <profile>
-         <id>ossrh</id>
+         <id>raygun4java-repo</id>
          <activation>
             <activeByDefault>true</activeByDefault>
          </activation>
@@ -128,7 +144,6 @@ If necessary:
       ```bash
       mvn release:prepare
       ```
-    - You may be prompted for our GPG passphrase again.
     - This will ask you for the release version, tag name, and next development version, which you can likely leave as-is. Make sure the release version doesn't contain `-SNAPSHOT`. It will then make changes to the POMs and commit/tag them in Git.
 
 2. **Perform the release**:
@@ -136,7 +151,7 @@ If necessary:
       ```bash
       mvn release:perform
       ```
-    - This command will checkout the code from Git using the tag created in the prepare step, build the project and deploy it to the OSSRH repository.
+    - This command will checkout the code from Git using the tag created in the prepare step, build the project, and deploy it to the OSSRH repository.
 
 3. **Release the artifacts on Sonatype**:
     - Once the artifacts are uploaded to OSSRH, you need to release them:
