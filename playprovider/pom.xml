@@ -1,16 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.mindscapehq</groupId>
         <artifactId>raygun4java</artifactId>
-        <version>4.0.0-rc2-SNAPSHOT</version>
+        <version>4.0.0-rc2</version>
     </parent>
     <scm>
         <url>https://github.com/mindscapehq/raygun4java</url>
         <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>raygun4java-4.0.0-rc2</tag>
     </scm>
     <artifactId>raygun4java-play2</artifactId>
     <packaging>jar</packaging>
@@ -21,7 +20,7 @@
         <license>
             <name>The MIT License</name>
             <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution/>
+            <distribution />
         </license>
     </licenses>
     <properties>
