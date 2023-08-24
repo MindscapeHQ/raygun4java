@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.mindscapehq</groupId>
@@ -20,7 +21,7 @@
         <license>
             <name>The MIT License</name>
             <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution />
+            <distribution/>
         </license>
     </licenses>
     <properties>
@@ -121,12 +122,24 @@
                                 <resource>
                                     <directory>${project.basedir}/target/scala-2.13/classes</directory>
                                 </resource>
-                                <!-- Include generated Javadocs -->
-                                <resource>
-                                    <directory>${project.basedir}/target/scala-2.13/api</directory>
-                                    <targetPath>META-INF/javadoc</targetPath>
-                                </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Generate Javadoc JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <sourcepath>${project.basedir}/target/scala-2.13/api</sourcepath>
                         </configuration>
                     </execution>
                 </executions>
