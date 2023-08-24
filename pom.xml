@@ -54,6 +54,10 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
+                <configuration>
+                    <doclint>none</doclint>
+                    <excludePackageNames>com.mindscapehq.raygun4java.play2</excludePackageNames>
+                </configuration>
             </plugin>
 
             <plugin>
