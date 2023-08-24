@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mindscapehq</groupId>
     <artifactId>raygun4java</artifactId>
-    <version>4.0.0-rc3-SNAPSHOT</version>
+    <version>4.0.0-rc2-SNAPSHOT</version>
     <name>Raygun4Java parent project</name>
     <packaging>pom</packaging>
     <properties>
@@ -54,9 +54,6 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
-                <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
             </plugin>
 
             <plugin>

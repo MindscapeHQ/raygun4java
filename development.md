@@ -166,7 +166,7 @@ If necessary:
 
 3. **Release the artifacts on Sonatype**:
     - Once the artifacts are uploaded to OSSRH, you need to release them:
-        - Go to [Sonatype OSSRH](https://oss.sonatype.org/).
+        - Go to [Sonatype OSSRH](https://oss.sonatype.org/#stagingRepositories).
         - Login with our Sonatype credentials.
         - Navigate to "Staging Repositories".
         - Find your artifact, select it, and click "Release".
