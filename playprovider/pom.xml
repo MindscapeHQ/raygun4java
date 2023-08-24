@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.mindscapehq</groupId>
         <artifactId>raygun4java</artifactId>
-        <version>4.0.0-rc3-SNAPSHOT</version>
+        <version>4.0.0-rc2-SNAPSHOT</version>
     </parent>
     <scm>
         <url>https://github.com/mindscapehq/raygun4java</url>
@@ -77,6 +77,7 @@
                             <arguments>
                                 <argument>update</argument>
                                 <argument>compile</argument>
+                                <argument>doc</argument>
                             </arguments>
                             <environmentVariables>
                                 <project.artifactId>${project.artifactId}</project.artifactId>
@@ -121,23 +122,12 @@
                                 <resource>
                                     <directory>${project.basedir}/target/scala-2.13/classes</directory>
                                 </resource>
+                                <!-- Include generated Javadocs -->
+                                <resource>
+                                    <directory>${project.basedir}/target/scala-2.13/api</directory>
+                                    <targetPath>META-INF/javadoc</targetPath>
+                                </resource>
                             </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <sourcepath>${project.basedir}/src/main/java</sourcepath>
                         </configuration>
                     </execution>
                 </executions>
