@@ -231,7 +231,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 ```
 
 ## Web applications
-When implementing web applications you can use the `webprovider` dependency to get a lot of out-of-the-box support. For example the `com.mindscapehq.raygun4java.webprovider.RaygunClient` class provides the described `ThreadLocal<RaygunClient>` pattern. The `RaygunServletFilter` creates the `RaygunClient` for each request, intercepts and sends unhandled exceptions to Raygun, and removes the `RaygunClient` at the end of the request.
+When implementing web applications, you can use the `webprovider` (or `webproviderjakarta` for Jakarta EE applications) dependency to get a lot of out-of-the-box support. For example the `com.mindscapehq.raygun4java.webprovider.RaygunClient` class provides the described `ThreadLocal<RaygunClient>` pattern. The `RaygunServletFilter` creates the `RaygunClient` for each request, intercepts and sends unhandled exceptions to Raygun, and removes the `RaygunClient` at the end of the request.
 
 For the out-of-the-box implementation of capturing exceptions thrown out of your controllers, simply do the following:
 1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `RaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
@@ -249,7 +249,7 @@ For the out-of-the-box implementation of capturing exceptions thrown out of your
 
 Intercepting unhandled exceptions is a standard pattern used by the servlet `Filter`, and provided out-of-the-box by the `com.mindscapehq.raygun4java.webprovider.DefaultRaygunServletFilter`
 
-Unfortunately most web frameworks implement their own exception handling for exceptions that occur inside their presentation layer, and those exceptions are not perculated through the servlet filter, rather they are handled by the framework. (The `DefaultRaygunServletFilter` could be extended to detect the 500 status code without an exception, but by that point all the useful information about the exception is not available).
+Unfortunately most web frameworks implement their own exception handling for exceptions that occur inside their presentation layer, and those exceptions are not percolated through the servlet filter, rather they are handled by the framework. (The `DefaultRaygunServletFilter` could be extended to detect the 500 status code without an exception, but by that point all the useful information about the exception is not available).
 
 To capture exceptions that occur within the framework presentation layer (or any other area that is handling exceptions), refer to that frameworks documentation about handling exceptions, and send the exception to Raygun using the techniques described above (the static accessor will help out here)
 
