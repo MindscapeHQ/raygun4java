@@ -1,4 +1,11 @@
+* 4.0.0
+
+    * Added new `webproviderjakarta` middleware module for Jakarta EE support and a corresponding sample app.
+    * **Breaking Change:** Upgraded `raygun4java-play2` to Play version 2.8.20. This means `GlobalSettings.onError` is no longer available. Instead, you should use `HttpErrorHandler`.
+    * Updated miscellaneous dependencies and removed vulnerabilities, included OWASP Dependency-Check build plugin for analysis.
+
 * 3.0.0
+
     * **Breaking Change:** Case changes for many functions to bring them in line with the Java standard
     * **Breaking Change:** Application version detection is performed by factories once, rather than by the client many times - this caused inaccuracies and inefficiency
     * **Breaking Change:** Removed static RaygunClient.OnBeforeSend to support multiple instances (ie multiple libraries etc)

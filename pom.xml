@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mindscapehq</groupId>
     <artifactId>raygun4java</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.0-SNAPSHOT</version>
     <name>Raygun4Java parent project</name>
     <packaging>pom</packaging>
     <properties>
@@ -23,8 +23,8 @@
         <url>https://github.com/mindscapehq/raygun4java</url>
         <connection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/MindscapeHQ/raygun4java.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <build>
         <plugins>
             <plugin>
@@ -54,7 +54,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
                 <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <doclint>none</doclint>
+                    <excludePackageNames>com.mindscapehq.raygun4java.play2</excludePackageNames>
                 </configuration>
             </plugin>
 
@@ -151,6 +152,5 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
 
 </project>
