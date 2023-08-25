@@ -167,8 +167,6 @@ If necessary:
 ## Release
 
 1. **Prepare the release**:
-    - Run `mvn clean install`. This will ensure the Play2 module access to the current core module in the local Maven
-      repository.
     - Ensure all changes are committed to Git.
     - Run the Maven release prepare command:
       ```bash
