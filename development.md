@@ -167,7 +167,8 @@ If necessary:
 ## Release
 
 1. **Prepare the release**:
-    - Ensure all changes are committed to Git.
+    - Do not use protected branch `master`, the `maven-release-plugin` needs to make changes. Ensure all changes are
+      committed to your branch.
     - Run the Maven release prepare command:
       ```bash
       mvn release:prepare
