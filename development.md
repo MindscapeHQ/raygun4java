@@ -178,20 +178,22 @@ If necessary:
       as-is. Make sure the release version doesn't contain `-SNAPSHOT`. It will then make changes to the POMs and
       commit/tag them in Git.
 
-2. **Perform the release**:
+2. **Deploy to Sonatype**:
     - After preparing, you can perform the release by running:
       ```bash
       mvn release:perform
       ```
     - This command will checkout the code from Git using the tag created in the prepare step, build the project, and
-      deploy it to the OSSRH repository.
+      deploy it to the OSSRH repository (Sonatype).
 
 3. **Release the artifacts on Sonatype**:
-    - Once the artifacts are uploaded to OSSRH, you need to release them:
+    - Once the artifacts are uploaded to Sonatype, follow these steps to release them:
         - Go to [Sonatype OSSRH](https://oss.sonatype.org/#stagingRepositories).
-        - Login with our Sonatype credentials.
+        - Login with our Sonatype credentials from 1Password.
         - Navigate to "Staging Repositories".
-        - Find your artifact, select it, and click "Release".
+        - Find your artifact in the list.
+        - Select your artifact, then click "Close". This will validate and prepare the artifact for release.
+        - Once closed successfully, select the artifact again and click "Release" to make it publicly available.
 
 4. **Verify on Maven Central**:
     - Your artifacts will be synchronized from OSSRH to Maven Central. This might take some time. You can periodically
