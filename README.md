@@ -165,7 +165,7 @@ public class MyErrorTracker {
      * Be sure to unset after use or pain will ensue.
      * @param toSet
      */
-    public static void set(RaygunServletClient toSet) {
+    public static void set(RaygunClient toSet) {
         client.set(toSet);
     }
 
@@ -180,9 +180,7 @@ public class MyApplication {
 
     public void startup() {
         MyErrorTracker.initialize(new RaygunClientFactory("YOUR_API_KEY")
-                                        .withVersion("1.2.3")
-                                        .withMessageBuilder(myCustomizedMessageBuilder)
-                                        .withBeforeSend(myCustomOnBeforeSendHandler));
+                                        .withVersion("1.2.3"));
     }
 
     public void processUserRequest(User user) {
@@ -225,7 +223,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
 		RaygunClient client = raygunClientFactory.newClient();
-		client.Send(e);
+		client.send(e);
 	}
 }
 ```
@@ -386,11 +384,13 @@ The previous method, SetUser(string) has been deprecated as of 1.5.0 and removed
 
 You can attatch custom data or tags on the factory so that all errors will be tagged ie:
 ```java
-factory
+IRaygunClientFactory factory = new RaygunClientFactory("paste_your_api_key_here")
     .withTag("tag1")
     .withTag("tag2")
     .withData("data1", 1)
     .withData("data2", 2);
+
+RaygunClient client = factory.newClient();
 ```
 
 or attach to the client so that the tags will be added to only errors send by this client instance:
@@ -424,11 +424,11 @@ client.recordBreadcrumb("hello world")
     .withCustomData(someData);
 ```
 
-**Dont do this in a production environment:** You can set the factory to have the source location (class, method, line) added to the breadcrumb:
+You can set the factory to have the source location (class, method, line) added to the breadcrumb:
 ```java
 RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBreadcrumbLocations()
 ```
-While this can be incredibly useful for debugging it is **very resource intensive and will cause performance degredation**.
+While this can be incredibly useful for debugging it is **very resource intensive and will cause performance degradation**. We recommend that you **do not do this in production**.
 
 ### Version tracking
 
@@ -437,7 +437,7 @@ By default, Raygun4Java reads the manifest file for `Specification-Version` or `
 When using Raygun4Java `core` the `/META-INF/MANIFEST.MF` file in the main executing `.jar` is used.
 When using Raygun4Java `webprovider` the `/META-INF/MANIFEST.MF` from the `.war` file.
 
-In the case where your code is neither of the stated situations, you can pass in a class from your jar so that the correct version can be extracted ie
+In the case where your code is neither of the stated situations, you can pass in a class from your jar so that the correct version can be extracted i.e.
 ```java
 RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").setVersionFrom(AClassFromMyApplication.class);
 ```
