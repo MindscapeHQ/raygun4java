@@ -428,7 +428,7 @@ You can set the factory to have the source location (class, method, line) added 
 ```java
 RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBreadcrumbLocations()
 ```
-While this can be incredibly useful for debugging it is **very resource intensive and will cause performance degredation**. We reccomend that you **do not do this in production**.
+While this can be incredibly useful for debugging it is **very resource intensive and will cause performance degradation**. We recommend that you **do not do this in production**.
 
 ### Version tracking
 
