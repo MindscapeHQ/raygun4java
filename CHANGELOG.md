@@ -1,3 +1,7 @@
+* 4.0.1-SNAPSHOT
+
+    * [Internal] Improved sbt-based build flow for `playprovider`
+  
 * 4.0.0
 
     * Added new `webproviderjakarta` middleware module for Jakarta EE support and a corresponding sample app.
