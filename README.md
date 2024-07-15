@@ -1,7 +1,7 @@
 Raygun4java
 ===========
 
-This provider provides support for sending exceptions from desktop Java, Scala, Sevlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
+This provider provides support for sending exceptions from desktop Java, Scala, servlets & JSPs, Google App Engine, Play 2 and other JVM frameworks.
 
 ## Installation
 
@@ -10,12 +10,10 @@ This provider provides support for sending exceptions from desktop Java, Scala, 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. Add `com.mindscape.raygun4java` and `com.mindscapehq.core`, version 2.0.0.
-
-    If you are working in a web environment, add `com.mindscapehq.webprovider` dependency too.
-
-    If you wish to grab the example project, you can also get the `sampleapp` jar.
-3. Save your POM, and the dependencies should appear in Maven Dependencies.
+2. - Add `com.mindscape.raygun4java` and `com.mindscapehq.core` in the desired version (the current stable release is `4.0.0`).
+   - If you are working in a web environment, add the `com.mindscapehq.webprovider` dependency too.
+   - If you wish to grab the example project, you can also get or build the `sampleapp` jar.
+3. Save your POM, and the dependencies should appear in Maven dependencies.
 
 ### With Maven and a command shell
 
@@ -28,12 +26,12 @@ The pom.xml will need to contain something like:
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>3.0.0</version>
+    	<version>4.0.0</version>
     </dependency>
 </dependencies>
 ```
 
-**POM for Web Projects**
+#### POM for Web Projects
 
 If you're using servlets, JSPs or similar, you'll need to also add:
 
@@ -41,7 +39,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>3.0.0</version>
+    <version>4.0.0</version>
 </dependency>
 ```
 
@@ -49,11 +47,11 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 
 Download the JARs for the latest version from here:
 
-[raygun-core](http://mvnrepository.com/artifact/com.mindscapehq/core): *required*
+[raygun-core](https://mvnrepository.com/artifact/com.mindscapehq/core): *required*
 
-[raygun-webprovider](http://mvnrepository.com/artifact/com.mindscapehq/webprovider): *optional* - if you want to receive HTTP request data from JSPs, servlets, GAE, web frameworks etc.
+[raygun-webprovider](https://mvnrepository.com/artifact/com.mindscapehq/webprovider): *optional* - if you want to receive HTTP request data from JSPs, servlets, GAE, web frameworks etc.
 
-[gson](http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar): *required* - you will also need the Gson dependency in your classpath.
+[gson](https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar): *required* - you will also need the Gson dependency in your classpath.
 
 ## Basic Usage
 An instance of the `RaygunClient` holds all the data for tracking errors, such as customer information, tags etc. Whether you're application is single user desktop application and/or multi-user server application, it is highly recommended to use a single `RaygunClient` per process. For example, in a web context it is essential to use a new `RaygunClient` for each user request.
@@ -104,7 +102,7 @@ client.send(anotherException);
 ```
 
 ### Going further
-Its very good practice to have a new `RaygunClient` instance per process/request/thread, and you can use that throughout your code to add metadata and send errors to Raygun. To make it easily available to your code, you could dependency inject the client, but inevitably you're end up passing the client around. There is, however a simple pattern using `ThreadLocal<RaygunClient>` that can be used to make a single `RaygunClient` instance easily available through out your code (the following class is not included in the core Raygun dependency as its important that this is not shared between multiple libraries using Raygun):
+It's very good practice to have a new `RaygunClient` instance per process/request/thread, and you can use that throughout your code to add metadata and send errors to Raygun. To make it easily available to your code, you could dependency-inject the client, but inevitably you end up passing the client around. There is, however a simple pattern using `ThreadLocal<RaygunClient>` that can be used to make a single `RaygunClient` instance easily available throughout your code (the following class is not included in the core Raygun dependency as it's important that this is not shared between multiple libraries using Raygun):
 
 ```java
 public class MyErrorTracker {
@@ -179,16 +177,16 @@ With this statically accessed error handling class you can do the following:
 public class MyApplication {
 
     public void startup() {
-        MyErrorTracker.initialize(new RaygunClientFactory("YOUR_API_KEY")
-                                        .withVersion("1.2.3"));
+        MyErrorTracker.initialize(
+                new RaygunClientFactory("YOUR_API_KEY").withVersion("1.2.3")
+        );
     }
 
     public void processUserRequest(User user) {
         try {
+            ...
             MyErrorTracker.setUser(user);
-
             ....
-
         } catch (Exception e) {
             MyErrorTracker.send(e);
         } finally{
@@ -232,7 +230,7 @@ class MyExceptionHandler implements Thread.UncaughtExceptionHandler
 When implementing web applications, you can use the `webprovider` (or `webproviderjakarta` for Jakarta EE applications) dependency to get a lot of out-of-the-box support. For example the `com.mindscapehq.raygun4java.webprovider.RaygunClient` class provides the described `ThreadLocal<RaygunClient>` pattern. The `RaygunServletFilter` creates the `RaygunClient` for each request, intercepts and sends unhandled exceptions to Raygun, and removes the `RaygunClient` at the end of the request.
 
 For the out-of-the-box implementation of capturing exceptions thrown out of your controllers, simply do the following:
-1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `RaygunServletClientFactory` and set it on to the `RaygunClient` static accessor
+1. In the servlet configuration step in your container (a method that provides a `ServletContext`) initialize a `RaygunServletClientFactory` and set it on to the `RaygunClient` static accessor.
     ```java
     IRaygunServletClientFactory factory = new RaygunServletClientFactory(apiKey, servletContext);
     RaygunClient.initialize(factory);
@@ -269,7 +267,7 @@ libraryDependencies ++= Seq(
 
 #### With Maven
 
-Add the `raygun4java-play2-4.x.x` dependency to your `pom.xml` (following the instructions under 'With Maven and a command shell' at the top of this file).
+Add the `raygun4java-play2-4.0.0` dependency to your `pom.xml` (following the instructions under 'With Maven and a command shell' at the top of this file).
 
 ### Usage
 
@@ -624,7 +622,7 @@ This feature is considered to be in Beta, and it is advised to test it in a stag
 
 **Google app engine:** This method will not work from code running on GAE - see the troubleshooting section below.
 
-#### Ignoring errors which specific http status code
+#### Ignoring errors which specific HTTP status code
 Sometimes unhandled exceptions are thrown that do not indicate an error. For example, an exception that represents a "Not Authorised" error might set a http status code of 401 onto the response.
 If you want to filter out errors by status code you can use the `RaygunRequestHttpStatusFilter`
 
@@ -667,7 +665,7 @@ RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY").withBe
 - When Maven runs the tests locally, Surefire might complain of unsupported major.minor version 51.0 - ensure you have JDK 7 set as your JAVA_HOME, or set the plugin goal for maven-surefire-plugin to be `<configuration><jvm>${env.your_jre_7_home}/bin/java.exe</jvm></configuration>` in the parent pom.
 
 - **Google App Engine**: Raygun4Java is confirmed to work with projects built with GAE, however only limited environment data is available due to JDK library restrictions.
-			 The SendAsync methods also will not work, however you can place the Send() call in the Run() body of a [background thread], or one of the other threading features in the App Engine API.
+			 The SendAsync methods also will not work, however you can place the `send()` call in the `run()` body of a [background thread], or one of the other threading features in the App Engine API.
 
 [background thread]: https://developers.google.com/appengine/docs/python/backends/background_thread
 
