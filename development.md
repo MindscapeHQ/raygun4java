@@ -30,33 +30,41 @@ contains `raygun.apiKey=<YOUR-RAYGUN-API-KEY>`.
 
 ## Triggering the maven build lifecycle phases
 
-Maven uses a build lifecycle, which you can look up online.
-These will be executed for all modules in the project.
-In the project's root directory, execute `mvn <phase>`.
-For example, you can execute `mvn install`, runs *all* the previous phases and then, installs the package into the local
+Maven uses a build lifecycle, which you can look up online. The necessary lifecycle steps will be executed for all modules in the project.
+
+Generally you can execute `mvn <phase>` in the project's root directory.
+
+For example, you could execute `mvn install`. This will run *all* the relevant phases for building and testing the code base and then, installs the package into the local
 repository, for use as a dependency in other projects locally.
 
 To include the two integration-test modules in the lifecycle, add `-P integration-tests`, which specifies the profile in
 the parent pom file that contains them.
-For instance, to run the tests execute `mvn -P integration-tests verify`.
+
+For instance, to run the tests: execute `mvn -P integration-tests verify`.
 
 ## Webprovider and Jakarta modules
 
 In 2018, the web APIs' namespaces where changed from `javax.*` to `jakarta.*`.
-The webproviderjakarta is a copy of webprovider with just these namespaces changes plus appropriate dependencies.
+
+The `webproviderjakarta` is a copy of `webprovider` with just these namespaces changes plus appropriate dependencies.
+
 If changes are made to one, ensure they are reflected to the other.
+
 Finally, notice that unhandled exception catching is unlikely to work because exceptions are first caught and handled by
 middleware; hence, they never reach the Raygun filter.
+
 This limitation is noted in the Raygun docs.
 
 # Releasing a new version
 
-## Manual version bump
+## Version bump
 
-**Note: this step should not be necessary!** The previous release should have automatically set the next development
-version.
+Currently, it is necessary to update the reported provider version in the `core` module's `RaygunClientMessage` class: `com/mindscapehq/raygun4java/core/messages/RaygunClientMessage.java`.
 
-If necessary:
+**Note: The following steps should not be necessary!** 
+The previous release should have automatically set the next development version.
+
+If that has not occurred for some reason:
 
 1. Run `mvn clean`.
 2. Bump the version in the following places (include `-SNAPSHOT` here):
