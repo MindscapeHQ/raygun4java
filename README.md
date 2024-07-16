@@ -450,12 +450,12 @@ RaygunClientFactory factory = new RaygunClientFactory("YOUR_APP_API_KEY")sSetVer
 
 This provider has an `OnBeforeSend` API to support accessing or mutating the candidate error payload immediately before it is sent, or cancelling the send outright.
 
-This is provided as the public method `RaygunClient.setOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `RaygunOnBeforeSend` interface. Your class needs a public `onBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
+This is provided as the public method `RaygunClient.setOnBeforeSend(RaygunOnBeforeSend)`, which takes an instance of a class that implements the `IRaygunOnBeforeSend` interface. Your class needs a public `onBeforeSend` method that takes a `RaygunMessage` parameter, and returns the same.
 
 By example:
 
 ```java
-class BeforeSendImplementation implements RaygunOnBeforeSend {
+class BeforeSendImplementation implements IRaygunOnBeforeSend {
     @Override
     public RaygunMessage onBeforeSend(RaygunMessage message) {
         // About to post to Raygun, returning the payload as is...
