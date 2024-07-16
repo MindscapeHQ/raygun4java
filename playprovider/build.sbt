@@ -1,8 +1,8 @@
-name := fromEnv("project.artifactId").get
+name := fromEnv("PROJECT_ARTIFACTID").get
 
 organization := "com.mindscapehq"
 
-version := fromEnv("project.version").get
+version := fromEnv("PROJECT_VERSION").get
 
 scalaVersion := "2.13.11"
 
@@ -12,7 +12,7 @@ resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/
 resolvers += "Typesafe Releases" at "https://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  "com.mindscapehq" % "core" % fromEnv("project.parent.version").get,
+  "com.mindscapehq" % "core" % fromEnv("PROJECT_PARENT_VERSION").get,
   "com.typesafe.play" %% "play" % "2.8.20"
 )
 
