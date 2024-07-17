@@ -7,4 +7,4 @@ ThisBuild / libraryDependencySchemes ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 )
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.20")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.4")
