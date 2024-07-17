@@ -66,5 +66,13 @@ public class RaygunEnvironmentMessage {
             osVersion = osMXBean.getName() + " - " + osMXBean.getVersion();
         } catch (Throwable t) {
         }
+
+        try {
+            com.sun.management.OperatingSystemMXBean sunOsMXBean = (com.sun.management.OperatingSystemMXBean) ManagementFactory
+                    .getOperatingSystemMXBean();
+            totalPhysicalMemory = sunOsMXBean.getTotalPhysicalMemorySize();
+            availablePhysicalMemory = sunOsMXBean.getFreePhysicalMemorySize();
+        } catch (Throwable t) {
+        }
     }
 }
