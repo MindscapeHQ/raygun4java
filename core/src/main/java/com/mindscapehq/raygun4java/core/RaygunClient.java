@@ -113,15 +113,15 @@ public class RaygunClient {
      * @return send status code
      */
     public int sendUnhandled(Throwable throwable) {
-        return send(throwable, new HashSet<String>(), null);
+        return sendUnhandled(throwable, new HashSet<String>(), null);
     }
 
     public int sendUnhandled(Throwable throwable, Map data) {
-        return send(throwable, new HashSet<String>(), data);
+        return sendUnhandled(throwable, new HashSet<String>(), data);
     }
 
     public int sendUnhandled(Throwable throwable, Set<String> tags) {
-        return send(throwable, tags, null);
+        return sendUnhandled(throwable, tags, null);
     }
 
     public int sendUnhandled(Throwable throwable, Set<String> tags, Map data) {
