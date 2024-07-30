@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * To test with getting the version from the jar
  * mvn clean package install
- * java -jar sampleapp\target\sampleapp-3.0.0-SNAPSHOT-jar-with-dependencies.jar
+ * java -jar sampleapp\target\sampleapp-<version>-jar-with-dependencies.jar
  */
 public class SampleApp {
 
@@ -49,46 +49,50 @@ public class SampleApp {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                MyExceptionHandler.getClient().recordBreadcrumb("different thread starting");
+                MyExceptionHandler.getClient().recordBreadcrumb("first thread starting");
 
-                // note that use info not set on this thread
-
+                // note that user info is not set on this thread
                 try {
-                    MyExceptionHandler.getClient().recordBreadcrumb("throwing exception");
+                    MyExceptionHandler.getClient().recordBreadcrumb("throwing exception in a thread");
                     throw exceptionToThrowLater;
                 } catch (Exception e) {
-                    MyExceptionHandler.getClient().recordBreadcrumb("handling exception");
+                    MyExceptionHandler.getClient().recordBreadcrumb("handling exception in a thread");
 
-                    Map<String, String> customData = new HashMap<String, String>();
-                    customData.put("thread id", "" + Thread.currentThread().getId());
-                    MyExceptionHandler.getClient()
-                            .withTag("thrown from thread")
+                    int result_thread = MyExceptionHandler.getClient()
+                            .withTag("thrown from a thread")
                             .withTag("no user withData")
                             .withData("thread id", "" + Thread.currentThread().getId())
                             .send(exceptionToThrowLater);
 
-                    // this should appear in the raygun console as its already been sed
-                    MyExceptionHandler.getClient().recordBreadcrumb("This should not appear because we're sending the same exception on the same thread");
+                    System.out.println("[SampleApp-Thread] First sending of the exception from a thread, result: " + result_thread);
+
+                    // Breadcrumb will be set on the RaygunClient object
+                    MyExceptionHandler.getClient().recordBreadcrumb("This will appear in exceptions further down, outside of this catch");
+
+                    // This additional send should not appear in the Raygun back end as the exception has already been sent
                     Set<String> tags = new HashSet<String>();
                     tags.add("should not appear in console");
-                    MyExceptionHandler.getClient().send(exceptionToThrowLater, tags);
+                    int result_notSucessful = MyExceptionHandler.getClient().send(exceptionToThrowLater, tags);
+                    System.out.println("[SampleApp-Thread] Second sending of the same exception from same thread, result: " + result_notSucessful);
                 }
 
                 // test offline storage by breaking the proxy
                 RaygunSettings.getSettings().setHttpProxy("nothing here", 80);
 
-                System.out.println("No Send below this line");
-                MyExceptionHandler.getClient().send(new Exception("occurred while offline offline"));
-                System.out.println("No Send above this lines ^");
+                System.out.println("[SampleApp-Thread] No send below this line");
+                int result_fakeOffline = MyExceptionHandler.getClient().send(new Exception("This occurred while offline"));
+                System.out.println("[SampleApp-Thread] Sending an exception while offline, result: " + result_fakeOffline);
+                System.out.println("[SampleApp-Thread] No send above this line ^");
 
                 // fix the proxy and send offline data
                 RaygunSettings.getSettings().setHttpProxy(null, 80);
-                MyExceptionHandler.getClient().send(new Exception("This should trigger offline"));
-
+                int result_backOnline = MyExceptionHandler.getClient().send(new Exception("This should trigger sending the previous offline report"));
+                System.out.println("[SampleApp-Thread] Sending an exception when back online, result: " + result_backOnline);
             }
         }).start();
 
         MyExceptionHandler.getClient().recordBreadcrumb("Throwing exception on main thread");
+        // This can be thrown *again* from the main thread
         throw exceptionToThrowLater;
     }
 }
@@ -154,7 +158,7 @@ class MyOnAfterHandler implements IRaygunOnAfterSend, IRaygunSendEventFactory<IR
 
     @Override
     public RaygunMessage onAfterSend(RaygunClient client, RaygunMessage message) {
-        System.out.println("We sent a error to ragun!");
+        System.out.println("[OnAfterSend] We sent a error to Raygun!");
         return message;
     }
 
