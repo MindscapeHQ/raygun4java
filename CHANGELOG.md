@@ -1,5 +1,6 @@
 * 4.1.0
 
+    * Feature: Upgraded Play2 dependency in `playprovider` to Play 2.9.4
     * Feature: Physical memory is tracked on Sun/Oracle JVMs (#74)
     * Docs: Various updates and fixes (#70 #88)
     * Fix: `RaygunClientMessage` was sending the wrong provider SDK version (#87)
