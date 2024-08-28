@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.mindscapehq</groupId>
         <artifactId>raygun4java</artifactId>
-        <version>4.1.1-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
     </parent>
     <artifactId>sampleJakartaEEApp</artifactId>
     <packaging>war</packaging>
@@ -115,7 +117,8 @@
                             <target>
                                 <mkdir dir="${project.build.directory}/deployments" />
                                 <!-- Copy the .war file -->
-                                <copy file="${project.build.directory}/${project.build.finalName}.war" tofile="${project.build.directory}/deployments/${project.artifactId}.war" />
+                                <copy file="${project.build.directory}/${project.build.finalName}.war"
+                                      tofile="${project.build.directory}/deployments/${project.artifactId}.war" />
                                 <!-- Create the .dodeploy file -->
                                 <touch file="${project.build.directory}/deployments/${project.artifactId}.war.dodeploy" />
                             </target>
