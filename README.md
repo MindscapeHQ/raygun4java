@@ -10,7 +10,7 @@ This provider provides support for sending exceptions from desktop Java, Scala, 
 These instructions assume you have a Maven project with a POM file set up in Eclipse, but this is also applicable to other IDEs and environments.
 
 1. Open your project's pom.xml in Eclipse. Click on Dependencies -> Add. In the pattern search box, type `com.mindscapehq`.
-2. - Add `com.mindscape.raygun4java` and `com.mindscapehq.core` in the desired version (the current stable release is `4.0.0`).
+2. - Add `com.mindscape.raygun4java` and `com.mindscapehq.core` in the desired version (the current stable release is `4.1.0`).
    - If you are working in a web environment, add the `com.mindscapehq.webprovider` dependency too.
    - If you wish to grab the example project, you can also get or build the `sampleapp` jar.
 3. Save your POM, and the dependencies should appear in Maven dependencies.
@@ -26,7 +26,7 @@ The pom.xml will need to contain something like:
     <dependency>
     	<groupId>com.mindscapehq</groupId>
     	<artifactId>core</artifactId>
-    	<version>4.0.0</version>
+    	<version>4.1.0</version>
     </dependency>
 </dependencies>
 ```
@@ -39,7 +39,7 @@ If you're using servlets, JSPs or similar, you'll need to also add:
 <dependency>
     <groupId>com.mindscapehq</groupId>
     <artifactId>webprovider</artifactId>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
 </dependency>
 ```
 
@@ -261,13 +261,13 @@ Add the following line to your `build.sbt`'s `libraryDependencies`:
 
 ```
 libraryDependencies ++= Seq(
-    "com.mindscapehq" % "raygun4java-play2" % "4.0.0"
+    "com.mindscapehq" % "raygun4java-play2" % "4.1.0"
 )
 ```
 
 #### With Maven
 
-Add the `raygun4java-play2-4.0.0` dependency to your `pom.xml` (following the instructions under 'With Maven and a command shell' at the top of this file).
+Add the `raygun4java-play2-4.1.0` dependency to your `pom.xml` (following the instructions under 'With Maven and a command shell' at the top of this file).
 
 ### Usage
 

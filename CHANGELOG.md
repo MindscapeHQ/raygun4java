@@ -1,7 +1,14 @@
-* 4.0.1-SNAPSHOT
+* 4.1.0
 
-    * [Internal] Improved sbt-based build flow for `playprovider`
-  
+    * Feature: Upgraded Play2 dependency in `playprovider` to Play 2.9.4
+    * Feature: Physical memory is tracked on Sun/Oracle JVMs (#74)
+    * Docs: Various updates and fixes (#70 #88)
+    * Fix: `RaygunClientMessage` was sending the wrong provider SDK version (#87)
+    * Fix: `sendUnhandled` behaved incorrectly (#72)
+    * Internal: Improved sbt-based build flow for `playprovider`
+    * Internal: Project-management upgrades (#96 #89)
+    * Internal: Environment now POSIX-compliant
+
 * 4.0.0
 
     * Added new `webproviderjakarta` middleware module for Jakarta EE support and a corresponding sample app.
