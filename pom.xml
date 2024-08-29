@@ -20,11 +20,6 @@
         <module>/webprovider</module>
         <module>/webproviderjakarta</module>
         <module>/playprovider</module>
-        <!--
-            Uncomment and refresh IDE Maven setup if you want to include the sample apps in the main project builds
-            <module>/sampleapp</module>
-            <module>/sampleJakartaEEApp</module>
-        -->
     </modules>
     <scm>
         <url>https://github.com/mindscapehq/raygun4java</url>
