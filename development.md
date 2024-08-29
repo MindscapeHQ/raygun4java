@@ -82,8 +82,8 @@ If that has not occurred for some reason:
 1. Install GPG (GNU Privacy Guard): [Gpg4win](https://gpg4win.org/download.html). We only need the GnuPG component.
     - On Windows, ensure `gpg.exe` is added to your PATH. By default, this can be found
       at `C:/Program Files (x86)/GnuPG/bin/gpg.exe`.
-    - On *nix systems, if not available already install via your package manager.
-2. Locate our **GPG passphrase** in 1Password.
+    - On Linux, Unix or macOS systems, if not available already, please install via your package manager.
+2. Locate our **GPG passphrase** in our password manager.
 3. Run `gpg --gen-key`, enter your details, and use the passphrase when prompted.
 4. After generating the key, you need to find out the ID of the GPG key. To list your GPG keys, execute:
    ```bash
@@ -101,7 +101,7 @@ If that has not occurred for some reason:
    ```
    gpg --keyserver hkps://keyserver.ubuntu.com:443 --send-keys YOUR_KEY_ID
    ```
-6. Locate our **Sonatype auth token** in 1Password.
+6. Locate our **Sonatype auth token** in our password manager.
 7. Modify or create a `settings.xml` in your Maven `conf` or `~/.m2` directory. Add the following with credentials
    substituted in:
 
@@ -141,7 +141,7 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
 https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection
 
-The below steps are an abridged version of the GH documentation intending to provide an overview of the steps. If at any stage
+The below steps are an abridged version of the GH documentation, intending to provide an overview of the required steps. If at any stage
 you run into issues, please refer to the GH documentation.
 
 1. **Generate SSH key**:
@@ -156,7 +156,7 @@ you run into issues, please refer to the GH documentation.
       ```bash
       type %userprofile%\.ssh\id_rsa.pub | clip
       ```
-    - On *nix, just `cat` the file and copy the output for a similar outcome.
+    - On Linux, Unix or macOS, just `cat` the file and copy the output for a similar outcome.
 
 3. **Add key to GitHub**:
     - Go to GitHub and navigate to your profile.
@@ -207,7 +207,7 @@ you run into issues, please refer to the GH documentation.
 
 3. **Release the artifacts on Sonatype**:
     - Once the artifacts are uploaded to Sonatype, follow these steps to release them:
-        - Locate our **Sonatype login** in 1Password.
+        - Locate our **Sonatype login** in our password manager.
         - Go to [Sonatype OSSRH](https://oss.sonatype.org/#stagingRepositories) and login.
         - Navigate to "Staging Repositories".
         - Find your uploaded artifact in the list.
