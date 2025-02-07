@@ -1,3 +1,7 @@
+* 4.1.1
+
+    *  Various minor dependency upgrades
+
 * 4.1.0
 
     * Feature: Upgraded Play2 dependency in `playprovider` to Play 2.9.4
